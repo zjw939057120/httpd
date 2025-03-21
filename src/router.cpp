@@ -17,6 +17,16 @@ void Router::Register(hv::HttpService& router) {
     // middleware
     // router.Use(Handler::Authorization);
 
+    /* Static file service */
+    // curl -v http://ip:port/
+#ifdef _DEBUG_ENV
+    router.Static("/", "../html/start");
+    router.Static("/dist", "../html/dist");
+#else
+    router.Static("/", "./html/start");
+    router.Static("/dist", "./html/dist");
+#endif
+
     // curl -v http://ip:port/ping
     router.GET("/ping", [](HttpRequest* req, HttpResponse* resp) {
         return resp->String("pong");

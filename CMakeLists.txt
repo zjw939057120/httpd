@@ -3,6 +3,9 @@ project(httpd)
 
 set(CMAKE_CXX_STANDARD 14)
 
+add_definitions(-D_DEBUG_ENV)
+
+include_directories(inc)
 include_directories(3rdparty/include/hv)
 link_directories(3rdparty/lib)
 
@@ -14,7 +17,7 @@ link_libraries(
         -lcrypt32
 )
 
-add_executable(${PROJECT_NAME} httpd.cpp router.cpp handler.cpp)
+add_executable(${PROJECT_NAME} httpd.cpp src/router.cpp src/handler.cpp)
 
 add_executable(http_server http_server_test.cpp)
 
