@@ -4,10 +4,12 @@
  *
  */
 
+#include <Thread.h>
 #include "HttpServer.h"
 #include "hthread.h"    // import hv_gettid
 #include "hasync.h"     // import hv::async
 #include "router.h"
+#include "EventLoop.h"
 
 using namespace hv;
 
@@ -69,8 +71,17 @@ int main(int argc, char **argv) {
 
     server.start();
 
-    // press Enter to stop
-    while (getchar() != '\n');
-    hv::async::cleanup();
+    hthread_create(Thread::testThread, NULL);
+
+    // 新建一个事件循环对象
+    EventLoopPtr loop(new EventLoop);
+
+    // 设置一个30s定时器
+    loop->setInterval(30000, [](TimerID timerID) {
+        //printf("time=%lus\n", (unsigned long) time(NULL));
+    });
+
+    // 运行事件循环
+    loop->run();
     return 0;
 }
