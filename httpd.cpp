@@ -67,11 +67,14 @@ int main(int argc, char **argv) {
     // uncomment to test multi-processes
     server.setProcessNum(4);
     // uncomment to test multi-threads
-    server.setThreadNum(4);
+    server.setThreadNum(64);
 
-    server.start();
+    int ret = server.start();
+    if (ret != 0) {
+        exit(0);
+    }
 
-    hthread_create(Thread::testThread, NULL);
+    //hthread_create(Thread::testThread, NULL);
 
     // 新建一个事件循环对象
     EventLoopPtr loop(new EventLoop);
