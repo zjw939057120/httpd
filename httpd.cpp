@@ -10,6 +10,7 @@
 #include "hasync.h"     // import hv::async
 #include "router.h"
 #include "EventLoop.h"
+#include "SystemRouter.h"
 
 using namespace hv;
 
@@ -47,6 +48,7 @@ int main(int argc, char **argv) {
     });
 
     Router::Register(router);
+    SystemRouter::Register(router);
 
     HttpServer server;
     server.service = &router;

@@ -6,11 +6,13 @@ set(CMAKE_CXX_STANDARD 14)
 add_definitions(-D_DEBUG_ENV)
 
 include_directories(Inc)
+include_directories(3rdparty/include)
 include_directories(3rdparty/include/hv)
 link_directories(3rdparty/lib)
 
 link_libraries(
         -lhv_static
+        -lsqlite3
         -lwinmm
         -lws2_32
         -lsecur32
