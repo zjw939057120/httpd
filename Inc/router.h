@@ -5,7 +5,13 @@
 
 class Router {
 public:
-    static void Register(hv::HttpService& router);
+    void Register(hv::HttpService &router);
+
+    void RegisterSystem(hv::HttpService &router);
+
+    void RegisterMethod(hv::HttpService &router);
+
+    void RegisterQueue(hv::HttpService &router);
 };
 
 #endif // HV_HTTPD_ROUTER_H

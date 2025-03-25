@@ -6,47 +6,60 @@
 class Handler {
 public:
     // preprocessor => middleware -> handlers => postprocessor
-    static int preprocessor(HttpRequest* req, HttpResponse* resp);
-    static int postprocessor(HttpRequest* req, HttpResponse* resp);
-    static int errorHandler(const HttpContextPtr& ctx);
+    static int preprocessor(HttpRequest *req, HttpResponse *resp);
+
+    static int postprocessor(HttpRequest *req, HttpResponse *resp);
+
+    static int errorHandler(const HttpContextPtr &ctx);
 
     // middleware
-    static int Authorization(HttpRequest* req, HttpResponse* resp);
+    static int Authorization(HttpRequest *req, HttpResponse *resp);
 
-    static int sleep(const HttpRequestPtr& req, const HttpResponseWriterPtr& writer);
-    static int setTimeout(const HttpContextPtr& ctx);
-    static int query(const HttpContextPtr& ctx);
+    static int sleep(const HttpRequestPtr &req, const HttpResponseWriterPtr &writer);
 
-    static int kv(HttpRequest* req, HttpResponse* resp);
-    static int json(HttpRequest* req, HttpResponse* resp);
-    static int form(HttpRequest* req, HttpResponse* resp);
-    static int grpc(HttpRequest* req, HttpResponse* resp);
+    static int setTimeout(const HttpContextPtr &ctx);
 
-    static int test(const HttpContextPtr& ctx);
-    static int restful(const HttpContextPtr& ctx);
+    static int query(const HttpContextPtr &ctx);
 
-    static int login(const HttpContextPtr& ctx);
-    static int upload(const HttpContextPtr& ctx);
+    static int kv(HttpRequest *req, HttpResponse *resp);
+
+    static int json(HttpRequest *req, HttpResponse *resp);
+
+    static int form(HttpRequest *req, HttpResponse *resp);
+
+    static int grpc(HttpRequest *req, HttpResponse *resp);
+
+    static int test(const HttpContextPtr &ctx);
+
+    static int restful(const HttpContextPtr &ctx);
+
+    static int login(const HttpContextPtr &ctx);
+
+    static int upload(const HttpContextPtr &ctx);
+
     // SSE: Server Send Events
-    static int sse(const HttpContextPtr& ctx);
+    static int sse(const HttpContextPtr &ctx);
 
     // LargeFile
-    static int sendLargeFile(const HttpContextPtr& ctx);
-    static int recvLargeFile(const HttpContextPtr& ctx, http_parser_state state, const char* data, size_t size);
+    static int sendLargeFile(const HttpContextPtr &ctx);
+
+    static int recvLargeFile(const HttpContextPtr &ctx, http_parser_state state, const char *data, size_t size);
 
 public:
-    static int response_status(HttpResponse* resp, int code = 200, const char* msg = NULL) {
-        if (msg == NULL) msg = http_status_str((enum http_status)code);
+    static int response_status(HttpResponse *resp, int code = 200, const char *msg = NULL) {
+        if (msg == NULL) msg = http_status_str((enum http_status) code);
         resp->Set("code", code);
         resp->Set("msg", msg);
         return code;
     }
-    static int response_status(const HttpResponseWriterPtr& writer, int code = 200, const char* msg = NULL) {
+
+    static int response_status(const HttpResponseWriterPtr &writer, int code = 200, const char *msg = NULL) {
         response_status(writer->response.get(), code, msg);
         writer->End();
         return code;
     }
-    static int response_status(const HttpContextPtr& ctx, int code = 200, const char* msg = NULL) {
+
+    static int response_status(const HttpContextPtr &ctx, int code = 200, const char *msg = NULL) {
         response_status(ctx->response.get(), code, msg);
         ctx->send();
         return code;

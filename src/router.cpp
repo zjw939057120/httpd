@@ -4,8 +4,14 @@
 #include "hthread.h"    // import hv_gettid
 #include "hasync.h"     // import hv::async
 #include "requests.h"   // import requests::async
+#include "MethodHandler.h"
+#include "SystemHandler.h"
+#include "QueueHandler.h"
+#include "SampleHandler.h"
+#include "SampleDataHandler.h"
+#include "System.h"
 
-void Router::Register(hv::HttpService& router) {
+void Router::Register(hv::HttpService &router) {
     /* handler chain */
     // preprocessor -> middleware -> processor -> postprocessor
     // processor: pathHandlers -> staticHandler -> errorHandler
@@ -17,39 +23,29 @@ void Router::Register(hv::HttpService& router) {
     // middleware
     // router.Use(Handler::Authorization);
 
-    /* Static file service */
-    // curl -v http://ip:port/
-#ifdef _DEBUG_ENV
-    router.Static("/", "../html/start");
-    router.Static("/dist", "../html/dist");
-#else
-    router.Static("/", "./html/start");
-    router.Static("/dist", "./html/dist");
-#endif
-
     // curl -v http://ip:port/ping
-    router.GET("/ping", [](HttpRequest* req, HttpResponse* resp) {
+    router.GET("/ping", [](HttpRequest *req, HttpResponse *resp) {
         return resp->String("pong");
     });
 
     // curl -v http://ip:port/data
-    router.GET("/data", [](HttpRequest* req, HttpResponse* resp) {
+    router.GET("/data", [](HttpRequest *req, HttpResponse *resp) {
         static char data[] = "0123456789";
         return resp->Data(data, 10 /*, false */);
     });
 
     // curl -v http://ip:port/html/index.html
-    router.GET("/html/index.html", [](HttpRequest* req, HttpResponse* resp) {
+    router.GET("/html/index.html", [](HttpRequest *req, HttpResponse *resp) {
         return resp->File("html/index.html");
     });
 
     // curl -v http://ip:port/paths
-    router.GET("/paths", [&router](HttpRequest* req, HttpResponse* resp) {
+    router.GET("/paths", [&router](HttpRequest *req, HttpResponse *resp) {
         return resp->Json(router.Paths());
     });
 
     // curl -v http://ip:port/service
-    router.GET("/service", [](const HttpContextPtr& ctx) {
+    router.GET("/service", [](const HttpContextPtr &ctx) {
         ctx->setContentType("application/json");
         ctx->set("base_url", ctx->service->base_url);
         ctx->set("document_root", ctx->service->document_root);
@@ -60,7 +56,7 @@ void Router::Register(hv::HttpService& router) {
     });
 
     // curl -v http://ip:port/get?env=1
-    router.GET("/get", [](const HttpContextPtr& ctx) {
+    router.GET("/get", [](const HttpContextPtr &ctx) {
         hv::Json resp;
         resp["origin"] = ctx->ip();
         resp["url"] = ctx->url();
@@ -70,19 +66,19 @@ void Router::Register(hv::HttpService& router) {
     });
 
     // curl -v http://ip:port/echo -d "hello,world!"
-    router.POST("/echo", [](const HttpContextPtr& ctx) {
+    router.POST("/echo", [](const HttpContextPtr &ctx) {
         return ctx->send(ctx->body(), ctx->type());
     });
 
     // wildcard *
     // curl -v http://ip:port/wildcard/any
-    router.GET("/wildcard*", [](HttpRequest* req, HttpResponse* resp) {
+    router.GET("/wildcard*", [](HttpRequest *req, HttpResponse *resp) {
         std::string str = req->path + " match /wildcard*";
         return resp->String(str);
     });
 
     // curl -v http://ip:port/async
-    router.GET("/async", [](const HttpRequestPtr& req, const HttpResponseWriterPtr& writer) {
+    router.GET("/async", [](const HttpRequestPtr &req, const HttpResponseWriterPtr &writer) {
         writer->Begin();
         writer->WriteHeader("X-Response-tid", hv_gettid());
         writer->WriteHeader("Content-Type", "text/plain");
@@ -92,10 +88,10 @@ void Router::Register(hv::HttpService& router) {
 
     // curl -v http://ip:port/www.*
     // curl -v http://ip:port/www.example.com
-    router.GET("/www.*", [](const HttpRequestPtr& req, const HttpResponseWriterPtr& writer) {
+    router.GET("/www.*", [](const HttpRequestPtr &req, const HttpResponseWriterPtr &writer) {
         auto req2 = std::make_shared<HttpRequest>();
         req2->url = req->path.substr(1);
-        requests::async(req2, [writer](const HttpResponsePtr& resp2){
+        requests::async(req2, [writer](const HttpResponsePtr &resp2) {
             writer->Begin();
             if (resp2 == NULL) {
                 writer->WriteStatus(HTTP_STATUS_NOT_FOUND);
@@ -155,4 +151,30 @@ void Router::Register(hv::HttpService& router) {
     // SSE: Server Send Events
     // @test html/EventSource.html EventSource.onmessage
     router.GET("/sse", Handler::sse);
+}
+
+void Router::RegisterSystem(hv::HttpService &router) {
+    printf("System debug %d\n", g_system.debug);
+
+    /* Static file service */
+    // curl -v http://ip:port/
+    if (g_system.debug) {
+        router.Static("/", "../html/start");
+        router.Static("/dist", "../html/dist");
+    } else {
+        router.Static("/", "./html/start");
+        router.Static("/dist", "./html/dist");
+    }
+
+    router.GET("/json/menu.js", SystemHandler::menu);
+
+    router.GET("/json/test.js", SystemHandler::test);
+}
+
+void Router::RegisterMethod(hv::HttpService &router) {
+
+}
+
+void Router::RegisterQueue(hv::HttpService &router) {
+
 }

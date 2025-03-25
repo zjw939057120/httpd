@@ -9,7 +9,7 @@
 #include "hstring.h"
 #include "EventLoop.h" // import setTimeout, setInterval
 
-int Handler::preprocessor(HttpRequest* req, HttpResponse* resp) {
+int Handler::preprocessor(HttpRequest *req, HttpResponse *resp) {
     // printf("%s:%d\n", req->client_addr.ip.c_str(), req->client_addr.port);
     // printf("%s\n", req->Dump(true, true).c_str());
 
@@ -35,17 +35,17 @@ int Handler::preprocessor(HttpRequest* req, HttpResponse* resp) {
     return HTTP_STATUS_NEXT;
 }
 
-int Handler::postprocessor(HttpRequest* req, HttpResponse* resp) {
+int Handler::postprocessor(HttpRequest *req, HttpResponse *resp) {
     // printf("%s\n", resp->Dump(true, true).c_str());
     return resp->status_code;
 }
 
-int Handler::errorHandler(const HttpContextPtr& ctx) {
+int Handler::errorHandler(const HttpContextPtr &ctx) {
     int error_code = ctx->response->status_code;
     return response_status(ctx, error_code);
 }
 
-int Handler::Authorization(HttpRequest* req, HttpResponse* resp) {
+int Handler::Authorization(HttpRequest *req, HttpResponse *resp) {
     // authentication sample code
     if (strcmp(req->path.c_str(), "/login") == 0) {
         return HTTP_STATUS_NEXT;
@@ -54,15 +54,14 @@ int Handler::Authorization(HttpRequest* req, HttpResponse* resp) {
     if (token.empty()) {
         response_status(resp, 10011, "Miss Authorization header!");
         return HTTP_STATUS_UNAUTHORIZED;
-    }
-    else if (strcmp(token.c_str(), "abcdefg") != 0) {
+    } else if (strcmp(token.c_str(), "abcdefg") != 0) {
         response_status(resp, 10012, "Authorization failed!");
         return HTTP_STATUS_UNAUTHORIZED;
     }
     return HTTP_STATUS_NEXT;
 }
 
-int Handler::sleep(const HttpRequestPtr& req, const HttpResponseWriterPtr& writer) {
+int Handler::sleep(const HttpRequestPtr &req, const HttpResponseWriterPtr &writer) {
     writer->WriteHeader("X-Response-tid", hv_gettid());
     unsigned long long start_ms = gettimeofday_ms();
     writer->response->Set("start_ms", start_ms);
@@ -80,14 +79,14 @@ int Handler::sleep(const HttpRequestPtr& req, const HttpResponseWriterPtr& write
     return 200;
 }
 
-int Handler::setTimeout(const HttpContextPtr& ctx) {
+int Handler::setTimeout(const HttpContextPtr &ctx) {
     unsigned long long start_ms = gettimeofday_ms();
     ctx->set("start_ms", start_ms);
     std::string strTime = ctx->param("t", "1000");
     if (!strTime.empty()) {
         int ms = atoi(strTime.c_str());
         if (ms > 0) {
-            hv::setTimeout(ms, [ctx, start_ms](hv::TimerID timerID){
+            hv::setTimeout(ms, [ctx, start_ms](hv::TimerID timerID) {
                 unsigned long long end_ms = gettimeofday_ms();
                 ctx->set("end_ms", end_ms);
                 ctx->set("cost_ms", end_ms - start_ms);
@@ -98,17 +97,17 @@ int Handler::setTimeout(const HttpContextPtr& ctx) {
     return HTTP_STATUS_UNFINISHED;
 }
 
-int Handler::query(const HttpContextPtr& ctx) {
+int Handler::query(const HttpContextPtr &ctx) {
     // scheme:[//[user[:password]@]host[:port]][/path][?query][#fragment]
     // ?query => HttpRequest::query_params
-    for (auto& param : ctx->params()) {
+    for (auto &param : ctx->params()) {
         ctx->set(param.first.c_str(), param.second);
     }
     response_status(ctx, 0, "OK");
     return 200;
 }
 
-int Handler::kv(HttpRequest* req, HttpResponse* resp) {
+int Handler::kv(HttpRequest *req, HttpResponse *resp) {
     if (req->content_type != APPLICATION_URLENCODED) {
         return response_status(resp, HTTP_STATUS_BAD_REQUEST);
     }
@@ -120,7 +119,7 @@ int Handler::kv(HttpRequest* req, HttpResponse* resp) {
     return 200;
 }
 
-int Handler::json(HttpRequest* req, HttpResponse* resp) {
+int Handler::json(HttpRequest *req, HttpResponse *resp) {
     if (req->content_type != APPLICATION_JSON) {
         return response_status(resp, HTTP_STATUS_BAD_REQUEST);
     }
@@ -132,7 +131,7 @@ int Handler::json(HttpRequest* req, HttpResponse* resp) {
     return 200;
 }
 
-int Handler::form(HttpRequest* req, HttpResponse* resp) {
+int Handler::form(HttpRequest *req, HttpResponse *resp) {
     if (req->content_type != MULTIPART_FORM_DATA) {
         return response_status(resp, HTTP_STATUS_BAD_REQUEST);
     }
@@ -145,7 +144,7 @@ int Handler::form(HttpRequest* req, HttpResponse* resp) {
     return 200;
 }
 
-int Handler::grpc(HttpRequest* req, HttpResponse* resp) {
+int Handler::grpc(HttpRequest *req, HttpResponse *resp) {
     if (req->content_type != APPLICATION_GRPC) {
         return response_status(resp, HTTP_STATUS_BAD_REQUEST);
     }
@@ -158,7 +157,7 @@ int Handler::grpc(HttpRequest* req, HttpResponse* resp) {
     return 200;
 }
 
-int Handler::test(const HttpContextPtr& ctx) {
+int Handler::test(const HttpContextPtr &ctx) {
     ctx->setContentType(ctx->type());
     ctx->set("bool", ctx->get<bool>("bool"));
     ctx->set("int", ctx->get<int>("int"));
@@ -168,7 +167,7 @@ int Handler::test(const HttpContextPtr& ctx) {
     return 200;
 }
 
-int Handler::restful(const HttpContextPtr& ctx) {
+int Handler::restful(const HttpContextPtr &ctx) {
     // RESTful /:field/ => HttpRequest::query_params
     // path=/group/:group_name/user/:user_id
     std::string group_name = ctx->param("group_name");
@@ -179,29 +178,26 @@ int Handler::restful(const HttpContextPtr& ctx) {
     return 200;
 }
 
-int Handler::login(const HttpContextPtr& ctx) {
+int Handler::login(const HttpContextPtr &ctx) {
     std::string username = ctx->get("username");
     std::string password = ctx->get("password");
     if (username.empty() || password.empty()) {
         response_status(ctx, 10001, "Miss username or password");
         return HTTP_STATUS_BAD_REQUEST;
-    }
-    else if (strcmp(username.c_str(), "admin") != 0) {
+    } else if (strcmp(username.c_str(), "admin") != 0) {
         response_status(ctx, 10002, "Username not exist");
         return HTTP_STATUS_BAD_REQUEST;
-    }
-    else if (strcmp(password.c_str(), "123456") != 0) {
+    } else if (strcmp(password.c_str(), "123456") != 0) {
         response_status(ctx, 10003, "Password wrong");
         return HTTP_STATUS_BAD_REQUEST;
-    }
-    else {
+    } else {
         ctx->set("token", "abcdefg");
         response_status(ctx, 0, "OK");
         return HTTP_STATUS_OK;
     }
 }
 
-int Handler::upload(const HttpContextPtr& ctx) {
+int Handler::upload(const HttpContextPtr &ctx) {
     int status_code = 200;
     std::string save_path = "html/uploads/";
     if (ctx->is(MULTIPART_FORM_DATA)) {
@@ -214,13 +210,12 @@ int Handler::upload(const HttpContextPtr& ctx) {
     return response_status(ctx, status_code);
 }
 
-int Handler::recvLargeFile(const HttpContextPtr& ctx, http_parser_state state, const char* data, size_t size) {
+int Handler::recvLargeFile(const HttpContextPtr &ctx, http_parser_state state, const char *data, size_t size) {
     // printf("recvLargeFile state=%d\n", (int)state);
     int status_code = HTTP_STATUS_UNFINISHED;
-    HFile* file = (HFile*)ctx->userdata;
+    HFile *file = (HFile *) ctx->userdata;
     switch (state) {
-    case HP_HEADERS_COMPLETE:
-        {
+        case HP_HEADERS_COMPLETE: {
             if (ctx->is(MULTIPART_FORM_DATA)) {
                 // NOTE: You can use multipart_parser if you want to use multipart/form-data.
                 ctx->close();
@@ -236,9 +231,8 @@ int Handler::recvLargeFile(const HttpContextPtr& ctx, http_parser_state state, c
             }
             ctx->userdata = file;
         }
-        break;
-    case HP_BODY:
-        {
+            break;
+        case HP_BODY: {
             if (file && data && size) {
                 if (file->write(data, size) != size) {
                     ctx->close();
@@ -246,9 +240,8 @@ int Handler::recvLargeFile(const HttpContextPtr& ctx, http_parser_state state, c
                 }
             }
         }
-        break;
-    case HP_MESSAGE_COMPLETE:
-        {
+            break;
+        case HP_MESSAGE_COMPLETE: {
             status_code = HTTP_STATUS_OK;
             ctx->setContentType(APPLICATION_JSON);
             response_status(ctx, status_code);
@@ -257,24 +250,23 @@ int Handler::recvLargeFile(const HttpContextPtr& ctx, http_parser_state state, c
                 ctx->userdata = NULL;
             }
         }
-        break;
-    case HP_ERROR:
-        {
+            break;
+        case HP_ERROR: {
             if (file) {
                 file->remove();
                 delete file;
                 ctx->userdata = NULL;
             }
         }
-        break;
-    default:
-        break;
+            break;
+        default:
+            break;
     }
     return status_code;
 }
 
-int Handler::sendLargeFile(const HttpContextPtr& ctx) {
-    std::thread([ctx](){
+int Handler::sendLargeFile(const HttpContextPtr &ctx) {
+    std::thread([ctx]() {
         ctx->writer->Begin();
         std::string filepath = ctx->service->document_root + ctx->request->Path();
         HFile file;
@@ -286,7 +278,7 @@ int Handler::sendLargeFile(const HttpContextPtr& ctx) {
             return;
         }
         http_content_type content_type = CONTENT_TYPE_NONE;
-        const char* suffix = hv_suffixname(filepath.c_str());
+        const char *suffix = hv_suffixname(filepath.c_str());
         if (suffix) {
             content_type = http_content_type_enum_by_suffix(suffix);
         }
@@ -302,7 +294,7 @@ int Handler::sendLargeFile(const HttpContextPtr& ctx) {
 #endif
         ctx->writer->EndHeaders();
 
-        char* buf = NULL;
+        char *buf = NULL;
         int len = 40960; // 40K
         SAFE_ALLOC(buf, len);
         size_t total_readbytes = 0;
@@ -354,7 +346,7 @@ int Handler::sendLargeFile(const HttpContextPtr& ctx) {
     return HTTP_STATUS_UNFINISHED;
 }
 
-int Handler::sse(const HttpContextPtr& ctx) {
+int Handler::sse(const HttpContextPtr &ctx) {
     // SSEvent(message) every 1s
     hv::setInterval(1000, [ctx](hv::TimerID timerID) {
         if (ctx->writer->isConnected()) {

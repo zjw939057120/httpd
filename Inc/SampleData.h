@@ -1,0 +1,14 @@
+//
+// Created by zjw93 on 2025/3/26.
+//
+
+#ifndef HTTPD_SAMPLEDATA_H
+#define HTTPD_SAMPLEDATA_H
+
+
+class SampleData {
+
+};
+
+static SampleData g_SampleData;
+#endif //HTTPD_SAMPLEDATA_H

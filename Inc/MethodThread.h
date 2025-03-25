@@ -2,13 +2,13 @@
 // Created by zjw93 on 2025/3/21.
 //
 
-#ifndef HTTPD_THREAD_H
-#define HTTPD_THREAD_H
+#ifndef HTTPD_METHODTHREAD_H
+#define HTTPD_METHODTHREAD_H
 
 
 #include <hthread.h>
 
-class Thread {
+class MethodThread {
 
 public:
     static HTHREAD_ROUTINE(testThread);
@@ -16,4 +16,4 @@ public:
 };
 
 
-#endif //HTTPD_THREAD_H
+#endif //HTTPD_METHODTHREAD_H
