@@ -76,6 +76,7 @@ int main(int argc, char **argv) {
         exit(0);
     }
 
+    printf("HttpServer listen on port %d\n", port);
     //hthread_create(Thread::testThread, NULL);
 
     // 新建一个事件循环对象

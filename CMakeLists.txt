@@ -3,6 +3,9 @@ project(httpd)
 
 set(CMAKE_CXX_STANDARD 14)
 
+# 开启静态编译
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static")
+
 add_definitions(-D_DEBUG_ENV)
 
 include_directories(Inc)
