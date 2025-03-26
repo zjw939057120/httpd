@@ -5,12 +5,16 @@
 #ifndef HTTPD_SYSTEM_H
 #define HTTPD_SYSTEM_H
 
+#include <cstdint>
+#include <string>
 
-class System {
-
-public:
+struct System {
     bool debug; //Debug模式
     int port;
+};
+
+struct SystemTable {
+    int id;
 };
 
 extern System m_system;
