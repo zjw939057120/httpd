@@ -37,6 +37,7 @@ void system_config();
 
 void parse_cmdline(int argc, char **argv);
 
+Calibration g_calibration;
 Method g_method;
 Queue g_queue;
 Sample g_sample;
@@ -173,15 +174,12 @@ int main(int argc, char **argv) {
         printf("http server listening on port %d\n", g_system.port);
     //hthread_create(MethodThread::testThread, NULL);
 
-    // 新建一个事件循环对象
-    EventLoopPtr loop(new EventLoop);
+    auto loop = std::make_shared<EventLoop>();
 
-    // 设置一个30s定时器
     loop->setInterval(30000, [](TimerID timerID) {
-        //printf("time=%lus\n", (unsigned long) time(NULL));
+        printf("time=%lus\n", (unsigned long) time(NULL));
     });
-
-    // 运行事件循环
     loop->run();
+
     return 0;
 }

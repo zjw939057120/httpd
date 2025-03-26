@@ -10,5 +10,5 @@ class SampleData {
 
 };
 
-static SampleData g_SampleData;
+extern SampleData g_SampleData;
 #endif //HTTPD_SAMPLEDATA_H
