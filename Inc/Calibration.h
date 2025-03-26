@@ -10,6 +10,6 @@ class Calibration {
 
 };
 
-extern Calibration g_calibration;
+extern Calibration m_calibration;
 
 #endif //HTTPD_CALIBRATION_H

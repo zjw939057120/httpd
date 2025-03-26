@@ -19,7 +19,7 @@
 void SystemRouter::Register(hv::HttpService &router) {
     /* Static file service */
     // curl -v http://ip:port/
-    if (g_system.debug) {
+    if (m_system.debug) {
         router.Static("/", "../html/start");
         router.Static("/dist", "../html/dist");
     } else {

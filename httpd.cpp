@@ -14,16 +14,16 @@
 
 #include "Calibration.h"
 #include "CalibrationRouter.h"
-#include "Method.h"
-#include "MethodRouter.h"
-#include "Queue.h"
-#include "QueueRouter.h"
-#include "Sample.h"
-#include "SampleRouter.h"
+#include "MethodList.h"
+#include "MethodListRouter.h"
+#include "QueueList.h"
+#include "QueueListRouter.h"
+#include "SampleList.h"
+#include "SampleListRouter.h"
 #include "SampleData.h"
 #include "SampleDataRouter.h"
-#include "Setting.h"
-#include "SettingRouter.h"
+#include "Configuration.h"
+#include "ConfigurationRouter.h"
 #include "System.h"
 #include "SystemRouter.h"
 
@@ -37,13 +37,13 @@ void system_config();
 
 void parse_cmdline(int argc, char **argv);
 
-Calibration g_calibration;
-Method g_method;
-Queue g_queue;
-Sample g_sample;
-SampleData g_sampleData;
-Setting g_setting;
-System g_system;
+Calibration m_calibration;
+MethodList m_methodList;
+QueueList m_queueList;
+SampleList m_sampleList;
+SampleData m_sampleData;
+Configuration m_configuration;
+System m_system;
 
 // long options
 static const option_t long_options[] = {
@@ -68,9 +68,9 @@ void system_config() {
     //设置日志级别
     hlog_set_level(LOG_LEVEL_INFO);
     //Debug模式
-    g_system.debug = false;
+    m_system.debug = false;
     //服务端口
-    g_system.port = 8080;
+    m_system.port = 8080;
 }
 
 void parse_cmdline(int argc, char **argv) {
@@ -95,11 +95,11 @@ void parse_cmdline(int argc, char **argv) {
 
     // debug
     if (get_arg("d")) {
-        g_system.debug = true;
+        m_system.debug = true;
     }
 
     const char *szPort = get_arg("p");
-    if (szPort) g_system.port = atoi(szPort);
+    if (szPort) m_system.port = atoi(szPort);
 }
 
 /*
@@ -135,16 +135,16 @@ int main(int argc, char **argv) {
 
     Router::Register(httpService);
     CalibrationRouter::Register(httpService);
-    MethodRouter::Register(httpService);
-    QueueRouter::Register(httpService);
-    SampleRouter::Register(httpService);
+    MethodListRouter::Register(httpService);
+    QueueListRouter::Register(httpService);
+    SampleListRouter::Register(httpService);
     SampleDataRouter::Register(httpService);
-    SettingRouter::Register(httpService);
+    ConfigurationRouter::Register(httpService);
     SystemRouter::Register(httpService);
 
     HttpServer httpServer;
     httpServer.service = &httpService;
-    httpServer.port = g_system.port;
+    httpServer.port = m_system.port;
 #if TEST_HTTPS
     httpServer.https_port = 8443;
     hssl_ctx_opt_t param;
@@ -168,11 +168,11 @@ int main(int argc, char **argv) {
         exit(0);
     }
 
-    if (g_system.debug)
-        printf("http server listening on port %d in debug mode\n", g_system.port);
+    if (m_system.debug)
+        printf("http server listening on port %d in debug mode\n", m_system.port);
     else
-        printf("http server listening on port %d\n", g_system.port);
-    //hthread_create(MethodThread::testThread, NULL);
+        printf("http server listening on port %d\n", m_system.port);
+    //hthread_create(MethodListThread::testThread, NULL);
 
     auto loop = std::make_shared<EventLoop>();
 

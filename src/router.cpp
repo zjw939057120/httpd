@@ -6,12 +6,12 @@
 #include "requests.h"   // import requests::async
 
 #include "CalibrationHander.h"
-#include "MethodHandler.h"
+#include "MethodListHandler.h"
 #include "SystemHandler.h"
-#include "QueueHandler.h"
-#include "SampleHandler.h"
+#include "QueueListHandler.h"
+#include "SampleListHandler.h"
 #include "SampleDataHandler.h"
-#include "SettingHandler.h"
+#include "ConfigurationHandler.h"
 #include "SystemHandler.h"
 #include "System.h"
 

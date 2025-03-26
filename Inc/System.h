@@ -13,6 +13,6 @@ public:
     int port;
 };
 
-extern System g_system;
+extern System m_system;
 
 #endif //HTTPD_SYSTEM_H
