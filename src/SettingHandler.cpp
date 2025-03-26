@@ -4,6 +4,7 @@
 
 #include "SettingHandler.h"
 
+#include "Setting.h"
 #include "handler.h"
 #include <thread>   // import std::thread
 #include <chrono>   // import std::chrono

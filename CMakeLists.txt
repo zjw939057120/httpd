@@ -14,6 +14,7 @@ link_directories(3rdparty/lib)
 link_libraries(
         -lhv_static
         -lsqlite3
+        -ljsoncpp
         -lwinmm
         -lws2_32
         -lsecur32

@@ -4,11 +4,15 @@
 #include "hthread.h"    // import hv_gettid
 #include "hasync.h"     // import hv::async
 #include "requests.h"   // import requests::async
+
+#include "CalibrationHander.h"
 #include "MethodHandler.h"
 #include "SystemHandler.h"
 #include "QueueHandler.h"
 #include "SampleHandler.h"
 #include "SampleDataHandler.h"
+#include "SettingHandler.h"
+#include "SystemHandler.h"
 #include "System.h"
 
 void Router::Register(hv::HttpService &router) {
@@ -153,28 +157,3 @@ void Router::Register(hv::HttpService &router) {
     router.GET("/sse", Handler::sse);
 }
 
-void Router::RegisterSystem(hv::HttpService &router) {
-    printf("System debug %d\n", g_system.debug);
-
-    /* Static file service */
-    // curl -v http://ip:port/
-    if (g_system.debug) {
-        router.Static("/", "../html/start");
-        router.Static("/dist", "../html/dist");
-    } else {
-        router.Static("/", "./html/start");
-        router.Static("/dist", "./html/dist");
-    }
-
-    router.GET("/json/menu.js", SystemHandler::menu);
-
-    router.GET("/json/test.js", SystemHandler::test);
-}
-
-void Router::RegisterMethod(hv::HttpService &router) {
-
-}
-
-void Router::RegisterQueue(hv::HttpService &router) {
-
-}

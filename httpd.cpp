@@ -13,14 +13,29 @@
 #include "EventLoop.h"
 
 #include "Calibration.h"
+#include "CalibrationRouter.h"
 #include "Method.h"
+#include "MethodRouter.h"
 #include "Queue.h"
+#include "QueueRouter.h"
 #include "Sample.h"
+#include "SampleRouter.h"
 #include "SampleData.h"
+#include "SampleDataRouter.h"
 #include "Setting.h"
+#include "SettingRouter.h"
 #include "System.h"
+#include "SystemRouter.h"
 
 using namespace hv;
+
+void print_version();
+
+void print_help();
+
+void system_config();
+
+void parse_cmdline(int argc, char **argv);
 
 Method g_method;
 Queue g_queue;
@@ -48,20 +63,14 @@ void print_help() {
     printf("%s\n", detail_options);
 }
 
-/*
- * #define TEST_HTTPS 1
- *
- * @build   ./configure --with-openssl && make clean && make
- *
- * @server  bin/http_server_test 8080
- *
- * @client  curl -v http://127.0.0.1:8080/ping
- *          curl -v https://127.0.0.1:8443/ping --insecure
- *          bin/curl -v http://127.0.0.1:8080/ping
- *          bin/curl -v https://127.0.0.1:8443/ping
- *
- */
-#define TEST_HTTPS 0
+void system_config() {
+    //设置日志级别
+    hlog_set_level(LOG_LEVEL_INFO);
+    //Debug模式
+    g_system.debug = false;
+    //服务端口
+    g_system.port = 8080;
+}
 
 void parse_cmdline(int argc, char **argv) {
     // g_main_ctx
@@ -92,19 +101,27 @@ void parse_cmdline(int argc, char **argv) {
     if (szPort) g_system.port = atoi(szPort);
 }
 
-void env_init() {
-    //Debug模式
-    g_system.debug = false;
-    //服务端口
-    g_system.port = 8080;
-}
+/*
+ * #define TEST_HTTPS 1
+ *
+ * @build   ./configure --with-openssl && make clean && make
+ *
+ * @server  bin/http_server_test 8080
+ *
+ * @client  curl -v http://127.0.0.1:8080/ping
+ *          curl -v https://127.0.0.1:8443/ping --insecure
+ *          bin/curl -v http://127.0.0.1:8080/ping
+ *          bin/curl -v https://127.0.0.1:8443/ping
+ *
+ */
+#define TEST_HTTPS 0
 
 int main(int argc, char **argv) {
     HV_MEMCHECK;
-
-    env_init();
+    //系统配置
+    system_config();
+    //解析命令行参数
     parse_cmdline(argc, argv);
-
 
     HttpService httpService;
 
@@ -115,11 +132,14 @@ int main(int argc, char **argv) {
         return HTTP_STATUS_NEXT;
     });
 
-    Router router;
-    router.Register(httpService);
-    router.RegisterSystem(httpService);
-    router.RegisterMethod(httpService);
-    router.RegisterQueue(httpService);
+    Router::Register(httpService);
+    CalibrationRouter::Register(httpService);
+    MethodRouter::Register(httpService);
+    QueueRouter::Register(httpService);
+    SampleRouter::Register(httpService);
+    SampleDataRouter::Register(httpService);
+    SettingRouter::Register(httpService);
+    SystemRouter::Register(httpService);
 
     HttpServer httpServer;
     httpServer.service = &httpService;
@@ -147,7 +167,10 @@ int main(int argc, char **argv) {
         exit(0);
     }
 
-    printf("HttpServer listen on port %d\n", g_system.port);
+    if (g_system.debug)
+        printf("http server listening on port %d in debug mode\n", g_system.port);
+    else
+        printf("http server listening on port %d\n", g_system.port);
     //hthread_create(MethodThread::testThread, NULL);
 
     // 新建一个事件循环对象
