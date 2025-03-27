@@ -12,13 +12,15 @@ class SampleListModel {
 public:
     SampleListModel();
 
-    size_t get_all(std::vector<SampleListTable> &list);
+    size_t list(std::vector<SampleListTable> &list);
 
-    int insert(SampleListTable &data);
+    int add(SampleListTable &data);
 
     bool get(SampleListTable &data, size_t id);
 
     void remove(size_t id);
+
+    void create();
 
 public:
 };

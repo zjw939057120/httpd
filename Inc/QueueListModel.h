@@ -12,13 +12,15 @@ class QueueListModel {
 public:
     QueueListModel();
 
-    size_t get_all(std::vector<QueueListTable> &list);
+    size_t list(std::vector<QueueListTable> &list);
 
-    int insert(QueueListTable &data);
+    int add(QueueListTable &data);
 
     bool get(QueueListTable &data, size_t id);
 
     void remove(size_t id);
+
+    void create();
 
 public:
 };

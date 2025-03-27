@@ -7,6 +7,7 @@
 
 using namespace sqlite_orm;
 
+
 CalibrationModel::CalibrationModel() {
 
 }
@@ -26,8 +27,6 @@ static auto storage = make_storage("../etc/database.db",
                                                           &CalibrationTable::calibration_order),
                                               make_column("calibration_intercept",
                                                           &CalibrationTable::calibration_intercept),
-                                              make_column("calibration_order",
-                                                          &CalibrationTable::calibration_order),
                                               make_column("calibration_A",
                                                           &CalibrationTable::calibration_A),
                                               make_column("calibration_B",
@@ -46,12 +45,12 @@ static auto storage = make_storage("../etc/database.db",
 );
 
 
-size_t CalibrationModel::get_all(std::vector<CalibrationTable> &list) {
+size_t CalibrationModel::list(std::vector<CalibrationTable> &list) {
     list = storage.get_all<CalibrationTable>();
     return list.size();
 }
 
-int CalibrationModel::insert(CalibrationTable &data) {
+int CalibrationModel::add(CalibrationTable &data) {
     return storage.insert(data);
 }
 
@@ -60,14 +59,18 @@ bool CalibrationModel::get(CalibrationTable &data, size_t id) {
         data = storage.get<CalibrationTable>(id);
         return true;
     } catch (std::system_error e) {
-        std::cout << e.what() << std::endl;
+        printf("CalibrationModel %zu %s\r\n", id, e.what());
         return false;
     } catch (...) {
-        std::cout << "unknown exeption" << std::endl;
+        printf("CalibrationModel %zu unknown exeption\r\n", id);
         return false;
     }
 }
 
 void CalibrationModel::remove(size_t id) {
     storage.remove<CalibrationTable>(id);
+}
+
+void CalibrationModel::create() {
+    storage.sync_schema();
 }

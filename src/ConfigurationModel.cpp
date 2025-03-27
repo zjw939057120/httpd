@@ -32,12 +32,12 @@ static auto storage = make_storage("../etc/database.db",
                                    )
 );
 
-size_t ConfigurationModel::get_all(std::vector<ConfigurationTable> &list) {
+size_t ConfigurationModel::list(std::vector<ConfigurationTable> &list) {
     list = storage.get_all<ConfigurationTable>();
     return list.size();
 }
 
-int ConfigurationModel::insert(ConfigurationTable &data) {
+int ConfigurationModel::add(ConfigurationTable &data) {
     return storage.insert(data);
 }
 
@@ -46,14 +46,18 @@ bool ConfigurationModel::get(ConfigurationTable &data, size_t id) {
         data = storage.get<ConfigurationTable>(id);
         return true;
     } catch (std::system_error e) {
-        std::cout << e.what() << std::endl;
+        printf("CalibrationModel %zu %s\r\n", id, e.what());
         return false;
     } catch (...) {
-        std::cout << "unknown exeption" << std::endl;
+        printf("CalibrationModel %zu unknown exeption\r\n", id);
         return false;
     }
 }
 
 void ConfigurationModel::remove(size_t id) {
     storage.remove<ConfigurationTable>(id);
+}
+
+void ConfigurationModel::create() {
+    storage.sync_schema();
 }

@@ -12,13 +12,15 @@ class ConfigurationModel {
 public:
     ConfigurationModel();
 
-    size_t get_all(std::vector<ConfigurationTable> &list);
+    size_t list(std::vector<ConfigurationTable> &list);
 
-    int insert(ConfigurationTable &data);
+    int add(ConfigurationTable &data);
 
     bool get(ConfigurationTable &data, size_t id);
 
     void remove(size_t id);
+
+    void create();
 
 public:
 };

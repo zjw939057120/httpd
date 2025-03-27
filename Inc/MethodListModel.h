@@ -12,13 +12,15 @@ class MethodListModel {
 public:
     MethodListModel();
 
-    size_t get_all(std::vector<MethodListTable> &list);
+    size_t list(std::vector<MethodListTable> &list);
 
-    int insert(MethodListTable &data);
+    int add(MethodListTable &data);
 
     bool get(MethodListTable &data, size_t id);
 
     void remove(size_t id);
+
+    void create();
 
 public:
 };

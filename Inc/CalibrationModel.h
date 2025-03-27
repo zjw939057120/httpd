@@ -13,13 +13,15 @@ class CalibrationModel {
 public:
     CalibrationModel();
 
-    size_t get_all(std::vector<CalibrationTable> &list);
+    size_t list(std::vector<CalibrationTable> &list);
 
-    int insert(CalibrationTable &data);
+    int add(CalibrationTable &data);
 
     bool get(CalibrationTable &data, size_t id);
 
     void remove(size_t id);
+
+    void create();
 
 public:
 };

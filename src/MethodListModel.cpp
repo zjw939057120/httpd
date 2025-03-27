@@ -77,12 +77,12 @@ static auto storage = make_storage("../etc/database.db",
                                    )
 );
 
-size_t MethodListModel::get_all(std::vector<MethodListTable> &list) {
+size_t MethodListModel::list(std::vector<MethodListTable> &list) {
     list = storage.get_all<MethodListTable>();
     return list.size();
 }
 
-int MethodListModel::insert(MethodListTable &data) {
+int MethodListModel::add(MethodListTable &data) {
     return storage.insert(data);
 }
 
@@ -91,14 +91,18 @@ bool MethodListModel::get(MethodListTable &data, size_t id) {
         data = storage.get<MethodListTable>(id);
         return true;
     } catch (std::system_error e) {
-        std::cout << e.what() << std::endl;
+        printf("MethodListTable %zu %s\r\n", id, e.what());
         return false;
     } catch (...) {
-        std::cout << "unknown exeption" << std::endl;
+        printf("MethodListTable %zu unknown exeption\r\n", id);
         return false;
     }
 }
 
 void MethodListModel::remove(size_t id) {
     storage.remove<MethodListTable>(id);
+}
+
+void MethodListModel::create() {
+    storage.sync_schema();
 }

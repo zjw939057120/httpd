@@ -14,8 +14,13 @@
 #include "hstring.h"
 #include "EventLoop.h" // import setTimeout, setInterval
 #include <sqlite_orm/sqlite_orm.h>
-
 #include "CalibrationModel.h"
+#include "ConfigurationModel.h"
+#include "MethodListModel.h"
+#include "QueueListModel.h"
+#include "SampleDataModel.h"
+#include "SampleListModel.h"
+
 
 int SystemHandler::menu(HttpRequest *req, HttpResponse *resp) {
     resp->content_type = APPLICATION_JSON;
@@ -76,22 +81,35 @@ int SystemHandler::test(HttpRequest *req, HttpResponse *resp) {
     resp->content_type = APPLICATION_JSON;
 
     try {
-        CalibrationModel model;
+        CalibrationModel calibrationModel;
+        calibrationModel.create();
+        ConfigurationModel configurationModel;
+        configurationModel.create();
+        MethodListModel methodListModel;
+        methodListModel.create();
+        QueueListModel queueListModel;
+        queueListModel.create();
+        SampleDataModel sampleDataModel;
+        sampleDataModel.create();
+        SampleListModel sampleListModel;
+        sampleListModel.create();
 
-        CalibrationTable item;
-        if (model.get(item, 10))
-            std::cout << "ID:" << item.id << ", calibration_line:" << item.calibration_line << ", calibration_A:"
-                      << item.calibration_A << std::endl;
+
+        CalibrationTable data;
+        calibrationModel.add(data);
+        if (calibrationModel.get(data, 10))
+            std::cout << "ID:" << data.id << ", calibration_line:" << data.calibration_line << ", calibration_A:"
+                      << data.calibration_A << std::endl;
 
         std::vector<CalibrationTable> list;
-        model.get_all(list);
-        for (auto item:list) {
-            std::cout << "ID:" << item.id << ", calibration_line:" << item.calibration_line << ", calibration_A:"
-                      << item.calibration_A << std::endl;
+        size_t len = calibrationModel.list(list);
+        for (int i = 0; i < len; ++i) {
+            resp->json["data"][i] = list[i].id;
+            std::cout << "ID:" << list[i].id << ", calibration_line:" << list[i].calibration_line << ", calibration_A:"
+                      << list[i].calibration_A << std::endl;
         }
 
-    } catch (std::system_error
-             e) {
+    } catch (std::system_error e) {
         std::cout << e.what() << std::endl;
     } catch (...) {
         std::cout << "unknown exeption" << std::endl;

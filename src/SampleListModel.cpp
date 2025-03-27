@@ -83,8 +83,6 @@ static auto storage = make_storage("../etc/database.db",
                                                           &SampleListTable::sample_vc),
                                               make_column("sample_sd",
                                                           &SampleListTable::sample_sd),
-                                              make_column("sample_vc",
-                                                          &SampleListTable::sample_vc),
                                               make_column("sample_flag",
                                                           &SampleListTable::sample_flag),
                                               make_column("sample_temperature",
@@ -99,12 +97,12 @@ static auto storage = make_storage("../etc/database.db",
                                    )
 );
 
-size_t SampleListModel::get_all(std::vector<SampleListTable> &list) {
+size_t SampleListModel::list(std::vector<SampleListTable> &list) {
     list = storage.get_all<SampleListTable>();
     return list.size();
 }
 
-int SampleListModel::insert(SampleListTable &data) {
+int SampleListModel::add(SampleListTable &data) {
     return storage.insert(data);
 }
 
@@ -113,14 +111,18 @@ bool SampleListModel::get(SampleListTable &data, size_t id) {
         data = storage.get<SampleListTable>(id);
         return true;
     } catch (std::system_error e) {
-        std::cout << e.what() << std::endl;
+        printf("SampleListTable %zu %s\r\n", id, e.what());
         return false;
     } catch (...) {
-        std::cout << "unknown exeption" << std::endl;
+        printf("SampleListTable %zu unknown exeption\r\n", id);
         return false;
     }
 }
 
 void SampleListModel::remove(size_t id) {
     storage.remove<SampleListTable>(id);
+}
+
+void SampleListModel::create() {
+    storage.sync_schema();
 }

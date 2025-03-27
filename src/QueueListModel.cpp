@@ -80,12 +80,12 @@ static auto storage = make_storage("../etc/database.db",
                                    )
 );
 
-size_t QueueListModel::get_all(std::vector<QueueListTable> &list) {
+size_t QueueListModel::list(std::vector<QueueListTable> &list) {
     list = storage.get_all<QueueListTable>();
     return list.size();
 }
 
-int QueueListModel::insert(QueueListTable &data) {
+int QueueListModel::add(QueueListTable &data) {
     return storage.insert(data);
 }
 
@@ -94,14 +94,18 @@ bool QueueListModel::get(QueueListTable &data, size_t id) {
         data = storage.get<QueueListTable>(id);
         return true;
     } catch (std::system_error e) {
-        std::cout << e.what() << std::endl;
+        printf("QueueListTable %zu %s\r\n", id, e.what());
         return false;
     } catch (...) {
-        std::cout << "unknown exeption" << std::endl;
+        printf("QueueListTable %zu unknown exeption\r\n", id);
         return false;
     }
 }
 
 void QueueListModel::remove(size_t id) {
     storage.remove<QueueListTable>(id);
+}
+
+void QueueListModel::create() {
+    storage.sync_schema();
 }

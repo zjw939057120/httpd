@@ -3,12 +3,12 @@
 //
 
 #include <iostream>
-#include "SampleDataMode.h"
+#include "SampleDataModel.h"
 
 using namespace sqlite_orm;
 
 
-SampleDataMode::SampleDataMode() {
+SampleDataModel::SampleDataModel() {
 
 }
 
@@ -32,28 +32,32 @@ static auto storage = make_storage("../etc/database.db",
                                    )
 );
 
-size_t SampleDataMode::get_all(std::vector<SampleDataTable> &list) {
+size_t SampleDataModel::list(std::vector<SampleDataTable> &list) {
     list = storage.get_all<SampleDataTable>();
     return list.size();
 }
 
-int SampleDataMode::insert(SampleDataTable &data) {
+int SampleDataModel::add(SampleDataTable &data) {
     return storage.insert(data);
 }
 
-bool SampleDataMode::get(SampleDataTable &data, size_t id) {
+bool SampleDataModel::get(SampleDataTable &data, size_t id) {
     try {
         data = storage.get<SampleDataTable>(id);
         return true;
     } catch (std::system_error e) {
-        std::cout << e.what() << std::endl;
+        printf("SampleDataTable %zu %s\r\n", id, e.what());
         return false;
     } catch (...) {
-        std::cout << "unknown exeption" << std::endl;
+        printf("SampleDataTable %zu unknown exeption\r\n", id);
         return false;
     }
 }
 
-void SampleDataMode::remove(size_t id) {
+void SampleDataModel::remove(size_t id) {
     storage.remove<SampleDataTable>(id);
+}
+
+void SampleDataModel::create() {
+    storage.sync_schema();
 }
