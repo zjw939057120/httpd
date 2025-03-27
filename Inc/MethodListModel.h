@@ -5,9 +5,22 @@
 #ifndef HTTPD_METHODLISTMODEL_H
 #define HTTPD_METHODLISTMODEL_H
 
+#include <sqlite_orm/sqlite_orm.h>
+#include "MethodList.h"
 
 class MethodListModel {
+public:
+    MethodListModel();
 
+    size_t get_all(std::vector<MethodListTable> &list);
+
+    int insert(MethodListTable &data);
+
+    bool get(MethodListTable &data, size_t id);
+
+    void remove(size_t id);
+
+public:
 };
 
 

@@ -3,3 +3,10 @@
 //
 
 #include "SystemModel.h"
+
+using namespace sqlite_orm;
+
+
+SystemModel::SystemModel() {
+
+}

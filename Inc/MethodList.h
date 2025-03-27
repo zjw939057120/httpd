@@ -12,7 +12,7 @@ struct MethodList {
 
 };
 
-struct MethodLisTable {
+struct MethodListTable {
     int id;
     int method_number;
     int method_step;
