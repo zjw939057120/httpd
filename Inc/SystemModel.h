@@ -5,7 +5,7 @@
 #ifndef HTTPD_SYSTEMMODEL_H
 #define HTTPD_SYSTEMMODEL_H
 
-#include <sqlite_orm/sqlite_orm.h>
+#include "model.h"
 
 class SystemModel {
 public:

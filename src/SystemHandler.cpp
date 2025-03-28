@@ -81,28 +81,33 @@ int SystemHandler::test(HttpRequest *req, HttpResponse *resp) {
     resp->content_type = APPLICATION_JSON;
 
     try {
-        CalibrationModel calibrationModel;
-        calibrationModel.create();
-        ConfigurationModel configurationModel;
-        configurationModel.create();
-        MethodListModel methodListModel;
-        methodListModel.create();
-        QueueListModel queueListModel;
-        queueListModel.create();
-        SampleDataModel sampleDataModel;
-        sampleDataModel.create();
-        SampleListModel sampleListModel;
-        sampleListModel.create();
+        Model::create(calibrationStorage);
+        Model::create(configurationStorage);
+        Model::create(methodListStorage);
+        Model::create(queueListsStorage);
+        Model::create(sampleDataStorage);
+        Model::create(sampleListStorage);
 
 
-        CalibrationTable data;
-        calibrationModel.add(data);
-        if (calibrationModel.get(data, 10))
+        // 查询 CalibrationTable 表的所有数据
+        std::vector<CalibrationTable> calibration_list;
+
+        size_t calibration_count = Model::list_record(calibrationStorage, calibration_list);
+        std::cout << "CalibrationTable count: " << calibration_count << std::endl;
+        CalibrationTable data{};
+        Model::insert_record(calibrationStorage, data);
+        if (Model::find_record(calibrationStorage, data, 10))
             std::cout << "ID:" << data.id << ", calibration_line:" << data.calibration_line << ", calibration_A:"
                       << data.calibration_A << std::endl;
 
         std::vector<CalibrationTable> list;
-        size_t len = calibrationModel.list(list);
+        size_t len = Model::list_record(calibrationStorage, list);
+
+        nlohmann::json  j;
+        CalibrationModel calibrationModel;
+        calibrationModel.to_json(j,list.at(0));
+        std::cout << "json:" << j.dump() << std::endl;
+
         for (int i = 0; i < len; ++i) {
             resp->json["data"][i] = list[i].id;
             std::cout << "ID:" << list[i].id << ", calibration_line:" << list[i].calibration_line << ", calibration_A:"
