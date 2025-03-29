@@ -6,6 +6,8 @@
 #define HTTPD_SYSTEMMODEL_H
 
 #include "model.h"
+#include "System.h"
+
 
 class SystemModel {
 public:
