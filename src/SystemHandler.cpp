@@ -5,6 +5,7 @@
 #include "SystemHandler.h"
 
 #include "handler.h"
+#include "System.h"
 #include <thread>   // import std::thread
 #include <chrono>   // import std::chrono
 
@@ -13,7 +14,9 @@
 #include "hfile.h"
 #include "hstring.h"
 #include "EventLoop.h" // import setTimeout, setInterval
+
 #include <sqlite_orm/sqlite_orm.h>
+#include <Utils.h>
 #include "CalibrationModel.h"
 #include "ConfigurationModel.h"
 #include "MethodListModel.h"
@@ -81,21 +84,17 @@ int SystemHandler::test(HttpRequest *req, HttpResponse *resp) {
     resp->content_type = APPLICATION_JSON;
 
     try {
-        Model::sync_table();
-
-        // 查询 CalibrationTable 表的所有数据
-        std::vector<CalibrationTable> calibration_list;
-
-        size_t calibration_count = Model::list_record(calibration_list);
-        std::cout << "CalibrationTable count: " << calibration_count << std::endl;
+        Model::sync_schema();
+        
         CalibrationTable data{};
-        Model::insert_record(data);
-        if (Model::find_record(data, 10))
+        Model::insert(data);
+        if (Model::get(data, 10))
             std::cout << "ID:" << data.id << ", calibration_line:" << data.calibration_line << ", calibration_A:"
                       << data.calibration_A << std::endl;
 
+        // 查询 CalibrationTable 表的所有数据
         std::vector<CalibrationTable> list;
-        size_t len = Model::list_record(list);
+        size_t len = Model::get_all(list);
 
         for (int i = 0; i < len; ++i) {
             resp->json["data"][i] = list[i].id;
@@ -108,6 +107,61 @@ int SystemHandler::test(HttpRequest *req, HttpResponse *resp) {
     } catch (...) {
         std::cout << "unknown exeption" << std::endl;
     }
+
+    Handler::response_status(resp, 0, "OK");
+    return 200;
+}
+
+int SystemHandler::get_all(HttpRequest *req, HttpResponse *resp) {
+    resp->content_type = APPLICATION_JSON;
+    resp->json = req->GetJson();
+    resp->json["int"] = 123;
+    resp->json["float"] = 3.14;
+    resp->json["string"] = "hello";
+
+    Handler::response_status(resp, 0, "OK");
+    return 200;
+}
+
+int SystemHandler::insert(HttpRequest *req, HttpResponse *resp) {
+    resp->content_type = APPLICATION_JSON;
+    resp->json = req->GetJson();
+    resp->json["int"] = 123;
+    resp->json["float"] = 3.14;
+    resp->json["string"] = "hello";
+
+    Handler::response_status(resp, 0, "OK");
+    return 200;
+}
+
+int SystemHandler::update(HttpRequest *req, HttpResponse *resp) {
+    resp->content_type = APPLICATION_JSON;
+    resp->json = req->GetJson();
+    resp->json["int"] = 123;
+    resp->json["float"] = 3.14;
+    resp->json["string"] = "hello";
+
+    Handler::response_status(resp, 0, "OK");
+    return 200;
+}
+
+int SystemHandler::remove(HttpRequest *req, HttpResponse *resp) {
+    resp->content_type = APPLICATION_JSON;
+    resp->json = req->GetJson();
+    resp->json["int"] = 123;
+    resp->json["float"] = 3.14;
+    resp->json["string"] = "hello";
+
+    Handler::response_status(resp, 0, "OK");
+    return 200;
+}
+
+int SystemHandler::get(HttpRequest *req, HttpResponse *resp) {
+    resp->content_type = APPLICATION_JSON;
+    resp->json = req->GetJson();
+    resp->json["int"] = 123;
+    resp->json["float"] = 3.14;
+    resp->json["string"] = "hello";
 
     Handler::response_status(resp, 0, "OK");
     return 200;

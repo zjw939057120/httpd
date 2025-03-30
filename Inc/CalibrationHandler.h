@@ -1,13 +1,13 @@
 //
-// Created by zjw93 on 2025/3/23.
+// Created by zjw93 on 2025/3/26.
 //
 
-#ifndef HTTPD_CONFIGURATIONHANDLER_H
-#define HTTPD_CONFIGURATIONHANDLER_H
+#ifndef HTTPD_CALIBRATIONHANDLER_H
+#define HTTPD_CALIBRATIONHANDLER_H
 
 #include "HttpService.h"
 
-class ConfigurationHandler {
+class CalibrationHandler {
 public:
     static int get_all(HttpRequest *req, HttpResponse *resp);
 
@@ -21,4 +21,4 @@ public:
 };
 
 
-#endif //HTTPD_CONFIGURATIONHANDLER_H
+#endif //HTTPD_CALIBRATIONHANDLER_H

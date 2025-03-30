@@ -3,18 +3,21 @@
 //
 
 #include "SystemRouter.h"
-#include <System.h>
-#include <SystemHandler.h>
 
 #include "handler.h"
-#include <thread>   // import std::thread
-#include <chrono>   // import std::chrono
+#include "hthread.h"    // import hv_gettid
+#include "hasync.h"     // import hv::async
+#include "requests.h"   // import requests::async
 
-#include "hbase.h"
-#include "htime.h"
-#include "hfile.h"
-#include "hstring.h"
-#include "EventLoop.h" // import setTimeout, setInterval
+#include "CalibrationHandler.h"
+#include "MethodListHandler.h"
+#include "SystemHandler.h"
+#include "QueueListHandler.h"
+#include "SampleListHandler.h"
+#include "SampleDataHandler.h"
+#include "ConfigurationHandler.h"
+#include "SystemHandler.h"
+#include "System.h"
 
 void SystemRouter::Register(hv::HttpService &router) {
     /* Static file service */
@@ -28,6 +31,11 @@ void SystemRouter::Register(hv::HttpService &router) {
     }
 
     router.GET("/json/menu.js", SystemHandler::menu);
-
     router.GET("/json/test.js", SystemHandler::test);
+
+    router.GET("/api/system/get_all", SystemHandler::get_all);
+    router.GET("/api/system/insert", SystemHandler::insert);
+    router.GET("/api/system/update", SystemHandler::update);
+    router.GET("/api/system/remove", SystemHandler::remove);
+    router.GET("/api/system/get", SystemHandler::get);
 }

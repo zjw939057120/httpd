@@ -2,9 +2,9 @@
 // Created by zjw93 on 2025/3/26.
 //
 
-#include "SampleListHandler.h"
+#include "CalibrationHandler.h"
 
-#include "SampleList.h"
+#include "Calibration.h"
 #include "handler.h"
 #include <thread>   // import std::thread
 #include <chrono>   // import std::chrono
@@ -14,7 +14,6 @@
 #include "hfile.h"
 #include "hstring.h"
 #include "EventLoop.h" // import setTimeout, setInterval
-
 #include <sqlite_orm/sqlite_orm.h>
 #include <Utils.h>
 #include "CalibrationModel.h"
@@ -24,11 +23,11 @@
 #include "SampleDataModel.h"
 #include "SampleListModel.h"
 
-int SampleListHandler::get_all(HttpRequest *req, HttpResponse *resp) {
+int CalibrationHandler::get_all(HttpRequest *req, HttpResponse *resp) {
     resp->content_type = APPLICATION_JSON;
 
     try {
-        std::vector<SampleListTable> list;
+        std::vector<CalibrationTable> list;
         size_t size = Model::get_all(list);
 
         int seq = 0;
@@ -48,7 +47,7 @@ int SampleListHandler::get_all(HttpRequest *req, HttpResponse *resp) {
     return 200;
 }
 
-int SampleListHandler::insert(HttpRequest *req, HttpResponse *resp) {
+int CalibrationHandler::insert(HttpRequest *req, HttpResponse *resp) {
     resp->content_type = APPLICATION_JSON;
     resp->json = req->GetJson();
     resp->json["int"] = 123;
@@ -59,7 +58,7 @@ int SampleListHandler::insert(HttpRequest *req, HttpResponse *resp) {
     return 200;
 }
 
-int SampleListHandler::update(HttpRequest *req, HttpResponse *resp) {
+int CalibrationHandler::update(HttpRequest *req, HttpResponse *resp) {
     resp->content_type = APPLICATION_JSON;
     resp->json = req->GetJson();
     resp->json["int"] = 123;
@@ -70,7 +69,7 @@ int SampleListHandler::update(HttpRequest *req, HttpResponse *resp) {
     return 200;
 }
 
-int SampleListHandler::remove(HttpRequest *req, HttpResponse *resp) {
+int CalibrationHandler::remove(HttpRequest *req, HttpResponse *resp) {
     resp->content_type = APPLICATION_JSON;
     resp->json = req->GetJson();
     resp->json["int"] = 123;
@@ -81,7 +80,7 @@ int SampleListHandler::remove(HttpRequest *req, HttpResponse *resp) {
     return 200;
 }
 
-int SampleListHandler::get(HttpRequest *req, HttpResponse *resp) {
+int CalibrationHandler::get(HttpRequest *req, HttpResponse *resp) {
     resp->content_type = APPLICATION_JSON;
     resp->json = req->GetJson();
     resp->json["int"] = 123;

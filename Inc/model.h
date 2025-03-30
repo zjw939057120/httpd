@@ -295,38 +295,38 @@ static auto storage = make_storage("../etc/database.db",
 class Model {
 public:
     // 同步数据库
-    static void sync_table() {
+    static void sync_schema() {
         storage.sync_schema();
     }
 
     // 通用获取列表函数
     template<typename T>
-    static size_t list_record(std::vector<T> &list) {
+    static size_t get_all(std::vector<T> &list) {
         list = storage.template get_all<T>();
         return list.size();
     }
 
     // 通用插入函数
     template<typename T>
-    static void insert_record(const T &record) {
+    static void insert(const T &record) {
         storage.insert(record);
     }
 
     // 通用更新函数
     template<typename T>
-    static void update_record(const T &record) {
+    static void update(const T &record) {
         storage.update(record);
     }
 
     // 通用删除函数
     template<typename T>
-    static void delete_record(const T &record, size_t id) {
+    static void remove(const T &record, size_t id) {
         storage.template remove<T>(id); // 主键是 id
     }
 
     // 通用查找函数
     template<typename T>
-    static bool find_record(T &record, size_t id) {
+    static bool get(T &record, size_t id) {
         try {
             record = storage.template get<T>(id);
             return true;
