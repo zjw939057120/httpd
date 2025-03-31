@@ -7,6 +7,7 @@
 
 #include <cstdint>
 #include <string>
+#include "hv/json.hpp"
 
 struct System {
     bool debug; //Debug模式

@@ -18,6 +18,6 @@ void SampleListRouter::Register(hv::HttpService &router) {
     router.GET("/api/sample_list/get_all", SampleListHandler::get_all);
     router.GET("/api/sample_list/insert", SampleListHandler::insert);
     router.GET("/api/sample_list/update", SampleListHandler::update);
-    router.GET("/api/sample_list/remove", SampleListHandler::remove);
-    router.GET("/api/sample_list/get", SampleListHandler::get);
+    router.GET("/api/sample_list/remove/{id}", SampleListHandler::remove);
+    router.GET("/api/sample_list/get/{id}", SampleListHandler::get);
 }

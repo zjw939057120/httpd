@@ -40,11 +40,12 @@ int SampleDataHandler::get_all(HttpRequest *req, HttpResponse *resp) {
 
     } catch (std::system_error e) {
         std::cout << e.what() << std::endl;
+        Handler::response_status(resp, 0, e.what());
     } catch (...) {
         std::cout << "unknown exeption" << std::endl;
+        Handler::response_status(resp, 0, "unknown exeption");
     }
 
-    Handler::response_status(resp, 0, "OK");
     return 200;
 }
 
@@ -55,7 +56,6 @@ int SampleDataHandler::insert(HttpRequest *req, HttpResponse *resp) {
     resp->json["float"] = 3.14;
     resp->json["string"] = "hello";
 
-    Handler::response_status(resp, 0, "OK");
     return 200;
 }
 
@@ -66,28 +66,43 @@ int SampleDataHandler::update(HttpRequest *req, HttpResponse *resp) {
     resp->json["float"] = 3.14;
     resp->json["string"] = "hello";
 
-    Handler::response_status(resp, 0, "OK");
     return 200;
 }
 
 int SampleDataHandler::remove(HttpRequest *req, HttpResponse *resp) {
     resp->content_type = APPLICATION_JSON;
-    resp->json = req->GetJson();
-    resp->json["int"] = 123;
-    resp->json["float"] = 3.14;
-    resp->json["string"] = "hello";
 
+    int id = atoi(req->GetParam("id").c_str());
+    CalibrationTable item;
+    Model::remove(item, id);
+
+    resp->json["data"] = id;
     Handler::response_status(resp, 0, "OK");
     return 200;
 }
 
 int SampleDataHandler::get(HttpRequest *req, HttpResponse *resp) {
     resp->content_type = APPLICATION_JSON;
-    resp->json = req->GetJson();
-    resp->json["int"] = 123;
-    resp->json["float"] = 3.14;
-    resp->json["string"] = "hello";
 
-    Handler::response_status(resp, 0, "OK");
+    auto id = req->GetParam("id");
+    try {
+        SampleDataTable item;
+        size_t size = Model::get(item, atoi(id.c_str()));
+        if (size) {
+            std::string str = storage.dump(item);
+            resp->json["data"] = nlohmann::json::parse(Utils::preprocessToJson(str));
+        } else {
+            resp->json["data"] = {};
+        }
+
+        Handler::response_status(resp, 0, "OK");
+    } catch (std::system_error e) {
+        std::cout << e.what() << std::endl;
+        Handler::response_status(resp, 0, e.what());
+    } catch (...) {
+        std::cout << "unknown exeption" << std::endl;
+        Handler::response_status(resp, 0, "unknown exeption");
+    }
+
     return 200;
 }

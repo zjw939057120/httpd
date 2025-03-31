@@ -37,56 +37,90 @@ int CalibrationHandler::get_all(HttpRequest *req, HttpResponse *resp) {
             seq++;
         }
 
+        Handler::response_status(resp, 0, "OK");
     } catch (std::system_error e) {
         std::cout << e.what() << std::endl;
+        Handler::response_status(resp, 0, e.what());
     } catch (...) {
         std::cout << "unknown exeption" << std::endl;
+        Handler::response_status(resp, 0, "unknown exeption");
     }
 
-    Handler::response_status(resp, 0, "OK");
     return 200;
 }
 
 int CalibrationHandler::insert(HttpRequest *req, HttpResponse *resp) {
     resp->content_type = APPLICATION_JSON;
-    resp->json = req->GetJson();
-    resp->json["int"] = 123;
-    resp->json["float"] = 3.14;
-    resp->json["string"] = "hello";
 
-    Handler::response_status(resp, 0, "OK");
+    try {
+        CalibrationTable item;
+        item.from_json(req->GetJson());
+        resp->json["data"] = Model::insert(item);
+        Handler::response_status(resp, 0, "OK");
+    } catch (std::system_error e) {
+        std::cout << e.what() << std::endl;
+        Handler::response_status(resp, 0, e.what());
+    } catch (...) {
+        std::cout << "unknown exeption" << std::endl;
+        Handler::response_status(resp, 0, "unknown exeption");
+    }
+
     return 200;
 }
 
 int CalibrationHandler::update(HttpRequest *req, HttpResponse *resp) {
-    resp->content_type = APPLICATION_JSON;
-    resp->json = req->GetJson();
-    resp->json["int"] = 123;
-    resp->json["float"] = 3.14;
-    resp->json["string"] = "hello";
+    try {
+        CalibrationTable item;
+        item.from_json(req->GetJson());
 
-    Handler::response_status(resp, 0, "OK");
+        Model::update(item);
+        resp->json["data"] = item.id;
+        Handler::response_status(resp, 0, "OK");
+    } catch (std::system_error e) {
+        std::cout << e.what() << std::endl;
+        Handler::response_status(resp, 0, e.what());
+    } catch (...) {
+        std::cout << "unknown exeption" << std::endl;
+        Handler::response_status(resp, 0, "unknown exeption");
+    }
+
     return 200;
 }
 
 int CalibrationHandler::remove(HttpRequest *req, HttpResponse *resp) {
     resp->content_type = APPLICATION_JSON;
-    resp->json = req->GetJson();
-    resp->json["int"] = 123;
-    resp->json["float"] = 3.14;
-    resp->json["string"] = "hello";
 
+    int id = atoi(req->GetParam("id").c_str());
+    CalibrationTable item;
+    Model::remove(item, id);
+
+    resp->json["data"] = id;
     Handler::response_status(resp, 0, "OK");
     return 200;
 }
 
 int CalibrationHandler::get(HttpRequest *req, HttpResponse *resp) {
     resp->content_type = APPLICATION_JSON;
-    resp->json = req->GetJson();
-    resp->json["int"] = 123;
-    resp->json["float"] = 3.14;
-    resp->json["string"] = "hello";
 
-    Handler::response_status(resp, 0, "OK");
+    int id = atoi(req->GetParam("id").c_str());
+    try {
+        CalibrationTable item;
+        size_t size = Model::get(item, id);
+        if (size) {
+            std::string str = storage.dump(item);
+            resp->json["data"] = nlohmann::json::parse(Utils::preprocessToJson(str));
+        } else {
+            resp->json["data"] = {};
+        }
+
+        Handler::response_status(resp, 0, "OK");
+    } catch (std::system_error e) {
+        std::cout << e.what() << std::endl;
+        Handler::response_status(resp, 0, e.what());
+    } catch (...) {
+        std::cout << "unknown exeption" << std::endl;
+        Handler::response_status(resp, 0, "unknown exeption");
+    }
+
     return 200;
 }

@@ -36,6 +36,6 @@ void SystemRouter::Register(hv::HttpService &router) {
     router.GET("/api/system/get_all", SystemHandler::get_all);
     router.GET("/api/system/insert", SystemHandler::insert);
     router.GET("/api/system/update", SystemHandler::update);
-    router.GET("/api/system/remove", SystemHandler::remove);
-    router.GET("/api/system/get", SystemHandler::get);
+    router.GET("/api/system/remove/{id}", SystemHandler::remove);
+    router.GET("/api/system/get/{id}", SystemHandler::get);
 }

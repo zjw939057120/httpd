@@ -18,6 +18,6 @@ void ConfigurationRouter::Register(hv::HttpService &router) {
     router.GET("/api/configuration/get_all", ConfigurationHandler::get_all);
     router.GET("/api/configuration/insert", ConfigurationHandler::insert);
     router.GET("/api/configuration/update", ConfigurationHandler::update);
-    router.GET("/api/configuration/remove", ConfigurationHandler::remove);
-    router.GET("/api/configuration/get", ConfigurationHandler::get);
+    router.GET("/api/configuration/remove/{id}", ConfigurationHandler::remove);
+    router.GET("/api/configuration/get/{id}", ConfigurationHandler::get);
 }

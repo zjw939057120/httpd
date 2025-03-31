@@ -18,6 +18,6 @@ void CalibrationRouter::Register(hv::HttpService &router) {
     router.GET("/api/calibration/get_all", CalibrationHandler::get_all);
     router.GET("/api/calibration/insert", CalibrationHandler::insert);
     router.GET("/api/calibration/update", CalibrationHandler::update);
-    router.GET("/api/calibration/remove", CalibrationHandler::remove);
-    router.GET("/api/calibration/get", CalibrationHandler::get);
+    router.GET("/api/calibration/remove/{id}", CalibrationHandler::remove);
+    router.GET("/api/calibration/get/{id}", CalibrationHandler::get);
 }

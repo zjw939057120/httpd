@@ -308,8 +308,8 @@ public:
 
     // 通用插入函数
     template<typename T>
-    static void insert(const T &record) {
-        storage.insert(record);
+    static int insert(const T &record) {
+        return storage.insert(record);
     }
 
     // 通用更新函数

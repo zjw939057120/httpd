@@ -7,6 +7,7 @@
 
 #include <cstdint>
 #include <string>
+#include "hv/json.hpp"
 
 struct SampleList {
 
