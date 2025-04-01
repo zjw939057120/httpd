@@ -51,20 +51,38 @@ int QueueListHandler::get_all(HttpRequest *req, HttpResponse *resp) {
 
 int QueueListHandler::insert(HttpRequest *req, HttpResponse *resp) {
     resp->content_type = APPLICATION_JSON;
-    resp->json = req->GetJson();
-    resp->json["int"] = 123;
-    resp->json["float"] = 3.14;
-    resp->json["string"] = "hello";
+
+    try {
+        QueueListTable item;
+        item.from_json(req->GetJson());
+        resp->json["data"] = Model::insert(item);
+        Handler::response_status(resp, 0, "OK");
+    } catch (std::system_error e) {
+        std::cout << e.what() << std::endl;
+        Handler::response_status(resp, 0, e.what());
+    } catch (...) {
+        std::cout << "unknown exeption" << std::endl;
+        Handler::response_status(resp, 0, "unknown exeption");
+    }
 
     return 200;
 }
 
 int QueueListHandler::update(HttpRequest *req, HttpResponse *resp) {
-    resp->content_type = APPLICATION_JSON;
-    resp->json = req->GetJson();
-    resp->json["int"] = 123;
-    resp->json["float"] = 3.14;
-    resp->json["string"] = "hello";
+    try {
+        QueueListTable item;
+        item.from_json(req->GetJson());
+
+        Model::update(item);
+        resp->json["data"] = item.id;
+        Handler::response_status(resp, 0, "OK");
+    } catch (std::system_error e) {
+        std::cout << e.what() << std::endl;
+        Handler::response_status(resp, 0, e.what());
+    } catch (...) {
+        std::cout << "unknown exeption" << std::endl;
+        Handler::response_status(resp, 0, "unknown exeption");
+    }
 
     return 200;
 }
@@ -73,7 +91,7 @@ int QueueListHandler::remove(HttpRequest *req, HttpResponse *resp) {
     resp->content_type = APPLICATION_JSON;
 
     int id = atoi(req->GetParam("id").c_str());
-    CalibrationTable item;
+    QueueListTable item;
     Model::remove(item, id);
 
     resp->json["data"] = id;

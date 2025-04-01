@@ -28,20 +28,41 @@ struct CalibrationTable {
     float calibration_max = 0;
     int calibration_calculated = 0;
 
-    // 从 JSON 解析到结构体
+
+// 从 JSON 解析到结构体
     void from_json(const nlohmann::json &j) {
         j.at("id").get_to(id);
         j.at("calibration_line").get_to(calibration_line);
         j.at("calibration_signalnumber").get_to(calibration_signalnumber);
+        j.at("calibration_queue").get_to(calibration_queue);
+        j.at("calibration_order").get_to(calibration_order);
+        j.at("calibration_intercept").get_to(calibration_intercept);
+        j.at("calibration_A").get_to(calibration_A);
+        j.at("calibration_B").get_to(calibration_B);
+        j.at("calibration_C").get_to(calibration_C);
+        j.at("calibration_regression").get_to(calibration_regression);
+        j.at("calibration_min").get_to(calibration_min);
+        j.at("calibration_max").get_to(calibration_max);
+        j.at("calibration_calculated").get_to(calibration_calculated);
+
     }
 
-    // 从结构体转换为 JSON
-    void to_json(nlohmann::json &j) const {
-        j["id"] = id;
-        j["calibration_line"] = calibration_line;
-        j["calibration_signalnumber"] = calibration_signalnumber;
+// 从结构体转换为 JSON
+    void to_json(const CalibrationTable &t, nlohmann::json &j) {
+        j["id"] = t.id;
+        j["calibration_line"] = t.calibration_line;
+        j["calibration_signalnumber"] = t.calibration_signalnumber;
+        j["calibration_queue"] = t.calibration_queue;
+        j["calibration_order"] = t.calibration_order;
+        j["calibration_intercept"] = t.calibration_intercept;
+        j["calibration_A"] = t.calibration_A;
+        j["calibration_B"] = t.calibration_B;
+        j["calibration_C"] = t.calibration_C;
+        j["calibration_regression"] = t.calibration_regression;
+        j["calibration_min"] = t.calibration_min;
+        j["calibration_max"] = t.calibration_max;
+        j["calibration_calculated"] = t.calibration_calculated;
     }
-
 };
 
 extern Calibration m_calibration;
