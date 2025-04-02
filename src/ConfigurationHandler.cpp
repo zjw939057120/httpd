@@ -36,10 +36,19 @@ int ConfigurationHandler::get_all(HttpRequest *req, HttpResponse *resp) {
             seq++;
         }
 
+    } catch (const nlohmann::json::parse_error &e) {
+        std::cerr << "Parse error: " << e.what() << std::endl;
+        Handler::response_status(resp, 0, e.what());
+    } catch (const nlohmann::json::out_of_range &e) {
+        std::cerr << "Out of range error: " << e.what() << std::endl;
+        Handler::response_status(resp, 0, e.what());
+    } catch (const nlohmann::json::type_error &e) {
+        std::cerr << "Type error: " << e.what() << std::endl;
+        Handler::response_status(resp, 0, e.what());
     } catch (std::system_error e) {
         std::cout << e.what() << std::endl;
         Handler::response_status(resp, 0, e.what());
-    } catch (...) {
+    }catch (...) {
         std::cout << "unknown exeption" << std::endl;
         Handler::response_status(resp, 0, "unknown exeption");
     }
@@ -55,10 +64,19 @@ int ConfigurationHandler::insert(HttpRequest *req, HttpResponse *resp) {
         item.from_json(req->GetJson());
         resp->json["data"] = Model::insert(item);
         Handler::response_status(resp, 0, "OK");
+    } catch (const nlohmann::json::parse_error &e) {
+        std::cerr << "Parse error: " << e.what() << std::endl;
+        Handler::response_status(resp, 0, e.what());
+    } catch (const nlohmann::json::out_of_range &e) {
+        std::cerr << "Out of range error: " << e.what() << std::endl;
+        Handler::response_status(resp, 0, e.what());
+    } catch (const nlohmann::json::type_error &e) {
+        std::cerr << "Type error: " << e.what() << std::endl;
+        Handler::response_status(resp, 0, e.what());
     } catch (std::system_error e) {
         std::cout << e.what() << std::endl;
         Handler::response_status(resp, 0, e.what());
-    } catch (...) {
+    }catch (...) {
         std::cout << "unknown exeption" << std::endl;
         Handler::response_status(resp, 0, "unknown exeption");
     }
@@ -74,10 +92,19 @@ int ConfigurationHandler::update(HttpRequest *req, HttpResponse *resp) {
         Model::update(item);
         resp->json["data"] = item.id;
         Handler::response_status(resp, 0, "OK");
+    } catch (const nlohmann::json::parse_error &e) {
+        std::cerr << "Parse error: " << e.what() << std::endl;
+        Handler::response_status(resp, 0, e.what());
+    } catch (const nlohmann::json::out_of_range &e) {
+        std::cerr << "Out of range error: " << e.what() << std::endl;
+        Handler::response_status(resp, 0, e.what());
+    } catch (const nlohmann::json::type_error &e) {
+        std::cerr << "Type error: " << e.what() << std::endl;
+        Handler::response_status(resp, 0, e.what());
     } catch (std::system_error e) {
         std::cout << e.what() << std::endl;
         Handler::response_status(resp, 0, e.what());
-    } catch (...) {
+    }catch (...) {
         std::cout << "unknown exeption" << std::endl;
         Handler::response_status(resp, 0, "unknown exeption");
     }
@@ -111,10 +138,19 @@ int ConfigurationHandler::get(HttpRequest *req, HttpResponse *resp) {
         }
 
         Handler::response_status(resp, 0, "OK");
+    } catch (const nlohmann::json::parse_error &e) {
+        std::cerr << "Parse error: " << e.what() << std::endl;
+        Handler::response_status(resp, 0, e.what());
+    } catch (const nlohmann::json::out_of_range &e) {
+        std::cerr << "Out of range error: " << e.what() << std::endl;
+        Handler::response_status(resp, 0, e.what());
+    } catch (const nlohmann::json::type_error &e) {
+        std::cerr << "Type error: " << e.what() << std::endl;
+        Handler::response_status(resp, 0, e.what());
     } catch (std::system_error e) {
         std::cout << e.what() << std::endl;
         Handler::response_status(resp, 0, e.what());
-    } catch (...) {
+    }catch (...) {
         std::cout << "unknown exeption" << std::endl;
         Handler::response_status(resp, 0, "unknown exeption");
     }
