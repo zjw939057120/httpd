@@ -31,9 +31,8 @@ int CalibrationHandler::get_all(HttpRequest *req, HttpResponse *resp) {
         size_t size = Model::get_all(list);
 
         int seq = 0;
-        for (auto const &item:list) {
-            std::string str = storage.dump(item);
-            resp->json["data"][seq] = nlohmann::json::parse(Utils::preprocessToJson(str));
+        for (auto &item:list) {
+            item.to_json(resp->json["data"][seq]);
             seq++;
         }
 
@@ -107,8 +106,7 @@ int CalibrationHandler::get(HttpRequest *req, HttpResponse *resp) {
         CalibrationTable item;
         size_t size = Model::get(item, id);
         if (size) {
-            std::string str = storage.dump(item);
-            resp->json["data"] = nlohmann::json::parse(Utils::preprocessToJson(str));
+            item.to_json(resp->json["data"]);
         } else {
             resp->json["data"] = {};
         }

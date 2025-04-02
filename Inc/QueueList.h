@@ -14,36 +14,36 @@ struct QueueList {
 };
 
 struct QueueListTable {
-    int id;
-    int queue_number;
-    int queue_signalnumber;
+    int id = 0;
+    int queue_number = 0;
+    int queue_signalnumber = 0;
     std::string queue_name;
     std::string queue_comment;
-    int queue_element;
-    float queue_blanco;
-    float queue_yield;
-    int queue_calibrationqueue;
-    int queue_calibration_signalnumber;
-    int queue_calibration_order;
-    int queue_intercept;
-    float queue_calibrationa;
-    float queue_calibrationb;
-    float queue_calibrationc;
-    float queue_regression;
-    int queue_calibration_min;
-    int queue_calibration_max;
-    int queue_timewindow;
-    int queue_treshold0;
-    float queue_treshold1;
-    float queue_treshold2;
+    int queue_element = 0;
+    float queue_blanco = 0;
+    float queue_yield = 0;
+    int queue_calibrationqueue = 0;
+    int queue_calibration_signalnumber = 0;
+    int queue_calibration_order = 0;
+    int queue_intercept = 0;
+    float queue_calibrationa = 0;
+    float queue_calibrationb = 0;
+    float queue_calibrationc = 0;
+    float queue_regression = 0;
+    int queue_calibration_min = 0;
+    int queue_calibration_max = 0;
+    int queue_timewindow = 0;
+    int queue_treshold0 = 0;
+    float queue_treshold1 = 0;
+    float queue_treshold2 = 0;
     std::string queue_baseline;
-    int queue_posintegration;
+    int queue_posintegration = 0;
     std::string queue_calculated;
-    float queue_blancocal;
-    int queue_TrashTime1;
-    int queue_AverageTime1;
-    int queue_TrashTime2;
-    int queue_AverageTime2;
+    float queue_blancocal = 0;
+    int queue_TrashTime1 = 0;
+    int queue_AverageTime1 = 0;
+    int queue_TrashTime2 = 0;
+    int queue_AverageTime2 = 0;
     std::string queue_calibrationline;
 
     // 从 JSON 解析到结构体
@@ -80,11 +80,41 @@ struct QueueListTable {
         j.at("queue_AverageTime2").get_to(queue_AverageTime2);
         j.at("queue_calibrationline").get_to(queue_calibrationline);
     }
-//
-//    // 从结构体转换为 JSON
-//    void to_json(const QueueListTable &t, nlohmann::json &j) {
-//        j["id"] = t.id;
-//    }
+
+    // 从结构体转换为 JSON
+    void to_json(nlohmann::json &j) const {
+        j["id"] = id;
+        j["queue_number"] = queue_number;
+        j["queue_signalnumber"] = queue_signalnumber;
+        j["queue_name"] = queue_name;
+        j["queue_comment"] = queue_comment;
+        j["queue_element"] = queue_element;
+        j["queue_blanco"] = queue_blanco;
+        j["queue_yield"] = queue_yield;
+        j["queue_calibrationqueue"] = queue_calibrationqueue;
+        j["queue_calibration_signalnumber"] = queue_calibration_signalnumber;
+        j["queue_calibration_order"] = queue_calibration_order;
+        j["queue_intercept"] = queue_intercept;
+        j["queue_calibrationa"] = queue_calibrationa;
+        j["queue_calibrationb"] = queue_calibrationb;
+        j["queue_calibrationc"] = queue_calibrationc;
+        j["queue_regression"] = queue_regression;
+        j["queue_calibration_min"] = queue_calibration_min;
+        j["queue_calibration_max"] = queue_calibration_max;
+        j["queue_timewindow"] = queue_timewindow;
+        j["queue_treshold0"] = queue_treshold0;
+        j["queue_treshold1"] = queue_treshold1;
+        j["queue_treshold2"] = queue_treshold2;
+        j["queue_baseline"] = queue_baseline;
+        j["queue_posintegration"] = queue_posintegration;
+        j["queue_calculated"] = queue_calculated;
+        j["queue_blancocal"] = queue_blancocal;
+        j["queue_TrashTime1"] = queue_TrashTime1;
+        j["queue_AverageTime1"] = queue_AverageTime1;
+        j["queue_TrashTime2"] = queue_TrashTime2;
+        j["queue_AverageTime2"] = queue_AverageTime2;
+        j["queue_calibrationline"] = queue_calibrationline;
+    }
 };
 
 extern QueueList m_queueList;

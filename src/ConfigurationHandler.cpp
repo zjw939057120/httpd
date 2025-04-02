@@ -31,9 +31,8 @@ int ConfigurationHandler::get_all(HttpRequest *req, HttpResponse *resp) {
         size_t size = Model::get_all(list);
 
         int seq = 0;
-        for (auto const &item:list) {
-            std::string str = storage.dump(item);
-            resp->json["data"][seq] = nlohmann::json::parse(Utils::preprocessToJson(str));
+        for (auto &item:list) {
+            item.to_json(resp->json["data"][seq]);
             seq++;
         }
 
@@ -106,8 +105,7 @@ int ConfigurationHandler::get(HttpRequest *req, HttpResponse *resp) {
         ConfigurationTable item;
         size_t size = Model::get(item, atoi(id.c_str()));
         if (size) {
-            std::string str = storage.dump(item);
-            resp->json["data"] = nlohmann::json::parse(Utils::preprocessToJson(str));
+           item.to_json(resp->json["data"]);
         } else {
             resp->json["data"] = {};
         }
