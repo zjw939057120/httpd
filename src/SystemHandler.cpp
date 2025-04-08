@@ -23,66 +23,79 @@
 #include "QueueListModel.h"
 #include "SampleDataModel.h"
 #include "SampleListModel.h"
-
+#include <fstream>
 
 int SystemHandler::menu(HttpRequest *req, HttpResponse *resp) {
-    resp->content_type = APPLICATION_JSON;
+    auto func = [req, resp] {
+        //加載演示功能菜单
+        if (m_system.debug) {
+            std::string filePath = "../html/start/json/menu.js";
 
-    uint8_t i = 0;
-    uint8_t j = 0;
+            std::ifstream file(filePath);
+            if (!file.is_open()) {
+                throw std::runtime_error("Failed to open file: " + filePath);
+            }
 
-    i = 0;
-    j = 0;
-    resp->json["data"][i]["title"] = "主页";
-    resp->json["data"][i]["icon"] = "layui-icon-home";
-    resp->json["data"][i]["list"][j]["title"] = "控制台";
-    resp->json["data"][i]["list"][j]["jump"] = "/";
-    j++;
-    resp->json["data"][i]["list"][j]["title"] = "主页一";
-    resp->json["data"][i]["list"][j]["jump"] = "home/homepage1";
-    j++;
-    resp->json["data"][i]["list"][j]["title"] = "主页二";
-    resp->json["data"][i]["list"][j]["jump"] = "home/homepage2";
+            // 解析 JSON 文件
+            nlohmann::json jsonData;
+            file >> jsonData; // 将文件内容解析为 JSON 对象
 
-    i++;
-    j = 0;
-    resp->json["data"][i]["name"] = "component";
-    resp->json["data"][i]["title"] = "组件";
-    resp->json["data"][i]["icon"] = "layui-icon-component";
-    resp->json["data"][i]["list"][j]["name"] = "button";
-    resp->json["data"][i]["list"][j]["title"] = "按钮";
-    j++;
-    resp->json["data"][i]["list"][j]["name"] = "nav";
-    resp->json["data"][i]["list"][j]["title"] = "导航";
-    j++;
-    resp->json["data"][i]["list"][j]["name"] = "tabs";
-    resp->json["data"][i]["list"][j]["title"] = "选项卡";
-    j++;
-    resp->json["data"][i]["list"][j]["name"] = "progress";
-    resp->json["data"][i]["list"][j]["title"] = "进度条";
-    j++;
-    resp->json["data"][i]["list"][j]["name"] = "panel";
-    resp->json["data"][i]["list"][j]["title"] = "面板";
-    j++;
-    resp->json["data"][i]["list"][j]["name"] = "badge";
-    resp->json["data"][i]["list"][j]["title"] = "徽章";
-    j++;
-    resp->json["data"][i]["list"][j]["name"] = "timeline";
-    resp->json["data"][i]["list"][j]["title"] = "时间线";
-    j++;
-    resp->json["data"][i]["list"][j]["name"] = "anim";
-    resp->json["data"][i]["list"][j]["title"] = "动画";
-    j++;
-    resp->json["data"][i]["list"][j]["name"] = "auxiliar";
-    resp->json["data"][i]["list"][j]["title"] = "辅助";
+            resp->json = jsonData;
+        }
 
+        uint8_t i = m_system.debug ? resp->json["data"].size() : 0;
+        uint8_t j = 0;
+
+        resp->json["data"][i]["title"] = "主页";
+        resp->json["data"][i]["icon"] = "layui-icon-home";
+        resp->json["data"][i]["list"][j]["title"] = "控制台";
+        resp->json["data"][i]["list"][j]["jump"] = "/";
+        j++;
+        resp->json["data"][i]["list"][j]["title"] = "主页一";
+        resp->json["data"][i]["list"][j]["jump"] = "home/homepage1";
+        j++;
+        resp->json["data"][i]["list"][j]["title"] = "主页二";
+        resp->json["data"][i]["list"][j]["jump"] = "home/homepage2";
+
+        i++;
+        j = 0;
+        resp->json["data"][i]["name"] = "component";
+        resp->json["data"][i]["title"] = "组件";
+        resp->json["data"][i]["icon"] = "layui-icon-component";
+        resp->json["data"][i]["list"][j]["name"] = "button";
+        resp->json["data"][i]["list"][j]["title"] = "按钮";
+        j++;
+        resp->json["data"][i]["list"][j]["name"] = "nav";
+        resp->json["data"][i]["list"][j]["title"] = "导航";
+        j++;
+        resp->json["data"][i]["list"][j]["name"] = "tabs";
+        resp->json["data"][i]["list"][j]["title"] = "选项卡";
+        j++;
+        resp->json["data"][i]["list"][j]["name"] = "progress";
+        resp->json["data"][i]["list"][j]["title"] = "进度条";
+        j++;
+        resp->json["data"][i]["list"][j]["name"] = "panel";
+        resp->json["data"][i]["list"][j]["title"] = "面板";
+        j++;
+        resp->json["data"][i]["list"][j]["name"] = "badge";
+        resp->json["data"][i]["list"][j]["title"] = "徽章";
+        j++;
+        resp->json["data"][i]["list"][j]["name"] = "timeline";
+        resp->json["data"][i]["list"][j]["title"] = "时间线";
+        j++;
+        resp->json["data"][i]["list"][j]["name"] = "anim";
+        resp->json["data"][i]["list"][j]["title"] = "动画";
+        j++;
+        resp->json["data"][i]["list"][j]["name"] = "auxiliar";
+        resp->json["data"][i]["list"][j]["title"] = "辅助";
+    };
+
+    Handler::response_json(req, resp, func);
     return 200;
-}
+};
 
 int SystemHandler::test(HttpRequest *req, HttpResponse *resp) {
-    resp->content_type = APPLICATION_JSON;
-
-    try {
+    auto func = [req, resp] {
         Model::sync_schema();
 
         CalibrationTable data;
@@ -100,26 +113,11 @@ int SystemHandler::test(HttpRequest *req, HttpResponse *resp) {
             std::cout << "ID:" << list[i].id << ", calibration_line:" << list[i].calibration_line << ", calibration_A:"
                       << list[i].calibration_A << std::endl;
         }
+    };
 
-    } catch (const nlohmann::json::parse_error &e) {
-        std::cerr << "Parse error: " << e.what() << std::endl;
-        Handler::response_status(resp, 0, e.what());
-    } catch (const nlohmann::json::out_of_range &e) {
-        std::cerr << "Out of range error: " << e.what() << std::endl;
-        Handler::response_status(resp, 0, e.what());
-    } catch (const nlohmann::json::type_error &e) {
-        std::cerr << "Type error: " << e.what() << std::endl;
-        Handler::response_status(resp, 0, e.what());
-    } catch (std::system_error e) {
-        std::cout << e.what() << std::endl;
-        Handler::response_status(resp, 0, e.what());
-    }catch (...) {
-        std::cout << "unknown exeption" << std::endl;
-        Handler::response_status(resp, 0, "unknown exeption");
-    }
-
+    Handler::response_json(req, resp, func);
     return 200;
-}
+};
 
 int SystemHandler::get_all(HttpRequest *req, HttpResponse *resp) {
     auto func = [req, resp] {
