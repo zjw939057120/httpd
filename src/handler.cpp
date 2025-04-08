@@ -360,3 +360,107 @@ int Handler::sse(const HttpContextPtr &ctx) {
     });
     return HTTP_STATUS_UNFINISHED;
 }
+
+int Handler::response_status(HttpResponse *resp, int code, const char *msg) {
+    if (msg == NULL) msg = http_status_str((enum http_status) code);
+    resp->Set("code", code);
+    resp->Set("msg", msg);
+    return code;
+}
+
+int Handler::response_status(const HttpResponseWriterPtr &writer, int code, const char *msg) {
+    response_status(writer->response.get(), code, msg);
+    writer->End();
+    return code;
+}
+
+int Handler::response_status(const HttpContextPtr &ctx, int code, const char *msg) {
+    response_status(ctx->response.get(), code, msg);
+    ctx->send();
+    return code;
+}
+
+int Handler::response_json(HttpRequest *req, HttpResponse *resp, const std::function<void()> &func) {
+    resp->content_type = APPLICATION_JSON;
+    try {
+        func();
+
+        response_status(resp, 0, "OK");
+    } catch (const nlohmann::json::parse_error &e) {
+        std::cerr << "Parse error: " << e.what() << std::endl;
+        resp->json["data"] = {};
+        response_status(resp, 1, e.what());
+
+    } catch (const nlohmann::json::out_of_range &e) {
+        std::cerr << "Out of range error: " << e.what() << std::endl;
+        resp->json["data"] = {};
+        response_status(resp, 1, e.what());
+
+    } catch (const nlohmann::json::type_error &e) {
+        std::cerr << "Type error: " << e.what() << std::endl;
+        resp->json["data"] = {};
+        response_status(resp, 1, e.what());
+
+    } catch (std::system_error e) {
+        std::cerr << e.what() << std::endl;
+        resp->json["data"] = {};
+        response_status(resp, 1, e.what());
+
+    } catch (std::domain_error e) {
+        std::cerr << e.what() << std::endl;
+        resp->json["data"] = {};
+        response_status(resp, 1, e.what());
+
+    } catch (std::invalid_argument e) {
+        std::cerr << e.what() << std::endl;
+        resp->json["data"] = {};
+        response_status(resp, 1, e.what());
+
+    } catch (std::length_error e) {
+        std::cerr << e.what() << std::endl;
+        resp->json["data"] = {};
+        response_status(resp, 1, e.what());
+
+    } catch (std::out_of_range e) {
+        std::cerr << e.what() << std::endl;
+        resp->json["data"] = {};
+        response_status(resp, 1, e.what());
+
+    } catch (std::logic_error e) {
+        std::cerr << e.what() << std::endl;
+        resp->json["data"] = {};
+        response_status(resp, 1, e.what());
+
+    } catch (std::range_error e) {
+        std::cerr << e.what() << std::endl;
+        resp->json["data"] = {};
+        response_status(resp, 1, e.what());
+
+    } catch (std::overflow_error e) {
+        std::cerr << e.what() << std::endl;
+        resp->json["data"] = {};
+        response_status(resp, 1, e.what());
+
+    } catch (std::underflow_error e) {
+        std::cerr << e.what() << std::endl;
+        resp->json["data"] = {};
+        response_status(resp, 1, e.what());
+    } catch (std::runtime_error e) {
+        std::cerr << e.what() << std::endl;
+        resp->json["data"] = {};
+        response_status(resp, 1, e.what());
+
+    } catch (std::exception e) {
+        std::cerr << e.what() << std::endl;
+        resp->json["data"] = {};
+        response_status(resp, 1, e.what());
+
+    } catch (...) {
+        std::cerr << "unknown exeption" << std::endl;
+        resp->json["data"] = {};
+        response_status(resp, 1, "unknown exeption");
+
+    }
+
+    return 200;
+}

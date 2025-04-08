@@ -46,24 +46,13 @@ public:
     static int recvLargeFile(const HttpContextPtr &ctx, http_parser_state state, const char *data, size_t size);
 
 public:
-    static int response_status(HttpResponse *resp, int code = 200, const char *msg = NULL) {
-        if (msg == NULL) msg = http_status_str((enum http_status) code);
-        resp->Set("code", code);
-        resp->Set("msg", msg);
-        return code;
-    }
+    static int response_status(HttpResponse *resp, int code = 200, const char *msg = NULL);
 
-    static int response_status(const HttpResponseWriterPtr &writer, int code = 200, const char *msg = NULL) {
-        response_status(writer->response.get(), code, msg);
-        writer->End();
-        return code;
-    }
+    static int response_status(const HttpResponseWriterPtr &writer, int code = 200, const char *msg = NULL);
 
-    static int response_status(const HttpContextPtr &ctx, int code = 200, const char *msg = NULL) {
-        response_status(ctx->response.get(), code, msg);
-        ctx->send();
-        return code;
-    }
+    static int response_status(const HttpContextPtr &ctx, int code = 200, const char *msg = NULL);
+
+    static int response_json(HttpRequest *req, HttpResponse *resp, const std::function<void()> &func);
 };
 
 #endif // HV_HTTPD_HANDLER_H

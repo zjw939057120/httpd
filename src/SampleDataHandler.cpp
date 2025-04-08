@@ -25,9 +25,7 @@
 #include "SampleListModel.h"
 
 int SampleDataHandler::get_all(HttpRequest *req, HttpResponse *resp) {
-    resp->content_type = APPLICATION_JSON;
-
-    try {
+    auto func = [req, resp] {
         std::vector<SampleDataTable> list;
         size_t size = Model::get_all(list);
 
@@ -36,125 +34,54 @@ int SampleDataHandler::get_all(HttpRequest *req, HttpResponse *resp) {
             item.to_json(resp->json["data"][seq]);
             seq++;
         }
-
-    } catch (const nlohmann::json::parse_error &e) {
-        std::cerr << "Parse error: " << e.what() << std::endl;
-        Handler::response_status(resp, 0, e.what());
-    } catch (const nlohmann::json::out_of_range &e) {
-        std::cerr << "Out of range error: " << e.what() << std::endl;
-        Handler::response_status(resp, 0, e.what());
-    } catch (const nlohmann::json::type_error &e) {
-        std::cerr << "Type error: " << e.what() << std::endl;
-        Handler::response_status(resp, 0, e.what());
-    } catch (std::system_error e) {
-        std::cout << e.what() << std::endl;
-        Handler::response_status(resp, 0, e.what());
-    }catch (...) {
-        std::cout << "unknown exeption" << std::endl;
-        Handler::response_status(resp, 0, "unknown exeption");
-    }
-
+    };
+    Handler::response_json(req, resp, func);
     return 200;
 }
 
 int SampleDataHandler::insert(HttpRequest *req, HttpResponse *resp) {
-    resp->content_type = APPLICATION_JSON;
-
-    try {
+    auto func = [req, resp] {
         SampleDataTable item;
         item.from_json(req->GetJson());
         resp->json["data"] = Model::insert(item);
-        Handler::response_status(resp, 0, "OK");
-    } catch (const nlohmann::json::parse_error &e) {
-        std::cerr << "Parse error: " << e.what() << std::endl;
-        Handler::response_status(resp, 0, e.what());
-    } catch (const nlohmann::json::out_of_range &e) {
-        std::cerr << "Out of range error: " << e.what() << std::endl;
-        Handler::response_status(resp, 0, e.what());
-    } catch (const nlohmann::json::type_error &e) {
-        std::cerr << "Type error: " << e.what() << std::endl;
-        Handler::response_status(resp, 0, e.what());
-    } catch (std::system_error e) {
-        std::cout << e.what() << std::endl;
-        Handler::response_status(resp, 0, e.what());
-    }catch (...) {
-        std::cout << "unknown exeption" << std::endl;
-        Handler::response_status(resp, 0, "unknown exeption");
-    }
-
+    };
+    Handler::response_json(req, resp, func);
     return 200;
 }
 
 int SampleDataHandler::update(HttpRequest *req, HttpResponse *resp) {
-    try {
+    auto func = [req, resp] {
         SampleDataTable item;
         item.from_json(req->GetJson());
 
         Model::update(item);
         resp->json["data"] = item.id;
-        Handler::response_status(resp, 0, "OK");
-    } catch (const nlohmann::json::parse_error &e) {
-        std::cerr << "Parse error: " << e.what() << std::endl;
-        Handler::response_status(resp, 0, e.what());
-    } catch (const nlohmann::json::out_of_range &e) {
-        std::cerr << "Out of range error: " << e.what() << std::endl;
-        Handler::response_status(resp, 0, e.what());
-    } catch (const nlohmann::json::type_error &e) {
-        std::cerr << "Type error: " << e.what() << std::endl;
-        Handler::response_status(resp, 0, e.what());
-    } catch (std::system_error e) {
-        std::cout << e.what() << std::endl;
-        Handler::response_status(resp, 0, e.what());
-    }catch (...) {
-        std::cout << "unknown exeption" << std::endl;
-        Handler::response_status(resp, 0, "unknown exeption");
-    }
+    };
 
+    Handler::response_json(req, resp, func);
     return 200;
 }
 
 int SampleDataHandler::remove(HttpRequest *req, HttpResponse *resp) {
-    resp->content_type = APPLICATION_JSON;
+    auto func = [req, resp] {
+        int id = atoi(req->GetParam("id").c_str());
+        SampleDataTable item;
+        Model::remove(item, id);
+        resp->json["data"] = id;
+    };
 
-    int id = atoi(req->GetParam("id").c_str());
-    SampleDataTable item;
-    Model::remove(item, id);
-
-    resp->json["data"] = id;
-    Handler::response_status(resp, 0, "OK");
+    Handler::response_json(req, resp, func);
     return 200;
 }
 
 int SampleDataHandler::get(HttpRequest *req, HttpResponse *resp) {
-    resp->content_type = APPLICATION_JSON;
-
-    auto id = req->GetParam("id");
-    try {
+    auto func = [req, resp] {
+        int id = atoi(req->GetParam("id").c_str());
         SampleDataTable item;
-        size_t size = Model::get(item, atoi(id.c_str()));
-        if (size) {
-           item.to_json(resp->json["data"]);
-        } else {
-            resp->json["data"] = {};
-        }
+        Model::get(item, id);
+        item.to_json(resp->json["data"]);
+    };
 
-        Handler::response_status(resp, 0, "OK");
-    } catch (const nlohmann::json::parse_error &e) {
-        std::cerr << "Parse error: " << e.what() << std::endl;
-        Handler::response_status(resp, 0, e.what());
-    } catch (const nlohmann::json::out_of_range &e) {
-        std::cerr << "Out of range error: " << e.what() << std::endl;
-        Handler::response_status(resp, 0, e.what());
-    } catch (const nlohmann::json::type_error &e) {
-        std::cerr << "Type error: " << e.what() << std::endl;
-        Handler::response_status(resp, 0, e.what());
-    } catch (std::system_error e) {
-        std::cout << e.what() << std::endl;
-        Handler::response_status(resp, 0, e.what());
-    }catch (...) {
-        std::cout << "unknown exeption" << std::endl;
-        Handler::response_status(resp, 0, "unknown exeption");
-    }
-
+    Handler::response_json(req, resp, func);
     return 200;
 }

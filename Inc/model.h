@@ -331,10 +331,14 @@ public:
             record = storage.template get<T>(id);
             return true;
         } catch (std::system_error e) {
-            printf("%s %zu %s\r\n", typeid(T).name(), id, e.what());
+            char error[64];
+            sprintf(error, "%s id:%zu %s", typeid(T).name(), id, e.what());
+            throw std::invalid_argument(error); // 抛出一个标准异常
             return false;
         } catch (...) {
-            printf("%s %zu unknown exeption\r\n", typeid(T).name(), id);
+            char error[64];
+            sprintf(error, "%s id:%zu unknown exeption", typeid(T).name(), id);
+            throw std::invalid_argument(error); // 抛出一个标准异常
             return false;
         }
     }
