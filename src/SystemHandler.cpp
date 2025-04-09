@@ -25,69 +25,60 @@
 #include "SampleListModel.h"
 #include <fstream>
 
-int SystemHandler::menu(HttpRequest *req, HttpResponse *resp) {
-    auto func = [req, resp] {
-        //加載演示功能菜单
-        if (m_system.debug) {
+int SystemHandler::menu(HttpRequest *req, HttpResponse *resp)
+{
+    auto func = [req, resp]
+    {
+        uint8_t i = 0;
+        uint8_t j = 0;
+        // 加載演示功能菜单
+#ifdef DEBUG_MODE
+        {
             std::string filePath = "../html/start/json/menu.js";
-
             std::ifstream file(filePath);
-            if (!file.is_open()) {
+            if (!file.is_open())
+            {
                 throw std::runtime_error("Failed to open file: " + filePath);
             }
 
             // 解析 JSON 文件
             nlohmann::json jsonData;
             file >> jsonData; // 将文件内容解析为 JSON 对象
-
             resp->json = jsonData;
+            file.close();
+            i = resp->json["data"].size();
         }
-
-        uint8_t i = m_system.debug ? resp->json["data"].size() : 0;
-        uint8_t j = 0;
-
-        resp->json["data"][i]["title"] = "主页";
-        resp->json["data"][i]["icon"] = "layui-icon-home";
-        resp->json["data"][i]["list"][j]["title"] = "控制台";
-        resp->json["data"][i]["list"][j]["jump"] = "/";
-        j++;
-        resp->json["data"][i]["list"][j]["title"] = "主页一";
-        resp->json["data"][i]["list"][j]["jump"] = "home/homepage1";
-        j++;
-        resp->json["data"][i]["list"][j]["title"] = "主页二";
-        resp->json["data"][i]["list"][j]["jump"] = "home/homepage2";
-
-        i++;
-        j = 0;
-        resp->json["data"][i]["name"] = "component";
-        resp->json["data"][i]["title"] = "组件";
+#endif
+        
+        resp->json["data"][i]["name"] = "status";
+        resp->json["data"][i]["title"] = "系统状态";
         resp->json["data"][i]["icon"] = "layui-icon-component";
-        resp->json["data"][i]["list"][j]["name"] = "button";
-        resp->json["data"][i]["list"][j]["title"] = "按钮";
-        j++;
-        resp->json["data"][i]["list"][j]["name"] = "nav";
-        resp->json["data"][i]["list"][j]["title"] = "导航";
-        j++;
-        resp->json["data"][i]["list"][j]["name"] = "tabs";
-        resp->json["data"][i]["list"][j]["title"] = "选项卡";
-        j++;
-        resp->json["data"][i]["list"][j]["name"] = "progress";
-        resp->json["data"][i]["list"][j]["title"] = "进度条";
-        j++;
-        resp->json["data"][i]["list"][j]["name"] = "panel";
-        resp->json["data"][i]["list"][j]["title"] = "面板";
-        j++;
-        resp->json["data"][i]["list"][j]["name"] = "badge";
-        resp->json["data"][i]["list"][j]["title"] = "徽章";
-        j++;
-        resp->json["data"][i]["list"][j]["name"] = "timeline";
-        resp->json["data"][i]["list"][j]["title"] = "时间线";
-        j++;
-        resp->json["data"][i]["list"][j]["name"] = "anim";
-        resp->json["data"][i]["list"][j]["title"] = "动画";
-        j++;
-        resp->json["data"][i]["list"][j]["name"] = "auxiliar";
-        resp->json["data"][i]["list"][j]["title"] = "辅助";
+        resp->json["data"][i]["jump"] = "/device/status";
+        i++;
+        resp->json["data"][i]["name"] = "method";
+        resp->json["data"][i]["title"] = "方法管理";
+        resp->json["data"][i]["icon"] = "layui-icon-template";
+        resp->json["data"][i]["jump"] = "/device/method";
+        i++;
+        resp->json["data"][i]["name"] = "queue";
+        resp->json["data"][i]["title"] = "队列管理";
+        resp->json["data"][i]["icon"] = "layui-icon-app";
+        resp->json["data"][i]["jump"] = "/device/queue";
+        i++;
+        resp->json["data"][i]["name"] = "sample";
+        resp->json["data"][i]["title"] = "评估结果";
+        resp->json["data"][i]["icon"] = "layui-icon-senior";
+        resp->json["data"][i]["jump"] = "/device/sample";
+        i++;
+        resp->json["data"][i]["name"] = "analyze";
+        resp->json["data"][i]["title"] = "智能分析";
+        resp->json["data"][i]["icon"] = "layui-icon-user";
+        resp->json["data"][i]["jump"] = "/device/analyze";
+        i++;
+        resp->json["data"][i]["name"] = "config";
+        resp->json["data"][i]["title"] = "系统配置";
+        resp->json["data"][i]["icon"] = "layui-icon-set";
+        resp->json["data"][i]["jump"] = "/device/config";
     };
 
     Handler::response_json(req, resp, func);
@@ -159,7 +150,7 @@ int SystemHandler::update(HttpRequest *req, HttpResponse *resp) {
 
 int SystemHandler::remove(HttpRequest *req, HttpResponse *resp) {
     auto func = [req, resp] {
-        int id = atoi(req->GetParam("id").c_str());
+        int id = std::stoi(req->GetParam("id"));
         CalibrationTable item;
         Model::remove(item, id);
         resp->json["data"] = id;
@@ -171,7 +162,7 @@ int SystemHandler::remove(HttpRequest *req, HttpResponse *resp) {
 
 int SystemHandler::get(HttpRequest *req, HttpResponse *resp) {
     auto func = [req, resp] {
-        int id = atoi(req->GetParam("id").c_str());
+        int id = std::stoi(req->GetParam("id"));
         CalibrationTable item;
         Model::get(item, id);
         item.to_json(resp->json["data"]);

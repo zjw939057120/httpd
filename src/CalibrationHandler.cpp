@@ -63,7 +63,7 @@ int CalibrationHandler::update(HttpRequest *req, HttpResponse *resp) {
 
 int CalibrationHandler::remove(HttpRequest *req, HttpResponse *resp) {
     auto func = [req, resp] {
-        int id = atoi(req->GetParam("id").c_str());
+        int id = std::stoi(req->GetParam("id"));
         CalibrationTable item;
         Model::remove(item, id);
         resp->json["data"] = id;
@@ -75,7 +75,7 @@ int CalibrationHandler::remove(HttpRequest *req, HttpResponse *resp) {
 
 int CalibrationHandler::get(HttpRequest *req, HttpResponse *resp) {
     auto func = [req, resp] {
-        int id = atoi(req->GetParam("id").c_str());
+        int id = std::stoi(req->GetParam("id"));
         CalibrationTable item;
         Model::get(item, id);
         item.to_json(resp->json["data"]);

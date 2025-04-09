@@ -66,7 +66,9 @@ void print_help() {
 
 void system_config() {
     //设置日志级别
-    hlog_set_level(LOG_LEVEL_INFO);
+    hlog_set_level(LOG_LEVEL_WARN);
+    hlog_set_file("");
+    hlog_set_format(DEFAULT_LOG_FORMAT);
     //Debug模式
     m_system.debug = false;
     //服务端口
@@ -168,10 +170,11 @@ int main(int argc, char **argv) {
         exit(0);
     }
 
-    if (m_system.debug)
-        printf("http server listening on port %d in debug mode\n", m_system.port);
-    else
-        printf("http server listening on port %d\n", m_system.port);
+#ifdef DEBUG_MODE
+        printf("http server url is http://127.0.0.1:%d in debug mode \n", m_system.port);
+#else
+        printf("http server url is http://127.0.0.1:%d \n", m_system.port);
+#endif
     //hthread_create(MethodListThread::testThread, NULL);
 
     auto loop = std::make_shared<EventLoop>();

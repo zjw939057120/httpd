@@ -64,7 +64,7 @@ int SampleListHandler::update(HttpRequest *req, HttpResponse *resp) {
 
 int SampleListHandler::remove(HttpRequest *req, HttpResponse *resp) {
     auto func = [req, resp] {
-        int id = atoi(req->GetParam("id").c_str());
+        int id = std::stoi(req->GetParam("id"));
         SampleListTable item;
         Model::remove(item, id);
         resp->json["data"] = id;
@@ -76,7 +76,7 @@ int SampleListHandler::remove(HttpRequest *req, HttpResponse *resp) {
 
 int SampleListHandler::get(HttpRequest *req, HttpResponse *resp) {
     auto func = [req, resp] {
-        int id = atoi(req->GetParam("id").c_str());
+        int id = std::stoi(req->GetParam("id"));
         SampleListTable item;
         Model::get(item, id);
         item.to_json(resp->json["data"]);

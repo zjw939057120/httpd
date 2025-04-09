@@ -386,80 +386,21 @@ int Handler::response_json(HttpRequest *req, HttpResponse *resp, const std::func
         func();
 
         response_status(resp, 0, "OK");
-    } catch (const nlohmann::json::parse_error &e) {
-        std::cerr << "Parse error: " << e.what() << std::endl;
-        resp->json["data"] = {};
-        response_status(resp, 1, e.what());
-
-    } catch (const nlohmann::json::out_of_range &e) {
-        std::cerr << "Out of range error: " << e.what() << std::endl;
-        resp->json["data"] = {};
-        response_status(resp, 1, e.what());
-
-    } catch (const nlohmann::json::type_error &e) {
-        std::cerr << "Type error: " << e.what() << std::endl;
-        resp->json["data"] = {};
-        response_status(resp, 1, e.what());
-
-    } catch (std::system_error e) {
+    } catch (const nlohmann::json::exception &e) {
         std::cerr << e.what() << std::endl;
         resp->json["data"] = {};
-        response_status(resp, 1, e.what());
 
-    } catch (std::domain_error e) {
-        std::cerr << e.what() << std::endl;
-        resp->json["data"] = {};
         response_status(resp, 1, e.what());
-
-    } catch (std::invalid_argument e) {
-        std::cerr << e.what() << std::endl;
-        resp->json["data"] = {};
-        response_status(resp, 1, e.what());
-
-    } catch (std::length_error e) {
-        std::cerr << e.what() << std::endl;
-        resp->json["data"] = {};
-        response_status(resp, 1, e.what());
-
-    } catch (std::out_of_range e) {
-        std::cerr << e.what() << std::endl;
-        resp->json["data"] = {};
-        response_status(resp, 1, e.what());
-
-    } catch (std::logic_error e) {
-        std::cerr << e.what() << std::endl;
-        resp->json["data"] = {};
-        response_status(resp, 1, e.what());
-
-    } catch (std::range_error e) {
-        std::cerr << e.what() << std::endl;
-        resp->json["data"] = {};
-        response_status(resp, 1, e.what());
-
-    } catch (std::overflow_error e) {
-        std::cerr << e.what() << std::endl;
-        resp->json["data"] = {};
-        response_status(resp, 1, e.what());
-
-    } catch (std::underflow_error e) {
-        std::cerr << e.what() << std::endl;
-        resp->json["data"] = {};
-        response_status(resp, 1, e.what());
-    } catch (std::runtime_error e) {
-        std::cerr << e.what() << std::endl;
-        resp->json["data"] = {};
-        response_status(resp, 1, e.what());
-
     } catch (std::exception e) {
         std::cerr << e.what() << std::endl;
         resp->json["data"] = {};
+        
         response_status(resp, 1, e.what());
-
     } catch (...) {
         std::cerr << "unknown exeption" << std::endl;
         resp->json["data"] = {};
+        
         response_status(resp, 1, "unknown exeption");
-
     }
 
     return 200;

@@ -16,8 +16,11 @@
 #include "SampleList.h"
 
 using namespace sqlite_orm;
-
+#ifdef DEBUG_MODE
 static auto storage = make_storage("../etc/database.db",
+#else
+static auto storage = make_storage("./etc/database.db",
+#endif
         //标定
                                    make_table("calibration",
                                               make_column("id", &CalibrationTable::id,

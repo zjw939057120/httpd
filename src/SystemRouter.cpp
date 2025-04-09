@@ -22,13 +22,13 @@
 void SystemRouter::Register(hv::HttpService &router) {
     /* Static file service */
     // curl -v http://ip:port/
-    if (m_system.debug) {
+#ifdef DEBUG_MODE
         router.Static("/", "../html/start");
         router.Static("/dist", "../html/dist");
-    } else {
+#else
         router.Static("/", "./html/start");
         router.Static("/dist", "./html/dist");
-    }
+#endif
 
     router.GET("/json/menu.js", SystemHandler::menu);
     router.GET("/json/test.js", SystemHandler::test);

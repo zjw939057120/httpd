@@ -63,7 +63,7 @@ int ConfigurationHandler::update(HttpRequest *req, HttpResponse *resp) {
 
 int ConfigurationHandler::remove(HttpRequest *req, HttpResponse *resp) {
     auto func = [req, resp] {
-        int id = atoi(req->GetParam("id").c_str());
+        int id = std::stoi(req->GetParam("id"));
         ConfigurationTable item;
         Model::remove(item, id);
         resp->json["data"] = id;
@@ -75,7 +75,7 @@ int ConfigurationHandler::remove(HttpRequest *req, HttpResponse *resp) {
 
 int ConfigurationHandler::get(HttpRequest *req, HttpResponse *resp) {
     auto func = [req, resp] {
-        int id = atoi(req->GetParam("id").c_str());
+        int id = std::stoi(req->GetParam("id"));
         ConfigurationTable item;
         Model::get(item, id);
     };

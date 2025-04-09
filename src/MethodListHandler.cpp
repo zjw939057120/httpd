@@ -64,7 +64,7 @@ int MethodListHandler::update(HttpRequest *req, HttpResponse *resp) {
 
 int MethodListHandler::remove(HttpRequest *req, HttpResponse *resp) {
     auto func = [req, resp] {
-        int id = atoi(req->GetParam("id").c_str());
+        int id = std::stoi(req->GetParam("id"));
         MethodListTable item;
         Model::remove(item, id);
         resp->json["data"] = id;
@@ -76,7 +76,7 @@ int MethodListHandler::remove(HttpRequest *req, HttpResponse *resp) {
 
 int MethodListHandler::get(HttpRequest *req, HttpResponse *resp) {
     auto func = [req, resp] {
-        int id = atoi(req->GetParam("id").c_str());
+        int id = std::stoi(req->GetParam("id"));
         MethodListTable item;
         Model::get(item, id);
         item.to_json(resp->json["data"]);
