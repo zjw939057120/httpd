@@ -89,20 +89,13 @@ int SystemHandler::test(HttpRequest *req, HttpResponse *resp) {
     auto func = [req, resp] {
         Model::sync_schema();
 
-        CalibrationTable data;
-        Model::insert(data);
-        if (Model::get(data, 10))
-            std::cout << "ID:" << data.id << ", calibration_line:" << data.calibration_line << ", calibration_A:"
-                      << data.calibration_A << std::endl;
-
-        // 查询 CalibrationTable 表的所有数据
         std::vector<CalibrationTable> list;
-        size_t len = Model::get_all(list);
+        size_t size = Model::get_all(list);
 
-        for (int i = 0; i < len; ++i) {
-            resp->json["data"][i] = list[i].id;
-            std::cout << "ID:" << list[i].id << ", calibration_line:" << list[i].calibration_line << ", calibration_A:"
-                      << list[i].calibration_A << std::endl;
+        int seq = 0;
+        for (auto &item:list) {
+            item.to_json(resp->json["data"][seq]);
+            seq++;
         }
     };
 
