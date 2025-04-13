@@ -1,95 +1,212 @@
-
-<title>折线图</title>
+<title>开启单元格编辑 - 数据表格</title>
 
 <div class="layui-card layadmin-header">
   <div class="layui-breadcrumb" lay-filter="breadcrumb">
-    <a lay-href="/">主页</a>
-    <a><cite>方法管理</cite></a>
+    <a lay-href="">主页</a>
+    <a><cite>组件</cite></a>
+    <a><cite>数据表格</cite></a>
+    <a><cite>开启单元格编辑</cite></a>
   </div>
 </div>
 
 <div class="layui-fluid">
   <div class="layui-row layui-col-space15">
-    <div class="layui-col-md6">
-      <div class="layui-card">
-        <div class="layui-card-header">标准折线图</div>
-        <div class="layui-card-body">
 
-          <div class="layui-carousel layadmin-carousel layadmin-dataview" data-anim="fade" lay-filter="LAY-index-normline">
-            <div carousel-item id="LAY-index-normline">
-              <div><i class="layui-icon layui-icon-loading1 layadmin-loading"></i></div>
-            </div>
+    <div class="layui-form layui-card-header layuiadmin-card-header-auto" lay-filter="layadmin-userfront-formlist">
+      <div class="layui-form-item">
+        <div class="layui-inline">
+          <label class="layui-form-label">方法名称</label>
+          <div class="layui-input-block">
+            <input type="text" name="id" placeholder="请输入" autocomplete="off" class="layui-input">
           </div>
-
         </div>
-      </div>
-      <div class="layui-card">
-        <div class="layui-card-header">堆积折线图</div>
-        <div class="layui-card-body">
-          
-          <div class="layui-carousel layadmin-carousel layadmin-dataview" data-anim="fade" lay-filter="LAY-index-heapline">
-            <div carousel-item id="LAY-index-heapline">
-              <div><i class="layui-icon layui-icon-loading1 layadmin-loading"></i></div>
-            </div>
-          </div>
 
+        <div class="layui-inline">
+          <label class="layui-form-label">方法类型</label>
+          <div class="layui-input-block">
+            <select name="sex">
+              <option value="-1">不限</option>
+              <option value="1">男</option>
+              <option value="2">女</option>
+            </select>
+          </div>
         </div>
-      </div>
-      <div class="layui-card">
-        <div class="layui-card-header">不等距折线图</div>
-        <div class="layui-card-body">
-          
-          <div class="layui-carousel layadmin-carousel layadmin-dataview" data-anim="fade" lay-filter="LAY-index-diffline">
-            <div carousel-item id="LAY-index-diffline">
-              <div><i class="layui-icon layui-icon-loading1 layadmin-loading"></i></div>
-            </div>
-          </div>
 
+        <div class="layui-inline">
+          <label class="layui-form-label">进样器类型</label>
+          <div class="layui-input-block">
+            <select name="sex">
+              <option value="-1">未选择</option>
+              <option value="1">男</option>
+              <option value="2">女</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="layui-inline">
+          <label class="layui-form-label">样品类型</label>
+          <div class="layui-input-block">
+            <select name="sex">
+              <option value="-1">未选择</option>
+              <option value="1">男</option>
+              <option value="2">女</option>
+            </select>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="layui-col-md4">
+      <div class="layui-card">
+        <div class="layui-card-header">开启单元格编辑</div>
+        <div class="layui-card-body">
+          <table class="layui-hide" id="test-table-cellEdit1" lay-filter="test-table-cellEdit1"></table>
         </div>
       </div>
     </div>
-    <div class="layui-col-md6">
-      <div class="layui-card">
-        <div class="layui-card-header">堆积面积图</div>
-        <div class="layui-card-body">
-          
-          <div class="layui-carousel layadmin-carousel layadmin-dataview" data-anim="fade" lay-filter="LAY-index-heaparea">
-            <div carousel-item id="LAY-index-heaparea">
-              <div><i class="layui-icon layui-icon-loading1 layadmin-loading"></i></div>
-            </div>
-          </div>
 
-        </div>
-      </div>
+    <div class="layui-col-md4">
       <div class="layui-card">
-        <div class="layui-card-header">面积图</div>
+        <div class="layui-card-header">开启单元格编辑</div>
         <div class="layui-card-body">
-         
-          <div class="layui-carousel layadmin-carousel layadmin-dataview" data-anim="fade" lay-filter="LAY-index-area">
-            <div carousel-item id="LAY-index-area">
-              <div><i class="layui-icon layui-icon-loading1 layadmin-loading"></i></div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-      <div class="layui-card">
-        <div class="layui-card-header">对数轴</div>
-        <div class="layui-card-body">
-         
-          <div class="layui-carousel layadmin-carousel layadmin-dataview" data-anim="fade" lay-filter="LAY-index-logline">
-            <div carousel-item id="LAY-index-logline">
-              <div><i class="layui-icon layui-icon-loading1 layadmin-loading"></i></div>
-            </div>
-          </div>
-
+          <table class="layui-hide" id="test-table-cellEdit2" lay-filter="test-table-cellEdit2"></table>
         </div>
       </div>
     </div>
-    
+
+    <div class="layui-col-md4">
+      <div class="layui-card">
+        <div class="layui-card-header">开启单元格编辑</div>
+        <div class="layui-card-body">
+          <table class="layui-hide" id="test-table-cellEdit3" lay-filter="test-table-cellEdit3"></table>
+        </div>
+      </div>
+    </div>
+
+    <div class="layui-col-md4">
+      <div class="layui-card">
+        <div class="layui-card-header">开启单元格编辑</div>
+        <div class="layui-card-body">
+          <table class="layui-hide" id="test-table-cellEdit4" lay-filter="test-table-cellEdit4"></table>
+        </div>
+      </div>
+    </div>
+
+    <div class="layui-col-md4">
+      <div class="layui-card">
+        <div class="layui-card-header">开启单元格编辑</div>
+        <div class="layui-card-body">
+          <table class="layui-hide" id="test-table-cellEdit5" lay-filter="test-table-cellEdit5"></table>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
 <script>
-layui.use('senior', layui.factory('senior'));
+  layui.use('useradmin', layui.factory('useradmin')).use(['admin', 'useradmin', 'table'], function () {
+    var $ = layui.$
+      , admin = layui.admin
+      , view = layui.view
+      , table = layui.table
+      , form = layui.form;
+
+    table.render({
+      elem: '#test-table-cellEdit1'
+      , url: './json/table/demo.js'
+      , cols: [[
+        { field: 'id', title: 'ID', width: 180, sort: true }
+        , { field: 'username', title: '用户名', width: 120, sort: true, edit: 'text' }
+        , { field: 'email', title: '邮箱', edit: 'text', minWidth: 150 }
+      ]]
+    });
+
+    table.render({
+      elem: '#test-table-cellEdit2'
+      , url: './json/table/demo.js'
+      , cols: [[
+        { field: 'id', title: 'ID', width: 180, sort: true }
+        , { field: 'username', title: '用户名', width: 120, sort: true, edit: 'text' }
+        , { field: 'email', title: '邮箱', edit: 'text', minWidth: 150 }
+      ]]
+    });
+
+    table.render({
+      elem: '#test-table-cellEdit3'
+      , url: './json/table/demo.js'
+      , cols: [[
+        { field: 'id', title: 'ID', width: 180, sort: true }
+        , { field: 'username', title: '用户名', width: 120, sort: true, edit: 'text' }
+        , { field: 'email', title: '邮箱', edit: 'text', minWidth: 150 }
+      ]]
+    });
+
+    table.render({
+      elem: '#test-table-cellEdit4'
+      , url: './json/table/demo.js'
+      , cols: [[
+        { field: 'id', title: 'ID', width: 180, sort: true }
+        , { field: 'username', title: '用户名', width: 120, sort: true, edit: 'text' }
+        , { field: 'email', title: '邮箱', edit: 'text', minWidth: 150 }
+      ]]
+    });
+
+    table.render({
+      elem: '#test-table-cellEdit5'
+      , url: './json/table/demo.js'
+      , cols: [[
+        { field: 'id', title: 'ID', width: 180, sort: true }
+        , { field: 'username', title: '用户名', width: 120, sort: true, edit: 'text' }
+        , { field: 'email', title: '邮箱', edit: 'text', minWidth: 150 }
+      ]]
+    });
+
+    //监听单元格编辑
+    table.on('edit(test-table-cellEdit1)', function (obj) {
+      var value = obj.value //得到修改后的值
+        , data = obj.data //得到所在行所有键值
+        , field = obj.field; //得到字段
+      layer.msg('[ID: ' + data.id + '] ' + field + ' 字段更改为：' + value, {
+        offset: '15px'
+      });
+    });
+
+    table.on('edit(test-table-cellEdit2)', function (obj) {
+      var value = obj.value //得到修改后的值
+        , data = obj.data //得到所在行所有键值
+        , field = obj.field; //得到字段
+      layer.msg('[ID: ' + data.id + '] ' + field + ' 字段更改为：' + value, {
+        offset: '15px'
+      });
+    });
+
+    table.on('edit(test-table-cellEdit3)', function (obj) {
+      var value = obj.value //得到修改后的值
+        , data = obj.data //得到所在行所有键值
+        , field = obj.field; //得到字段
+      layer.msg('[ID: ' + data.id + '] ' + field + ' 字段更改为：' + value, {
+        offset: '15px'
+      });
+    });
+
+    table.on('edit(test-table-cellEdit4)', function (obj) {
+      var value = obj.value //得到修改后的值
+        , data = obj.data //得到所在行所有键值
+        , field = obj.field; //得到字段
+      layer.msg('[ID: ' + data.id + '] ' + field + ' 字段更改为：' + value, {
+        offset: '15px'
+      });
+    });
+
+    table.on('edit(test-table-cellEdit5)', function (obj) {
+      var value = obj.value //得到修改后的值
+        , data = obj.data //得到所在行所有键值
+        , field = obj.field; //得到字段
+      layer.msg('[ID: ' + data.id + '] ' + field + ' 字段更改为：' + value, {
+        offset: '15px'
+      });
+    });
+  });
 </script>
