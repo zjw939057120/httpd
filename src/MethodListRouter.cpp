@@ -20,4 +20,5 @@ void MethodListRouter::Register(hv::HttpService &router) {
     router.GET("/api/method_list/update", MethodListHandler::update);
     router.GET("/api/method_list/remove/{id}", MethodListHandler::remove);
     router.GET("/api/method_list/get/{id}", MethodListHandler::get);
+    router.GET("/api/method_list/config", MethodListHandler::config);
 }

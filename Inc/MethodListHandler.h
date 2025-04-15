@@ -18,7 +18,8 @@ public:
     static int remove(HttpRequest *req, HttpResponse *resp);
 
     static int get(HttpRequest *req, HttpResponse *resp);
+    
+    static int config(HttpRequest *req, HttpResponse *resp);
 };
-
 
 #endif //HTTPD_METHODLISTHANDLER_H
