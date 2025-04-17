@@ -18,6 +18,8 @@ public:
     static int remove(HttpRequest *req, HttpResponse *resp);
 
     static int get(HttpRequest *req, HttpResponse *resp);
+
+    static int get_filter(HttpRequest *req, HttpResponse *resp);
     
     static int config(HttpRequest *req, HttpResponse *resp);
 };

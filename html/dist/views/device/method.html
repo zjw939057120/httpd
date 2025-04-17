@@ -29,13 +29,6 @@
           <div class="layui-input-block">
             <select name="type" id="type" lay-filter="type">
               <option value="">未选择</option>
-              <option value="0">单硫</option>
-              <option value="1">单氮</option>
-              <option value="2">单氯</option>
-              <option value="3">硫氮</option>
-              <option value="4">CELL</option>
-              <option value="5">待机</option>
-              <option value="6">启动</option>
             </select>
           </div>
         </div>
@@ -44,11 +37,6 @@
           <div class="layui-input-block">
             <select name="injector_type" id="injector_type" lay-filter="injector_type">
               <option value="">未选择</option>
-              <option value="0">AJ</option>
-              <option value="1">液体</option>
-              <option value="2">气体</option>
-              <option value="3">固体</option>
-              <option value="4">无</option>
             </select>
           </div>
         </div>
@@ -58,9 +46,6 @@
           <div class="layui-input-block">
             <select name="sample_type" id="sample_type" lay-filter="sample_type">
               <option value="">未选择</option>
-              <option value="0">液体</option>
-              <option value="1">气体</option>
-              <option value="2">固体</option>
             </select>
           </div>
         </div>
@@ -133,7 +118,21 @@
       , form = layui.form
       , table = layui.table;
 
+    var method_config = {};
     var method_list = {};
+
+    //获取配置
+    $.ajax({
+      url: '/api/method_list/config', // 替换为你的 JSON 接口地址
+      method: 'GET',
+      async: false, // 设置为同步请求
+      success: function (res) {
+        method_config = res.data; // 将数据存储到全局变量中
+      },
+      error: function () {
+        console.error('请求失败');
+      }
+    });
 
     // [方法列表]动态填充数据后需要重新渲染 select
     $.ajax({
@@ -142,12 +141,37 @@
       success: function (res) {
         method_list = res.data; // 将数据存储到全局变量中
         // 假设返回的数据格式为：[{ "id": "1", "name": "方法1" }, { "id": "2", "name": "方法2" }]
-        var options = '<option value="">未选择</option>';
+        // 填充方法列表下拉框
+        var method_list_options = '';
         method_list.forEach(function (item) {
-          options += '<option value="' + item.id + '">' + item.name + '</option>';
+          method_list_options += '<option value="' + item.id + '">' + item.name + '</option>';
         });
-        $('#method_list').html(options); // 填充到 select 中
+        $('#method_list').html(method_list_options); // 填充到 select 中
+
+        // 填充方法类型下拉框
+        var type_options = '';
+        method_config.type.forEach(function (item, index) {
+          type_options += '<option value="' + index + '">' + item + '</option>';
+        });
+        $('#type').html(type_options); // 填充到 select 中
+
+        // 填充类型下拉框
+        var injector_type_options = '';
+        method_config.injector_type.forEach(function (item, index) {
+          injector_type_options += '<option value="' + index + '">' + item + '</option>';
+        });
+        $('#injector_type').html(injector_type_options); // 填充到 select 中
+
+        // 填充样品类型下拉框
+        var sample_type_options = '';
+        method_config.sample_type.forEach(function (item, index) {
+          sample_type_options += '<option value="' + index + '">' + item + '</option>';
+        });
+        $('#sample_type').html(sample_type_options); // 填充到 select 中  
+
         form.render('select'); // 重新渲染表单
+
+        renderMethod(method_list[0].id); // 默认渲染第一个方法的设置
       },
       error: function () {
         console.error('请求失败');
@@ -159,73 +183,155 @@
     form.on('select(method_list)', function (data) {
       if (!data.value) return; // 防止未选择时触发
       console.log('选中的值:', data.value); // 获取选中的值
-
-      $('#type').val(method_list[data.value].type); // 设置选中值
-      $('#injector_type').val(method_list[data.value].injector_type); // 设置选中值
-      $('#sample_type').val(method_list[data.value].sample_type); // 设置选中值
-      $('#name').val(method_list[data.value].name);
-      form.render('select'); // 重新渲染 select
+      renderMethod(data.value)
     });
 
+    function renderMethod(id) {
+      $('#type').val(method_list[id].type); // 设置选中值
+      $('#injector_type').val(method_list[id].injector_type); // 设置选中值
+      $('#sample_type').val(method_list[id].sample_type); // 设置选中值
+      $('#name').val(method_list[id].name);
+      form.render('select'); // 重新渲染 select
 
-
-
-
-
-    function renderMethodTemp(type) {
-
+      renderMethodTemp(id);//渲染温度表格
+      renderMethodPass(id);//渲染压力表格
+      renderMethodFlow(id);//渲染流量表格
+      renderMethodOther(id);//渲染其他表格
+      renderMethodInjector(method_list[id].injector_type, method_list[id].sample_type);//渲染注入器表格
     }
 
+    //渲染温度表格
+    function renderMethodTemp(method_id) {
+      //根据方法类型渲染不同的表格
+      table.render({
+        elem: '#method_temp'
+        , minheight: 313
+        , url: '/api/method_list/get/' + method_id // 替换为你的 JSON 接口地址
+        , parseData: function (res) {
+          // 提取指定 key 下的数据
+          return {
+            code: res.code, // 状态码
+            msg: res.msg, // 提示信息
+            count: Object.keys(res.data.method_temp).length, // 数据总数
+            data: Object.entries(res.data.method_temp).map(([key, value]) => ({
+              key: key, // 参数名称
+              value: value // 参数值
+            }))
+          };
+        }
+        , cols: [[
+          , { field: 'key', title: '用户参数名称名' }
+          , { field: 'value', title: '设置定', event: 'setSign', style: 'cursor: pointer;' }
+        ]]
+      });
+    }
 
+    //渲染压力表格
+    function renderMethodPass(method_id) {
+      //根据方法类型渲染不同的表格
+      table.render({
+        elem: '#method_pass'
+        , minheight: 313
+        , url: '/api/method_list/get/' + method_id // 替换为你的 JSON 接口地址
+        , parseData: function (res) {
+          // 提取指定 key 下的数据
+          return {
+            code: res.code, // 状态码
+            msg: res.msg, // 提示信息
+            count: Object.keys(res.data.method_pass).length, // 数据总数
+            data: Object.entries(res.data.method_pass).map(([key, value]) => ({
+              key: key, // 参数名称
+              value: value // 参数值
+            }))
+          };
+        }
+        , cols: [[
+          , { field: 'key', title: '用户参数名称名' }
+          , { field: 'value', title: '设置定', event: 'setSign', style: 'cursor: pointer;' }
+        ]]
+      });
+    }
 
+    //渲染流量表格
+    function renderMethodFlow(method_id) {
+      //根据方法类型渲染不同的表格
+      table.render({
+        elem: '#method_flow'
+        , minheight: 313
+        , url: '/api/method_list/get/' + method_id // 替换为你的 JSON 接口地址
+        , parseData: function (res) {
+          // 提取指定 key 下的数据
+          return {
+            code: res.code, // 状态码
+            msg: res.msg, // 提示信息
+            count: Object.keys(res.data.method_flow).length, // 数据总数
+            data: Object.entries(res.data.method_flow).map(([key, value]) => ({
+              key: key, // 参数名称
+              value: value // 参数值
+            }))
+          };
+        }
+        , cols: [[
+          , { field: 'key', title: '用户参数名称名' }
+          , { field: 'value', title: '设置定', event: 'setSign', style: 'cursor: pointer;' }
+        ]]
+      });
+    }
+
+    //渲染其他表格
+    function renderMethodOther(method_id) {
+      //根据方法类型渲染不同的表格
+      table.render({
+        elem: '#method_other'
+        , minheight: 313
+        , url: '/api/method_list/get/' + method_id // 替换为你的 JSON 接口地址
+        , parseData: function (res) {
+          // 提取指定 key 下的数据
+          return {
+            code: res.code, // 状态码
+            msg: res.msg, // 提示信息
+            count: Object.keys(res.data.method_other).length, // 数据总数
+            data: Object.entries(res.data.method_other).map(([key, value]) => ({
+              key: key, // 参数名称
+              value: value // 参数值
+            }))
+          };
+        }
+        , cols: [[
+          , { field: 'key', title: '用户参数名称名' }
+          , { field: 'value', title: '设置定', event: 'setSign', style: 'cursor: pointer;' }
+        ]]
+      });
+    }
+
+    //渲染进样器表格
+    function renderMethodInjector(injector_type, sample_type) {
+      //根据进样器类型和样品类型渲染不同的表格
+      table.render({
+        elem: '#method_injector'
+        , minheight: 313
+        , url: '/api/method_list/get/' + method_id // 替换为你的 JSON 接口地址
+        , parseData: function (res) {
+          // 提取指定 key 下的数据
+          return {
+            code: res.code, // 状态码
+            msg: res.msg, // 提示信息
+            count: Object.keys(res.data.method_injector).length, // 数据总数
+            data: Object.entries(res.data.method_injector).map(([key, value]) => ({
+              key: key, // 参数名称
+              value: value // 参数值
+            }))
+          };
+        }
+        , cols: [[
+          , { field: 'key', title: '用户参数名称名' }
+          , { field: 'value', title: '设置定', event: 'setSign', style: 'cursor: pointer;' }
+        ]]
+      });
+    }
 
     form.render(null, 'layadmin-userfront-formlist');
 
-    table.render({
-      elem: '#method_temp'
-      , minheight: 313
-      , url: './json/table/user.js'
-      , cols: [[
-        , { field: 'username', title: '用户名' }
-        , { field: 'sign', title: '签名', event: 'setSign', style: 'cursor: pointer;' }
-      ]]
-    });
-    table.render({
-      elem: '#method_pass'
-      , minheight: 313
-      , url: './json/table/user.js'
-      , cols: [[
-        , { field: 'username', title: '用户名' }
-        , { field: 'sign', title: '签名', event: 'setSign', style: 'cursor: pointer;' }
-      ]]
-    });
-    table.render({
-      elem: '#method_flow'
-      , minheight: 313
-      , url: './json/table/user.js'
-      , cols: [[
-        , { field: 'username', title: '用户名' }
-        , { field: 'sign', title: '签名', event: 'setSign', style: 'cursor: pointer;' }
-      ]]
-    });
-    table.render({
-      elem: '#method_other'
-      , minminheight: 313
-      , url: './json/table/user.js'
-      , cols: [[
-        , { field: 'username', title: '用户名' }
-        , { field: 'sign', title: '签名', event: 'setSign', style: 'cursor: pointer;' }
-      ]]
-    });
-    table.render({
-      elem: '#method_injector'
-      , minheight: 313
-      , url: './json/table/user.js'
-      , cols: [[
-        , { field: 'username', title: '用户名' }
-        , { field: 'sign', title: '签名', event: 'setSign', style: 'cursor: pointer;' }
-      ]]
-    });
 
     //监听单元格事件
     table.on('tool(method_temp)', function (obj) {

@@ -49,7 +49,7 @@ int SystemHandler::menu(HttpRequest *req, HttpResponse *resp)
             i = resp->json["data"].size();
         }
 #endif
-        
+
         resp->json["data"][i]["name"] = "status";
         resp->json["data"][i]["title"] = "系统状态";
         resp->json["data"][i]["icon"] = "layui-icon-component";
@@ -85,15 +85,18 @@ int SystemHandler::menu(HttpRequest *req, HttpResponse *resp)
     return 200;
 };
 
-int SystemHandler::test(HttpRequest *req, HttpResponse *resp) {
-    auto func = [req, resp] {
+int SystemHandler::test(HttpRequest *req, HttpResponse *resp)
+{
+    auto func = [req, resp]
+    {
         Model::sync_schema();
 
         std::vector<CalibrationTable> list;
         size_t size = Model::get_all(list);
 
         int seq = 0;
-        for (auto &item:list) {
+        for (auto &item : list)
+        {
             item.to_json(resp->json["data"][seq]);
             seq++;
         }
@@ -103,13 +106,16 @@ int SystemHandler::test(HttpRequest *req, HttpResponse *resp) {
     return 200;
 };
 
-int SystemHandler::get_all(HttpRequest *req, HttpResponse *resp) {
-    auto func = [req, resp] {
+int SystemHandler::get_all(HttpRequest *req, HttpResponse *resp)
+{
+    auto func = [req, resp]
+    {
         std::vector<CalibrationTable> list;
         size_t size = Model::get_all(list);
 
         int seq = 0;
-        for (auto &item:list) {
+        for (auto &item : list)
+        {
             item.to_json(resp->json["data"][seq]);
             seq++;
         }
@@ -118,8 +124,10 @@ int SystemHandler::get_all(HttpRequest *req, HttpResponse *resp) {
     return 200;
 }
 
-int SystemHandler::insert(HttpRequest *req, HttpResponse *resp) {
-    auto func = [req, resp] {
+int SystemHandler::insert(HttpRequest *req, HttpResponse *resp)
+{
+    auto func = [req, resp]
+    {
         CalibrationTable item;
         item.from_json(req->GetJson());
         resp->json["data"] = Model::insert(item);
@@ -128,8 +136,10 @@ int SystemHandler::insert(HttpRequest *req, HttpResponse *resp) {
     return 200;
 }
 
-int SystemHandler::update(HttpRequest *req, HttpResponse *resp) {
-    auto func = [req, resp] {
+int SystemHandler::update(HttpRequest *req, HttpResponse *resp)
+{
+    auto func = [req, resp]
+    {
         CalibrationTable item;
         item.from_json(req->GetJson());
 
@@ -141,8 +151,10 @@ int SystemHandler::update(HttpRequest *req, HttpResponse *resp) {
     return 200;
 }
 
-int SystemHandler::remove(HttpRequest *req, HttpResponse *resp) {
-    auto func = [req, resp] {
+int SystemHandler::remove(HttpRequest *req, HttpResponse *resp)
+{
+    auto func = [req, resp]
+    {
         int id = std::stoi(req->GetParam("id"));
         CalibrationTable item;
         Model::remove(item, id);
@@ -153,8 +165,10 @@ int SystemHandler::remove(HttpRequest *req, HttpResponse *resp) {
     return 200;
 }
 
-int SystemHandler::get(HttpRequest *req, HttpResponse *resp) {
-    auto func = [req, resp] {
+int SystemHandler::get(HttpRequest *req, HttpResponse *resp)
+{
+    auto func = [req, resp]
+    {
         int id = std::stoi(req->GetParam("id"));
         CalibrationTable item;
         Model::get(item, id);
