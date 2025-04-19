@@ -3,9 +3,7 @@
 <div class="layui-card layadmin-header">
   <div class="layui-breadcrumb" lay-filter="breadcrumb">
     <a lay-href="">主页</a>
-    <a><cite>组件</cite></a>
-    <a><cite>数据表格</cite></a>
-    <a><cite>监听单元格事件</cite></a>
+    <a><cite>方法管理</cite></a>
   </div>
 </div>
 
@@ -120,6 +118,7 @@
 
     var method_config = {};
     var method_list = {};
+    var current_method_item = {}; // 当前选中的方法项
 
     //获取配置
     $.ajax({
@@ -143,8 +142,8 @@
         // 假设返回的数据格式为：[{ "id": "1", "name": "方法1" }, { "id": "2", "name": "方法2" }]
         // 填充方法列表下拉框
         var method_list_options = '';
-        method_list.forEach(function (item) {
-          method_list_options += '<option value="' + item.id + '">' + item.name + '</option>';
+        method_list.forEach(function (item, index) {
+          method_list_options += '<option value="' + index + '">' + item.name + '</option>';
         });
         $('#method_list').html(method_list_options); // 填充到 select 中
 
@@ -171,7 +170,8 @@
 
         form.render('select'); // 重新渲染表单
 
-        renderMethod(method_list[0].id); // 默认渲染第一个方法的设置
+        var index = $('#method_list').val();
+        renderMethodItem(index); // 初始化时渲染第一个方法项
       },
       error: function () {
         console.error('请求失败');
@@ -183,149 +183,180 @@
     form.on('select(method_list)', function (data) {
       if (!data.value) return; // 防止未选择时触发
       console.log('选中的值:', data.value); // 获取选中的值
-      renderMethod(data.value)
+      renderMethodItem(data.value)
     });
 
-    function renderMethod(id) {
-      $('#type').val(method_list[id].type); // 设置选中值
-      $('#injector_type').val(method_list[id].injector_type); // 设置选中值
-      $('#sample_type').val(method_list[id].sample_type); // 设置选中值
-      $('#name').val(method_list[id].name);
+    // 监听[方法类型]改变事件
+    form.on('select(type)', function (data) {
+      if (!data.value) return; // 防止未选择时触发
+      console.log('选中的值:', data.value); // 获取选中的值
+      renderMethodTemp(current_method_item.id, data.value);//渲染温度表格
+      renderMethodPass(current_method_item.id, data.value);//渲染压力表格
+      renderMethodFlow(current_method_item.id, data.value);//渲染流量表格
+      renderMethodOther(current_method_item.id, data.value);//渲染其他表格
+    });
+
+    // 监听[进样器类型]改变事件
+    form.on('select(injector_type)', function (data) {
+      if (!data.value) return; // 防止未选择时触发
+      console.log('选中的值:', data.value); // 获取选中的值
+      var sample_type = $('#sample_type').val(); // 获取当前选中的样品类型
+      renderMethodInjector(current_method_item.id, data.value, sample_type);//渲染注入器表格
+    });
+
+    // 监听[样品类型]改变事件 
+    form.on('select(sample_type)', function (data) {
+      if (!data.value) return; // 防止未选择时触发
+      var injector_type = $('#injector_type').val(); // 获取当前选中的进样器类型
+      renderMethodInjector(current_method_item.id, injector_type, data.value);//渲染注入器表格
+    });
+
+    function renderMethodItem(index) {
+      current_method_item = method_list[index]; // 获取当前选中的方法项
+      console.log('当前选中的方法项:', current_method_item); // 打印当前选中的方法项
+      // 填充方法类型下拉框
+      $('#type').val(current_method_item.type); // 设置选中值
+      // 填充类型下拉框
+      $('#injector_type').val(current_method_item.injector_type); // 设置选中值
+      // 填充样品类型下拉框
+      $('#sample_type').val(current_method_item.sample_type); // 设置选中值
+      // 填充方法名称
+      $('#name').val(current_method_item.name);
       form.render('select'); // 重新渲染 select
 
-      renderMethodTemp(id);//渲染温度表格
-      renderMethodPass(id);//渲染压力表格
-      renderMethodFlow(id);//渲染流量表格
-      renderMethodOther(id);//渲染其他表格
-      renderMethodInjector(method_list[id].injector_type, method_list[id].sample_type);//渲染注入器表格
+      renderMethodTemp(current_method_item.id);//渲染温度表格
+      renderMethodPass(current_method_item.id);//渲染压力表格
+      renderMethodFlow(current_method_item.id);//渲染流量表格
+      renderMethodOther(current_method_item.id);//渲染其他表格
+      renderMethodInjector(current_method_item.id);//渲染注入器表格
     }
 
     //渲染温度表格
-    function renderMethodTemp(method_id) {
+    function renderMethodTemp(method_id, type = -1) {
       //根据方法类型渲染不同的表格
       table.render({
         elem: '#method_temp'
         , minheight: 313
-        , url: '/api/method_list/get/' + method_id // 替换为你的 JSON 接口地址
+        , url: '/api/method_list/get/' + method_id + '?type=' + type // 替换为你的 JSON 接口地址
         , parseData: function (res) {
           // 提取指定 key 下的数据
           return {
             code: res.code, // 状态码
             msg: res.msg, // 提示信息
-            count: Object.keys(res.data.method_temp).length, // 数据总数
-            data: Object.entries(res.data.method_temp).map(([key, value]) => ({
-              key: key, // 参数名称
-              value: value // 参数值
-            }))
+            data: res.data.method_temp.map(item => (item ? {
+              id: item[0], // 索引
+              name: item[1], // 参数名称
+              val: item[2] // 参数值
+            } : {}))
           };
         }
         , cols: [[
-          , { field: 'key', title: '用户参数名称名' }
-          , { field: 'value', title: '设置定', event: 'setSign', style: 'cursor: pointer;' }
+          , { field: 'name', title: '参数名称' }
+          , { field: 'val', title: '设置值', event: 'setSign', style: 'cursor: pointer;' }
         ]]
       });
     }
 
     //渲染压力表格
-    function renderMethodPass(method_id) {
+    function renderMethodPass(method_id, type = -1) {
       //根据方法类型渲染不同的表格
       table.render({
         elem: '#method_pass'
         , minheight: 313
-        , url: '/api/method_list/get/' + method_id // 替换为你的 JSON 接口地址
+        , url: '/api/method_list/get/' + method_id + '?type=' + type // 替换为你的 JSON 接口地址
         , parseData: function (res) {
           // 提取指定 key 下的数据
           return {
             code: res.code, // 状态码
             msg: res.msg, // 提示信息
-            count: Object.keys(res.data.method_pass).length, // 数据总数
-            data: Object.entries(res.data.method_pass).map(([key, value]) => ({
-              key: key, // 参数名称
-              value: value // 参数值
-            }))
+            data: res.data.method_pass.map(item => (item ? {
+              id: item[0], // 索引
+              name: item[1], // 参数名称
+              val: item[2] // 参数值
+            } : {}))
           };
         }
         , cols: [[
-          , { field: 'key', title: '用户参数名称名' }
-          , { field: 'value', title: '设置定', event: 'setSign', style: 'cursor: pointer;' }
+          , { field: 'name', title: '参数名称' }
+          , { field: 'val', title: '设置值', event: 'setSign', style: 'cursor: pointer;' }
         ]]
       });
     }
 
     //渲染流量表格
-    function renderMethodFlow(method_id) {
+    function renderMethodFlow(method_id, type = -1) {
       //根据方法类型渲染不同的表格
       table.render({
         elem: '#method_flow'
         , minheight: 313
-        , url: '/api/method_list/get/' + method_id // 替换为你的 JSON 接口地址
+        , url: '/api/method_list/get/' + method_id + '?type=' + type // 替换为你的 JSON 接口地址
         , parseData: function (res) {
           // 提取指定 key 下的数据
           return {
             code: res.code, // 状态码
             msg: res.msg, // 提示信息
-            count: Object.keys(res.data.method_flow).length, // 数据总数
-            data: Object.entries(res.data.method_flow).map(([key, value]) => ({
-              key: key, // 参数名称
-              value: value // 参数值
-            }))
+            data: res.data.method_flow.map(item => (item ? {
+              id: item[0], // 索引
+              name: item[1], // 参数名称
+              val: item[2] // 参数值
+            } : {}))
           };
         }
         , cols: [[
-          , { field: 'key', title: '用户参数名称名' }
-          , { field: 'value', title: '设置定', event: 'setSign', style: 'cursor: pointer;' }
+          , { field: 'name', title: '参数名称' }
+          , { field: 'val', title: '设置值', event: 'setSign', style: 'cursor: pointer;' }
         ]]
       });
     }
 
     //渲染其他表格
-    function renderMethodOther(method_id) {
+    function renderMethodOther(method_id, type = -1) {
       //根据方法类型渲染不同的表格
       table.render({
         elem: '#method_other'
         , minheight: 313
-        , url: '/api/method_list/get/' + method_id // 替换为你的 JSON 接口地址
+        , url: '/api/method_list/get/' + method_id + '?type=' + type // 替换为你的 JSON 接口地址
         , parseData: function (res) {
           // 提取指定 key 下的数据
           return {
             code: res.code, // 状态码
             msg: res.msg, // 提示信息
-            count: Object.keys(res.data.method_other).length, // 数据总数
-            data: Object.entries(res.data.method_other).map(([key, value]) => ({
-              key: key, // 参数名称
-              value: value // 参数值
-            }))
+            data: res.data.method_other.map(item => (item ? {
+              id: item[0], // 索引
+              name: item[1], // 参数名称
+              val: item[2] // 参数值
+            } : {}))
           };
         }
         , cols: [[
-          , { field: 'key', title: '用户参数名称名' }
-          , { field: 'value', title: '设置定', event: 'setSign', style: 'cursor: pointer;' }
+          , { field: 'name', title: '参数名称' }
+          , { field: 'val', title: '设置值', event: 'setSign', style: 'cursor: pointer;' }
         ]]
       });
     }
 
     //渲染进样器表格
-    function renderMethodInjector(injector_type, sample_type) {
+    function renderMethodInjector(method_id, injector_type = -1, sample_type = -1) {
       //根据进样器类型和样品类型渲染不同的表格
       table.render({
         elem: '#method_injector'
         , minheight: 313
-        , url: '/api/method_list/get/' + method_id // 替换为你的 JSON 接口地址
+        , url: '/api/method_list/get/' + method_id + '?injector_type=' + injector_type + '&sample_type=' + sample_type  // 替换为你的 JSON 接口地址
         , parseData: function (res) {
           // 提取指定 key 下的数据
           return {
             code: res.code, // 状态码
             msg: res.msg, // 提示信息
-            count: Object.keys(res.data.method_injector).length, // 数据总数
-            data: Object.entries(res.data.method_injector).map(([key, value]) => ({
-              key: key, // 参数名称
-              value: value // 参数值
-            }))
+            data: res.data.method_injector.map(item => (item ? {
+              id: item[0], // 索引
+              name: item[1], // 参数名称
+              val: item[2] // 参数值
+            } : {}))
           };
         }
         , cols: [[
-          , { field: 'key', title: '用户参数名称名' }
-          , { field: 'value', title: '设置定', event: 'setSign', style: 'cursor: pointer;' }
+          , { field: 'name', title: '参数名称' }
+          , { field: 'val', title: '设置值', event: 'setSign', style: 'cursor: pointer;' }
         ]]
       });
     }
@@ -339,8 +370,8 @@
       if (obj.event === 'setSign') {
         layer.prompt({
           formType: 2
-          , title: '修改 ID 为 [' + data.id + '] 的用户签名'
-          , value: data.sign
+          , title: '修改 ' + data.name + ' 的值'
+          , value: data.val
         }, function (value, index) {
           layer.close(index);
 
@@ -348,11 +379,88 @@
 
           //同步更新表格和缓存对应的值
           obj.update({
-            sign: value
+            val: value
           });
         });
       }
     });
+    table.on('tool(method_pass)', function (obj) {
+      var data = obj.data;
+      if (obj.event === 'setSign') {
+        layer.prompt({
+          formType: 2
+          , title: '修改 ' + data.name + ' 的值'
+          , value: data.val
+        }, function (value, index) {
+          layer.close(index);
+
+          //这里一般是发送修改的Ajax请求
+
+          //同步更新表格和缓存对应的值
+          obj.update({
+            val: value
+          });
+        });
+      }
+    });
+    table.on('tool(method_flow)', function (obj) {
+      var data = obj.data;
+      if (obj.event === 'setSign') {
+        layer.prompt({
+          formType: 2
+          , title: '修改 ' + data.name + ' 的值'
+          , value: data.val
+        }, function (value, index) {
+          layer.close(index);
+
+          //这里一般是发送修改的Ajax请求
+
+          //同步更新表格和缓存对应的值
+          obj.update({
+            val: value
+          });
+        });
+      }
+    });
+    table.on('tool(method_other)', function (obj) {
+      var data = obj.data;
+      if (obj.event === 'setSign') {
+        layer.prompt({
+          formType: 2
+          , title: '修改 ' + data.name + ' 的值'
+          , value: data.val
+        }, function (value, index) {
+          layer.close(index);
+
+          //这里一般是发送修改的Ajax请求
+
+          //同步更新表格和缓存对应的值
+          obj.update({
+            val: value
+          });
+        });
+      }
+    });
+    table.on('tool(method_injector)', function (obj) {
+      var data = obj.data;
+      if (obj.event === 'setSign') {
+        layer.prompt({
+          formType: 2
+          , title: '修改 ' + data.name + ' 的值'
+          , value: data.val
+        }, function (value, index) {
+          layer.close(index);
+
+          //这里一般是发送修改的Ajax请求
+
+          //同步更新表格和缓存对应的值
+          obj.update({
+            val: value
+          });
+        });
+      }
+    });
+
 
   });
 </script>
