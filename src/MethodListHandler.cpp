@@ -94,12 +94,9 @@ int MethodListHandler::get(HttpRequest *req, HttpResponse *resp)
         MethodListTable item;
         Model::get(item, id);
 
-        printf("1 type:%d, injector_type:%d, sample_type:%d\n", type, injector_type, sample_type);
         type = type == -1 ? item.type : type;                                     // type
         injector_type = injector_type == -1 ? item.injector_type : injector_type; // injector_type
         sample_type = sample_type == -1 ? item.sample_type : sample_type;         // sample_type
-
-        printf("2 type:%d, injector_type:%d, sample_type:%d\n", type, injector_type, sample_type);
 
         resp->json["data"]["method_temp"] = {{}, {}, {}, {}, {}};
         resp->json["data"]["method_pass"] = {{}, {}, {}, {}, {}};

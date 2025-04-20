@@ -34,8 +34,8 @@ void SystemRouter::Register(hv::HttpService &router) {
     router.GET("/json/test.js", SystemHandler::test);
 
     router.GET("/api/system/get_all", SystemHandler::get_all);
-    router.GET("/api/system/insert", SystemHandler::insert);
-    router.GET("/api/system/update", SystemHandler::update);
-    router.GET("/api/system/remove/{id}", SystemHandler::remove);
+    router.POST("/api/system/insert", SystemHandler::insert);
+    router.POST("/api/system/update", SystemHandler::update);
+    router.POST("/api/system/remove/{id}", SystemHandler::remove);
     router.GET("/api/system/get/{id}", SystemHandler::get);
 }

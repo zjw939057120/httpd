@@ -16,8 +16,8 @@
 
 void QueueListRouter::Register(hv::HttpService &router) {
     router.GET("/api/queue_list/get_all", QueueListHandler::get_all);
-    router.GET("/api/queue_list/insert", QueueListHandler::insert);
-    router.GET("/api/queue_list/update", QueueListHandler::update);
-    router.GET("/api/queue_list/remove/{id}", QueueListHandler::remove);
+    router.POST("/api/queue_list/insert", QueueListHandler::insert);
+    router.POST("/api/queue_list/update", QueueListHandler::update);
+    router.POST("/api/queue_list/remove/{id}", QueueListHandler::remove);
     router.GET("/api/queue_list/get/{id}", QueueListHandler::get);
 }
