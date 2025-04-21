@@ -31,6 +31,11 @@ int MethodListHandler::get_all(HttpRequest *req, HttpResponse *resp)
         std::vector<MethodListTable> list;
         size_t size = Model::get_all(list);
 
+        if(size == 0)
+        {
+            resp->json["data"] = {};
+            return;
+        }
         int seq = 0;
         for (auto &item : list)
         {
@@ -48,6 +53,7 @@ int MethodListHandler::insert(HttpRequest *req, HttpResponse *resp)
     {
         MethodListTable item;
         item.from_json(req->GetJson());
+        item.name += std::to_string(item.id); // 添加ID到名称后面
         resp->json["data"] = Model::insert(item);
     };
     Handler::response_json(req, resp, func);
@@ -294,69 +300,22 @@ int MethodListHandler::get(HttpRequest *req, HttpResponse *resp)
     Handler::response_json(req, resp, func);
     return 200;
 }
-int MethodListHandler::get_filter(HttpRequest *req, HttpResponse *resp)
+int MethodListHandler::copy(HttpRequest *req, HttpResponse *resp)
 {
     auto func = [req, resp]
     {
         int id = std::stoi(req->GetParam("id"));
         MethodListTable item;
-        Model::get(item, id);
-
-        // 根据类型渲染内容
-        switch (item.type)
+        if (id == 0)
         {
-        case 0: // 硫
-            resp->json["data"]["method_temp"] = {item.method_temp0};
-            resp->json["data"]["method_pass"] = {item.method_pass0};
-            resp->json["data"]["method_flow"] = {item.method_flow0, item.method_flow1, item.method_flow2};
-            resp->json["data"]["method_other"] = {item.method_other0, item.method_other1, item.method_other3, item.method_other4};
-            break;
-
-        case 1: // 氮
-            resp->json["data"]["method_temp"] = {item.method_temp0, item.method_temp1, item.method_temp2, item.method_temp3};
-            resp->json["data"]["method_pass"] = {item.method_pass0};
-            resp->json["data"]["method_flow"] = {item.method_flow0, item.method_flow1, item.method_flow2, item.method_flow3};
-            resp->json["data"]["method_other"] = {item.method_other0, item.method_other1, item.method_other2};
-            break;
-
-        case 2: // 氯
-            resp->json["data"]["method_temp"] = {item.method_temp0, item.method_temp4};
-            resp->json["data"]["method_pass"] = {item.method_pass0, item.method_pass1};
-            resp->json["data"]["method_flow"] = {item.method_flow0, item.method_flow1, item.method_flow2};
-            resp->json["data"]["method_other"] = {item.method_other0, item.method_other1};
-            break;
-
-        case 3: // 硫氮
-            resp->json["data"]["method_temp"] = {item.method_temp0, item.method_temp1, item.method_temp2, item.method_temp3};
-            resp->json["data"]["method_pass"] = {item.method_pass0};
-            resp->json["data"]["method_flow"] = {item.method_flow0, item.method_flow1, item.method_flow2, item.method_flow3};
-            resp->json["data"]["method_other"] = {item.method_other0, item.method_other1, item.method_other2, item.method_other3, item.method_other4};
-            break;
-
-        case 4: // CELL
-            resp->json["data"]["method_temp"] = {item.method_temp4};
-            resp->json["data"]["method_pass"] = {};
-            resp->json["data"]["method_flow"] = {};
-            resp->json["data"]["method_other"] = {item.method_other0};
-            break;
-
-        case 5: // 待机
-            resp->json["data"]["method_temp"] = {item.method_temp0, item.method_temp1, item.method_temp2, item.method_temp3, item.method_temp4};
-            resp->json["data"]["method_pass"] = {item.method_pass0, item.method_pass1};
-            resp->json["data"]["method_flow"] = {item.method_flow0, item.method_flow1, item.method_flow2, item.method_flow3};
-            resp->json["data"]["method_other"] = {item.method_other0, item.method_other1, item.method_other2, item.method_other3, item.method_other4};
-            break;
-
-        case 6: // 启动
-            resp->json["data"]["method_temp"] = {item.method_temp0, item.method_temp1, item.method_temp2, item.method_temp3, item.method_temp4};
-            resp->json["data"]["method_pass"] = {item.method_pass0, item.method_pass1};
-            resp->json["data"]["method_flow"] = {item.method_flow0, item.method_flow1, item.method_flow2, item.method_flow3};
-            resp->json["data"]["method_other"] = {item.method_other0, item.method_other1, item.method_other2, item.method_other3, item.method_other4};
-            break;
-
-        default:
-            break;
+            item.name = "新方法"; // 如果没有id，则使用默认名称
         }
+        else
+        {
+            Model::get(item, id);
+            item.name += std::to_string(item.id); // 添加ID到名称后面
+        }
+        resp->json["data"] = Model::insert(item); // 插入到方法列表中
     };
 
     Handler::response_json(req, resp, func);

@@ -57,10 +57,11 @@
         </div>
 
         <div class="layui-inline">
-          <div class="layui-input-block">
+          <div class="layui-input-block" style="margin-left:30px;">
             <button class="layui-btn layui-btn-warm" id="update_method">修改</button>
             <button class="layui-btn layui-btn-danger" id="remove_method">刪除</button>
             <button class="layui-btn layui-btn-normal" id="insert_method">新增</button>
+            <button class="layui-btn layui-btn-primary" id="copy_method">复制</button>
           </div>
         </div>
 
@@ -150,6 +151,10 @@
         method: 'GET',
         success: function (res) {
           method_list = res.data; // 将数据存储到全局变量中
+          if (method_list == null) {
+            layer.msg('没有方法列表数据', { icon: 5 });
+            return;
+          }
           // 假设返回的数据格式为：[{ "id": "1", "name": "方法1" }, { "id": "2", "name": "方法2" }]
           // 填充方法列表下拉框
           var method_list_options = '';
@@ -494,7 +499,10 @@
 
     // 监听[修改]按钮点击事件
     $('#update_method').on('click', function () {
-      console.log(current_method_item);
+      if (method_list == null) {
+        layer.msg('没有方法列表数据', { icon: 5 });
+        return;
+      }
       current_method_item.name = $('#name').val(); // 更新方法名称
       $.ajax({
         url: '/api/method_list/update', // 替换为你的 JSON 接口地址
@@ -516,7 +524,10 @@
 
     // 监听[删除]按钮点击事件
     $('#remove_method').on('click', function () {
-      console.log(current_method_item);
+      if (method_list == null) {
+        layer.msg('没有方法列表数据', { icon: 5 });
+        return;
+      }
       $.ajax({
         url: '/api/method_list/remove/' + current_method_item.id, // 替换为你的 JSON 接口地址
         method: 'POST',
@@ -536,7 +547,10 @@
 
     // 监听[新增]按钮点击事件
     $('#insert_method').on('click', function () {
-      console.log(current_method_item);
+      if (method_list == null) {
+        layer.msg('没有方法列表数据', { icon: 5 });
+        return;
+      }
       current_method_item.name = $('#name').val(); // 更新方法名称
       $.ajax({
         url: '/api/method_list/insert', // 替换为你的 JSON 接口地址
@@ -555,9 +569,30 @@
         }
       });
     });
-    $('#delete_method').on('click', function () {
 
-    })
+    // 监听[复制]按钮点击事件
+    $('#copy_method').on('click', function () {
+      var method_id = current_method_item.id;
+      if (method_list == null) {
+        method_id = 0; // 如果没有方法列表数据，则设置为 0
+      }
+      current_method_item.name = $('#name').val(); // 更新方法名称
+      $.ajax({
+        url: '/api/method_list/copy/' + method_id, // 替换为你的 JSON 接口地址
+        method: 'POST',
+        contentType: 'application/json',
+        success: function (res) {
+          if (res.code != 0) {
+            layer.msg(res.msg, { icon: 5 });
+            return;
+          }
+          initMethodList(); // 重新初始化方法列表
+        },
+        error: function () {
+          console.error('请求失败');
+        }
+      });
+    });
 
   });
 </script>

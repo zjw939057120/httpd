@@ -112,7 +112,11 @@ int SystemHandler::get_all(HttpRequest *req, HttpResponse *resp)
     {
         std::vector<CalibrationTable> list;
         size_t size = Model::get_all(list);
-
+        if(size == 0)
+        {
+            resp->json["data"] = {};
+            return;
+        }
         int seq = 0;
         for (auto &item : list)
         {

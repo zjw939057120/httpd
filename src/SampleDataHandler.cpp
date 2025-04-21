@@ -28,7 +28,11 @@ int SampleDataHandler::get_all(HttpRequest *req, HttpResponse *resp) {
     auto func = [req, resp] {
         std::vector<SampleDataTable> list;
         size_t size = Model::get_all(list);
-
+        if(size == 0)
+        {
+            resp->json["data"] = {};
+            return;
+        }
         int seq = 0;
         for (auto &item:list) {
             item.to_json(resp->json["data"][seq]);
