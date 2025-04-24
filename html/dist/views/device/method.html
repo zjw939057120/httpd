@@ -1,4 +1,4 @@
-<title>监听单元格事件 - 数据表格</title>
+<title></title>
 
 <div class="layui-card layadmin-header">
   <div class="layui-breadcrumb" lay-filter="breadcrumb">
@@ -25,7 +25,7 @@
         <div class="layui-inline">
           <label class="layui-form-label">方法类型</label>
           <div class="layui-input-block">
-            <select name="type" id="type" lay-filter="type">
+            <select name="method_type" id="method_type" lay-filter="method_type">
               <option value="">未选择</option>
             </select>
           </div>
@@ -51,7 +51,7 @@
         <div class="layui-inline">
           <label class="layui-form-label">方法名称</label>
           <div class="layui-input-block">
-            <input type="text" name="name" id="name" placeholder="请输入" autocomplete="off" class="layui-input"
+            <input type="text" name="method_name" id="method_name" placeholder="请输入" autocomplete="off" class="layui-input"
               style="padding-right: 30px;">
           </div>
         </div>
@@ -159,16 +159,16 @@
           // 填充方法列表下拉框
           var method_list_options = '';
           method_list.forEach(function (item, index) {
-            method_list_options += '<option value="' + index + '">' + item.name + '</option>';
+            method_list_options += '<option value="' + index + '">' + item.method_name + '</option>';
           });
           $('#method_list').html(method_list_options); // 填充到 select 中
 
           // 填充方法类型下拉框
           var type_options = '';
-          method_config.type.forEach(function (item, index) {
+          method_config.method_type.forEach(function (item, index) {
             type_options += '<option value="' + index + '">' + item + '</option>';
           });
-          $('#type').html(type_options); // 填充到 select 中
+          $('#method_type').html(type_options); // 填充到 select 中
 
           // 填充类型下拉框
           var injector_type_options = '';
@@ -202,9 +202,9 @@
     });
 
     // 监听[方法类型]改变事件
-    form.on('select(type)', function (data) {
+    form.on('select(method_type)', function (data) {
       if (!data.value) return; // 防止未选择时触发
-      current_method_item.type = parseInt(data.value);  // 更新当前方法项的类型
+      current_method_item.method_type = parseInt(data.value);  // 更新当前方法项的类型
       renderMethodTemp(current_method_item.id, data.value);//渲染温度表格
       renderMethodPass(current_method_item.id, data.value);//渲染压力表格
       renderMethodFlow(current_method_item.id, data.value);//渲染流量表格
@@ -231,13 +231,13 @@
       current_method_item = method_list[index]; // 获取当前选中的方法项
       console.log('当前选中的方法项:', current_method_item); // 打印当前选中的方法项
       // 填充方法类型下拉框
-      $('#type').val(current_method_item.type); // 设置选中值
+      $('#method_type').val(current_method_item.method_type); // 设置选中值
       // 填充类型下拉框
       $('#injector_type').val(current_method_item.injector_type); // 设置选中值
       // 填充样品类型下拉框
       $('#sample_type').val(current_method_item.sample_type); // 设置选中值
       // 填充方法名称
-      $('#name').val(current_method_item.name);
+      $('#method_name').val(current_method_item.method_name);
       form.render('select'); // 重新渲染 select
 
       renderMethodTemp(current_method_item.id);//渲染温度表格
@@ -248,12 +248,12 @@
     }
 
     //渲染温度表格
-    function renderMethodTemp(method_id, type = -1) {
+    function renderMethodTemp(method_id, method_type = -1) {
       //根据方法类型渲染不同的表格
       table.render({
         elem: '#method_temp'
         , minheight: 313
-        , url: '/api/method_list/get/' + method_id + '?type=' + type // 替换为你的 JSON 接口地址
+        , url: '/api/method_list/get/' + method_id + '?method_type=' + method_type // 替换为你的 JSON 接口地址
         , parseData: function (res) {
           // 提取指定 key 下的数据
           return {
@@ -274,12 +274,12 @@
     }
 
     //渲染压力表格
-    function renderMethodPass(method_id, type = -1) {
+    function renderMethodPass(method_id, method_type = -1) {
       //根据方法类型渲染不同的表格
       table.render({
         elem: '#method_pass'
         , minheight: 313
-        , url: '/api/method_list/get/' + method_id + '?type=' + type // 替换为你的 JSON 接口地址
+        , url: '/api/method_list/get/' + method_id + '?method_type=' + method_type // 替换为你的 JSON 接口地址
         , parseData: function (res) {
           // 提取指定 key 下的数据
           return {
@@ -300,12 +300,12 @@
     }
 
     //渲染流量表格
-    function renderMethodFlow(method_id, type = -1) {
+    function renderMethodFlow(method_id, method_type = -1) {
       //根据方法类型渲染不同的表格
       table.render({
         elem: '#method_flow'
         , minheight: 313
-        , url: '/api/method_list/get/' + method_id + '?type=' + type // 替换为你的 JSON 接口地址
+        , url: '/api/method_list/get/' + method_id + '?method_type=' + method_type // 替换为你的 JSON 接口地址
         , parseData: function (res) {
           // 提取指定 key 下的数据
           return {
@@ -326,12 +326,12 @@
     }
 
     //渲染其他表格
-    function renderMethodOther(method_id, type = -1) {
+    function renderMethodOther(method_id, method_type = -1) {
       //根据方法类型渲染不同的表格
       table.render({
         elem: '#method_other'
         , minheight: 313
-        , url: '/api/method_list/get/' + method_id + '?type=' + type // 替换为你的 JSON 接口地址
+        , url: '/api/method_list/get/' + method_id + '?method_type=' + method_type // 替换为你的 JSON 接口地址
         , parseData: function (res) {
           // 提取指定 key 下的数据
           return {
@@ -503,7 +503,7 @@
         layer.msg('没有方法列表数据', { icon: 5 });
         return;
       }
-      current_method_item.name = $('#name').val(); // 更新方法名称
+      current_method_item.method_name = $('#method_name').val(); // 更新方法名称
       $.ajax({
         url: '/api/method_list/update', // 替换为你的 JSON 接口地址
         method: 'POST',
@@ -551,7 +551,7 @@
         layer.msg('没有方法列表数据', { icon: 5 });
         return;
       }
-      current_method_item.name = $('#name').val(); // 更新方法名称
+      current_method_item.method_name = $('#method_name').val(); // 更新方法名称
       $.ajax({
         url: '/api/method_list/insert', // 替换为你的 JSON 接口地址
         method: 'POST',
@@ -574,9 +574,9 @@
     $('#copy_method').on('click', function () {
       var method_id = current_method_item.id;
       if (method_list == null) {
-        method_id = 0; // 如果没有方法列表数据，则设置为 0
+        method_id = -1; // 如果没有方法列表数据，则设置为 0
       }
-      current_method_item.name = $('#name').val(); // 更新方法名称
+      current_method_item.method_name = $('#method_name').val(); // 更新方法名称
       $.ajax({
         url: '/api/method_list/copy/' + method_id, // 替换为你的 JSON 接口地址
         method: 'POST',

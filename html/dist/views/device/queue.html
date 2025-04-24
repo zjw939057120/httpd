@@ -1,95 +1,665 @@
-
-<title>折线图</title>
+<title></title>
 
 <div class="layui-card layadmin-header">
   <div class="layui-breadcrumb" lay-filter="breadcrumb">
-    <a lay-href="/">主页</a>
+    <a lay-href="">主页</a>
     <a><cite>队列管理</cite></a>
   </div>
 </div>
 
 <div class="layui-fluid">
   <div class="layui-row layui-col-space15">
-    <div class="layui-col-md6">
-      <div class="layui-card">
-        <div class="layui-card-header">标准折线图</div>
-        <div class="layui-card-body">
 
-          <div class="layui-carousel layadmin-carousel layadmin-dataview" data-anim="fade" lay-filter="LAY-index-normline">
-            <div carousel-item id="LAY-index-normline">
-              <div><i class="layui-icon layui-icon-loading1 layadmin-loading"></i></div>
-            </div>
+    <div class="layui-form layui-card-header layuiadmin-card-header-auto" lay-filter="layadmin-userfront-formlist">
+      <div class="layui-form-item">
+        <div class="layui-inline">
+          <label class="layui-form-label">方法列表</label>
+          <div class="layui-input-block">
+            <select name="method_list" id="method_list" lay-filter="method_list">
+              <option value="">未选择</option>
+              <!-- 这里的选项会通过 AJAX 动态填充 -->
+            </select>
           </div>
-
         </div>
-      </div>
-      <div class="layui-card">
-        <div class="layui-card-header">堆积折线图</div>
-        <div class="layui-card-body">
-          
-          <div class="layui-carousel layadmin-carousel layadmin-dataview" data-anim="fade" lay-filter="LAY-index-heapline">
-            <div carousel-item id="LAY-index-heapline">
-              <div><i class="layui-icon layui-icon-loading1 layadmin-loading"></i></div>
-            </div>
-          </div>
 
+        <div class="layui-inline">
+          <label class="layui-form-label">方法类型</label>
+          <div class="layui-input-block">
+            <select name="method_type" id="method_type" lay-filter="method_type">
+              <option value="">未选择</option>
+            </select>
+          </div>
         </div>
-      </div>
-      <div class="layui-card">
-        <div class="layui-card-header">不等距折线图</div>
-        <div class="layui-card-body">
-          
-          <div class="layui-carousel layadmin-carousel layadmin-dataview" data-anim="fade" lay-filter="LAY-index-diffline">
-            <div carousel-item id="LAY-index-diffline">
-              <div><i class="layui-icon layui-icon-loading1 layadmin-loading"></i></div>
-            </div>
+        <div class="layui-inline">
+          <label class="layui-form-label">进样器类型</label>
+          <div class="layui-input-block">
+            <select name="injector_type" id="injector_type" lay-filter="injector_type">
+              <option value="">未选择</option>
+            </select>
           </div>
+        </div>
 
+        <div class="layui-inline">
+          <label class="layui-form-label">样品类型</label>
+          <div class="layui-input-block">
+            <select name="sample_type" id="sample_type" lay-filter="sample_type">
+              <option value="">未选择</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="layui-inline">
+          <label class="layui-form-label">方法名称</label>
+          <div class="layui-input-block">
+            <input type="text" name="method_name" id="method_name" placeholder="请输入" autocomplete="off" class="layui-input"
+              style="padding-right: 30px;">
+          </div>
+        </div>
+
+        <div class="layui-inline">
+          <div class="layui-input-block" style="margin-left:30px;">
+            <button class="layui-btn layui-btn-warm" id="update_method">修改</button>
+            <button class="layui-btn layui-btn-danger" id="remove_method">刪除</button>
+            <button class="layui-btn layui-btn-normal" id="insert_method">新增</button>
+            <button class="layui-btn layui-btn-primary" id="copy_method">复制</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="layui-col-md4">
+      <div class="layui-card">
+        <div class="layui-card-header">温度设置</div>
+        <div class="layui-card-body">
+
+          <table class="layui-hide" id="method_temp" lay-filter="method_temp"></table>
         </div>
       </div>
     </div>
-    <div class="layui-col-md6">
-      <div class="layui-card">
-        <div class="layui-card-header">堆积面积图</div>
-        <div class="layui-card-body">
-          
-          <div class="layui-carousel layadmin-carousel layadmin-dataview" data-anim="fade" lay-filter="LAY-index-heaparea">
-            <div carousel-item id="LAY-index-heaparea">
-              <div><i class="layui-icon layui-icon-loading1 layadmin-loading"></i></div>
-            </div>
-          </div>
 
-        </div>
-      </div>
+    <div class="layui-col-md4">
       <div class="layui-card">
-        <div class="layui-card-header">面积图</div>
+        <div class="layui-card-header">压力设置</div>
         <div class="layui-card-body">
-         
-          <div class="layui-carousel layadmin-carousel layadmin-dataview" data-anim="fade" lay-filter="LAY-index-area">
-            <div carousel-item id="LAY-index-area">
-              <div><i class="layui-icon layui-icon-loading1 layadmin-loading"></i></div>
-            </div>
-          </div>
 
-        </div>
-      </div>
-      <div class="layui-card">
-        <div class="layui-card-header">对数轴</div>
-        <div class="layui-card-body">
-         
-          <div class="layui-carousel layadmin-carousel layadmin-dataview" data-anim="fade" lay-filter="LAY-index-logline">
-            <div carousel-item id="LAY-index-logline">
-              <div><i class="layui-icon layui-icon-loading1 layadmin-loading"></i></div>
-            </div>
-          </div>
-
+          <table class="layui-hide" id="method_pass" lay-filter="method_pass"></table>
         </div>
       </div>
     </div>
-    
+    <div class="layui-col-md4">
+      <div class="layui-card">
+        <div class="layui-card-header">流量设置</div>
+        <div class="layui-card-body">
+
+          <table class="layui-hide" id="method_flow" lay-filter="method_flow"></table>
+        </div>
+      </div>
+    </div>
+    <div class="layui-col-md4">
+      <div class="layui-card">
+        <div class="layui-card-header">其他设置</div>
+        <div class="layui-card-body">
+
+          <table class="layui-hide" id="method_other" lay-filter="method_other"></table>
+        </div>
+      </div>
+    </div>
+    <div class="layui-col-md4">
+      <div class="layui-card">
+        <div class="layui-card-header">进样器设置</div>
+        <div class="layui-card-body">
+
+          <table class="layui-hide" id="method_injector" lay-filter="method_injector"></table>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
 <script>
-layui.use('senior', layui.factory('senior'));
+  layui.use(['admin', 'form', 'table'], function () {
+    var $ = layui.$
+      , admin = layui.admin
+      , element = layui.element
+      , form = layui.form
+      , table = layui.table;
+
+    var method_config = {};
+    var method_list = {};
+    var current_method_item = {}; // 当前选中的方法项
+
+    //获取配置
+    $.ajax({
+      url: '/api/method_list/config', // 替换为你的 JSON 接口地址
+      method: 'GET',
+      async: false, // 设置为同步请求
+      success: function (res) {
+        method_config = res.data; // 将数据存储到全局变量中
+      },
+      error: function () {
+        console.error('请求失败');
+      }
+    });
+
+    initMethodList(); // 初始化时渲染方法列表
+    function initMethodList() {
+      // [方法列表]动态填充数据后需要重新渲染 select
+      $.ajax({
+        url: '/api/method_list/get_all', // 替换为你的 JSON 接口地址
+        method: 'GET',
+        success: function (res) {
+          method_list = res.data; // 将数据存储到全局变量中
+          if (method_list == null) {
+            layer.msg('没有方法列表数据', { icon: 5 });
+            return;
+          }
+          // 假设返回的数据格式为：[{ "id": "1", "name": "方法1" }, { "id": "2", "name": "方法2" }]
+          // 填充方法列表下拉框
+          var method_list_options = '';
+          method_list.forEach(function (item, index) {
+            method_list_options += '<option value="' + index + '">' + item.method_name + '</option>';
+          });
+          $('#method_list').html(method_list_options); // 填充到 select 中
+
+          // 填充方法类型下拉框
+          var type_options = '';
+          method_config.method_type.forEach(function (item, index) {
+            type_options += '<option value="' + index + '">' + item + '</option>';
+          });
+          $('#method_type').html(type_options); // 填充到 select 中
+
+          // 填充类型下拉框
+          var injector_type_options = '';
+          method_config.injector_type.forEach(function (item, index) {
+            injector_type_options += '<option value="' + index + '">' + item + '</option>';
+          });
+          $('#injector_type').html(injector_type_options); // 填充到 select 中
+
+          // 填充样品类型下拉框
+          var sample_type_options = '';
+          method_config.sample_type.forEach(function (item, index) {
+            sample_type_options += '<option value="' + index + '">' + item + '</option>';
+          });
+          $('#sample_type').html(sample_type_options); // 填充到 select 中  
+
+          form.render('select'); // 重新渲染表单
+
+          var index = $('#method_list').val();
+          renderMethodItem(index); // 初始化时渲染第一个方法项
+        },
+        error: function () {
+          console.error('请求失败');
+        }
+      });
+    };
+
+    // 监听[方法列表]改变事件
+    form.on('select(method_list)', function (data) {
+      if (!data.value) return; // 防止未选择时触发
+      renderMethodItem(data.value)
+    });
+
+    // 监听[方法类型]改变事件
+    form.on('select(method_type)', function (data) {
+      if (!data.value) return; // 防止未选择时触发
+      current_method_item.method_type = parseInt(data.value);  // 更新当前方法项的类型
+      renderMethodTemp(current_method_item.id, data.value);//渲染温度表格
+      renderMethodPass(current_method_item.id, data.value);//渲染压力表格
+      renderMethodFlow(current_method_item.id, data.value);//渲染流量表格
+      renderMethodOther(current_method_item.id, data.value);//渲染其他表格
+    });
+
+    // 监听[进样器类型]改变事件
+    form.on('select(injector_type)', function (data) {
+      if (!data.value) return; // 防止未选择时触发
+      current_method_item.injector_type = parseInt(data.value); // 更新当前方法项的进样器类型
+      var sample_type = $('#sample_type').val(); // 获取当前选中的样品类型
+      renderMethodInjector(current_method_item.id, data.value, sample_type);//渲染注入器表格
+    });
+
+    // 监听[样品类型]改变事件 
+    form.on('select(sample_type)', function (data) {
+      if (!data.value) return; // 防止未选择时触发
+      current_method_item.sample_type = parseInt(data.value); // 更新当前方法项的样品类型
+      var injector_type = $('#injector_type').val(); // 获取当前选中的进样器类型
+      renderMethodInjector(current_method_item.id, injector_type, data.value);//渲染注入器表格
+    });
+
+    function renderMethodItem(index) {
+      current_method_item = method_list[index]; // 获取当前选中的方法项
+      console.log('当前选中的方法项:', current_method_item); // 打印当前选中的方法项
+      // 填充方法类型下拉框
+      $('#method_type').val(current_method_item.method_type); // 设置选中值
+      // 填充类型下拉框
+      $('#injector_type').val(current_method_item.injector_type); // 设置选中值
+      // 填充样品类型下拉框
+      $('#sample_type').val(current_method_item.sample_type); // 设置选中值
+      // 填充方法名称
+      $('#method_name').val(current_method_item.method_name);
+      form.render('select'); // 重新渲染 select
+
+      renderMethodTemp(current_method_item.id);//渲染温度表格
+      renderMethodPass(current_method_item.id);//渲染压力表格
+      renderMethodFlow(current_method_item.id);//渲染流量表格
+      renderMethodOther(current_method_item.id);//渲染其他表格
+      renderMethodInjector(current_method_item.id);//渲染注入器表格
+    }
+
+    //渲染温度表格
+    function renderMethodTemp(method_id, method_type = -1) {
+      //根据方法类型渲染不同的表格
+      table.render({
+        elem: '#method_temp'
+        , minheight: 313
+        , url: '/api/method_list/get/' + method_id + '?method_type=' + method_type // 替换为你的 JSON 接口地址
+        , parseData: function (res) {
+          // 提取指定 key 下的数据
+          return {
+            code: res.code, // 状态码
+            msg: res.msg, // 提示信息
+            data: res.data.method_temp.map(item => (item ? {
+              id: item[0], // 索引
+              name: item[1], // 参数名称
+              val: item[2] // 参数值
+            } : {}))
+          };
+        }
+        , cols: [[
+          , { field: 'name', title: '参数名称' }
+          , { field: 'val', title: '设置值', event: 'setSign', style: 'cursor: pointer;' }
+        ]]
+      });
+    }
+
+    //渲染压力表格
+    function renderMethodPass(method_id, method_type = -1) {
+      //根据方法类型渲染不同的表格
+      table.render({
+        elem: '#method_pass'
+        , minheight: 313
+        , url: '/api/method_list/get/' + method_id + '?method_type=' + method_type // 替换为你的 JSON 接口地址
+        , parseData: function (res) {
+          // 提取指定 key 下的数据
+          return {
+            code: res.code, // 状态码
+            msg: res.msg, // 提示信息
+            data: res.data.method_pass.map(item => (item ? {
+              id: item[0], // 索引
+              name: item[1], // 参数名称
+              val: item[2] // 参数值
+            } : {}))
+          };
+        }
+        , cols: [[
+          , { field: 'name', title: '参数名称' }
+          , { field: 'val', title: '设置值', event: 'setSign', style: 'cursor: pointer;' }
+        ]]
+      });
+    }
+
+    //渲染流量表格
+    function renderMethodFlow(method_id, method_type = -1) {
+      //根据方法类型渲染不同的表格
+      table.render({
+        elem: '#method_flow'
+        , minheight: 313
+        , url: '/api/method_list/get/' + method_id + '?method_type=' + method_type // 替换为你的 JSON 接口地址
+        , parseData: function (res) {
+          // 提取指定 key 下的数据
+          return {
+            code: res.code, // 状态码
+            msg: res.msg, // 提示信息
+            data: res.data.method_flow.map(item => (item ? {
+              id: item[0], // 索引
+              name: item[1], // 参数名称
+              val: item[2] // 参数值
+            } : {}))
+          };
+        }
+        , cols: [[
+          , { field: 'name', title: '参数名称' }
+          , { field: 'val', title: '设置值', event: 'setSign', style: 'cursor: pointer;' }
+        ]]
+      });
+    }
+
+    //渲染其他表格
+    function renderMethodOther(method_id, method_type = -1) {
+      //根据方法类型渲染不同的表格
+      table.render({
+        elem: '#method_other'
+        , minheight: 313
+        , url: '/api/method_list/get/' + method_id + '?method_type=' + method_type // 替换为你的 JSON 接口地址
+        , parseData: function (res) {
+          // 提取指定 key 下的数据
+          return {
+            code: res.code, // 状态码
+            msg: res.msg, // 提示信息
+            data: res.data.method_other.map(item => (item ? {
+              id: item[0], // 索引
+              name: item[1], // 参数名称
+              val: item[2] // 参数值
+            } : {}))
+          };
+        }
+        , cols: [[
+          , { field: 'name', title: '参数名称' }
+          , { field: 'val', title: '设置值', event: 'setSign', style: 'cursor: pointer;' }
+        ]]
+      });
+    }
+
+    //渲染进样器表格
+    function renderMethodInjector(method_id, injector_type = -1, sample_type = -1) {
+      //根据进样器类型和样品类型渲染不同的表格
+      table.render({
+        elem: '#method_injector'
+        , minheight: 313
+        , url: '/api/method_list/get/' + method_id + '?injector_type=' + injector_type + '&sample_type=' + sample_type  // 替换为你的 JSON 接口地址
+        , parseData: function (res) {
+          // 提取指定 key 下的数据
+          return {
+            code: res.code, // 状态码
+            msg: res.msg, // 提示信息
+            data: res.data.method_injector.map(item => (item ? {
+              id: item[0], // 索引
+              name: item[1], // 参数名称
+              val: item[2] // 参数值
+            } : {}))
+          };
+        }
+        , cols: [[
+          , { field: 'name', title: '参数名称' }
+          , { field: 'val', title: '设置值', event: 'setSign', style: 'cursor: pointer;' }
+        ]]
+      });
+    }
+
+    form.render(null, 'layadmin-userfront-formlist');
+
+
+    //监听单元格事件
+    table.on('tool(method_temp)', function (obj) {
+      if (obj.data.id == undefined) return; // 防止未选择时触发
+      var data = obj.data;
+      if (obj.event === 'setSign') {
+        layer.prompt({
+          formType: 2
+          , title: '修改 ' + data.name + ' 的值'
+          , value: data.val
+        }, function (value, index) {
+          if (isNaN(value)) {
+            layer.msg('请输入数字', { icon: 5 });
+            return;
+          }
+          layer.close(index);
+          //这里一般是发送修改的Ajax请求
+          current_method_item["method_temp" + obj.data.id] = parseFloat(value); // 更新当前方法项的值
+          //同步更新表格和缓存对应的值
+          obj.update({
+            val: value
+          });
+        });
+      }
+    });
+    table.on('tool(method_pass)', function (obj) {
+      if (obj.data.id == undefined) return; // 防止未选择时触发
+      var data = obj.data;
+      if (obj.event === 'setSign') {
+        layer.prompt({
+          formType: 2
+          , title: '修改 ' + data.name + ' 的值'
+          , value: data.val
+        }, function (value, index) {
+          if (isNaN(value)) {
+            layer.msg('请输入数字', { icon: 5 });
+            return;
+          }
+          layer.close(index);
+          //这里一般是发送修改的Ajax请求
+          current_method_item["method_pass" + obj.data.id] = parseFloat(value); // 更新当前方法项的值
+          //同步更新表格和缓存对应的值
+          obj.update({
+            val: value
+          });
+        });
+      }
+    });
+    table.on('tool(method_flow)', function (obj) {
+      if (obj.data.id == undefined) return; // 防止未选择时触发
+      var data = obj.data;
+      if (obj.event === 'setSign') {
+        layer.prompt({
+          formType: 2
+          , title: '修改 ' + data.name + ' 的值'
+          , value: data.val
+        }, function (value, index) {
+          if (isNaN(value)) {
+            layer.msg('请输入数字', { icon: 5 });
+            return;
+          }
+          layer.close(index);
+          //这里一般是发送修改的Ajax请求
+          current_method_item["method_flow" + obj.data.id] = parseFloat(value); // 更新当前方法项的值
+          //同步更新表格和缓存对应的值
+          obj.update({
+            val: value
+          });
+        });
+      }
+    });
+    table.on('tool(method_other)', function (obj) {
+      if (obj.data.id == undefined) return; // 防止未选择时触发
+      var data = obj.data;
+      if (obj.event === 'setSign') {
+        layer.prompt({
+          formType: 2
+          , title: '修改 ' + data.name + ' 的值'
+          , value: data.val
+        }, function (value, index) {
+          if (isNaN(value)) {
+            layer.msg('请输入数字', { icon: 5 });
+            return;
+          }
+          layer.close(index);
+          //这里一般是发送修改的Ajax请求
+          current_method_item["method_other" + obj.data.id] = parseFloat(value); // 更新当前方法项的值
+          //同步更新表格和缓存对应的值
+          obj.update({
+            val: value
+          });
+        });
+      }
+    });
+    table.on('tool(method_injector)', function (obj) {
+      if (obj.data.id == undefined) return; // 防止未选择时触发
+      var data = obj.data;
+      if (obj.event === 'setSign') {
+        layer.prompt({
+          formType: 2
+          , title: '修改 ' + data.name + ' 的值'
+          , value: data.val
+        }, function (value, index) {
+          if (isNaN(value)) {
+            layer.msg('请输入数字', { icon: 5 });
+            return;
+          }
+          layer.close(index);
+          //这里一般是发送修改的Ajax请求
+          current_method_item["method_injector" + obj.data.id] = parseFloat(value); // 更新当前方法项的值
+          //同步更新表格和缓存对应的值
+          obj.update({
+            val: value
+          });
+        });
+      }
+    });
+
+    // 监听[修改]按钮点击事件
+    $('#update_method').on('click', function () {
+      if (method_list == null) {
+        layer.msg('没有方法列表数据', { icon: 5 });
+        return;
+      }
+      current_method_item.method_name = $('#method_name').val(); // 更新方法名称
+      $.ajax({
+        url: '/api/method_list/update', // 替换为你的 JSON 接口地址
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(current_method_item), // 将数据转换为 JSON 字符串
+        success: function (res) {
+          if (res.code != 0) {
+            layer.msg(res.msg, { icon: 5 });
+            return;
+          }
+          initMethodList(); // 重新初始化方法列表
+        },
+        error: function () {
+          console.error('请求失败');
+        }
+      });
+    });
+
+    // 监听[删除]按钮点击事件
+    $('#remove_method').on('click', function () {
+      if (method_list == null) {
+        layer.msg('没有方法列表数据', { icon: 5 });
+        return;
+      }
+      $.ajax({
+        url: '/api/method_list/remove/' + current_method_item.id, // 替换为你的 JSON 接口地址
+        method: 'POST',
+        contentType: 'application/json',
+        success: function (res) {
+          if (res.code != 0) {
+            layer.msg(res.msg, { icon: 5 });
+            return;
+          }
+          initMethodList(); // 重新初始化方法列表
+        },
+        error: function () {
+          console.error('请求失败');
+        }
+      });
+    });
+
+    // 监听[新增]按钮点击事件
+    $('#insert_method').on('click', function () {
+      if (method_list == null) {
+        layer.msg('没有方法列表数据', { icon: 5 });
+        return;
+      }
+      current_method_item.method_name = $('#method_name').val(); // 更新方法名称
+      $.ajax({
+        url: '/api/method_list/insert', // 替换为你的 JSON 接口地址
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(current_method_item), // 将数据转换为 JSON 字符串
+        success: function (res) {
+          if (res.code != 0) {
+            layer.msg(res.msg, { icon: 5 });
+            return;
+          }
+          initMethodList(); // 重新初始化方法列表
+        },
+        error: function () {
+          console.error('请求失败');
+        }
+      });
+    });
+
+    // 监听[复制]按钮点击事件
+    $('#copy_method').on('click', function () {
+      var method_id = current_method_item.id;
+      if (method_list == null) {
+        method_id = -1; // 如果没有方法列表数据，则设置为 0
+      }
+      current_method_item.method_name = $('#method_name').val(); // 更新方法名称
+      $.ajax({
+        url: '/api/method_list/copy/' + method_id, // 替换为你的 JSON 接口地址
+        method: 'POST',
+        contentType: 'application/json',
+        success: function (res) {
+          if (res.code != 0) {
+            layer.msg(res.msg, { icon: 5 });
+            return;
+          }
+          initMethodList(); // 重新初始化方法列表
+        },
+        error: function () {
+          console.error('请求失败');
+        }
+      });
+    });
+
+  });
 </script>
+
+<style>
+  /* 设置 #method_temp 列宽度 */
+  #method_temp+.layui-table-view th:nth-child(1),
+  #method_temp+.layui-table-view td:nth-child(1) {
+    width: 60% !important;
+    /* 第一列宽度 60% */
+  }
+
+  #method_temp+.layui-table-view th:nth-child(2),
+  #method_temp+.layui-table-view td:nth-child(2) {
+    width: 40% !important;
+    /* 第二列宽度 40% */
+  }
+
+  /* 设置 #method_pass 列宽度 */
+  #method_pass+.layui-table-view th:nth-child(1),
+  #method_pass+.layui-table-view td:nth-child(1) {
+    width: 60% !important;
+    /* 第一列宽度 60% */
+  }
+
+  #method_pass+.layui-table-view th:nth-child(2),
+  #method_pass+.layui-table-view td:nth-child(2) {
+    width: 40% !important;
+    /* 第二列宽度 40% */
+  }
+
+  /* 设置 #method_flow 列宽度 */
+  #method_flow+.layui-table-view th:nth-child(1),
+  #method_flow+.layui-table-view td:nth-child(1) {
+    width: 60% !important;
+    /* 第一列宽度 60% */
+  }
+
+  #method_flow+.layui-table-view th:nth-child(2),
+  #method_flow+.layui-table-view td:nth-child(2) {
+    width: 40% !important;
+    /* 第二列宽度 40% */
+  }
+
+  /* 设置 #method_other 列宽度 */
+  #method_other+.layui-table-view th:nth-child(1),
+  #method_other+.layui-table-view td:nth-child(1) {
+    width: 60% !important;
+    /* 第一列宽度 60% */
+  }
+
+  #method_other+.layui-table-view th:nth-child(2),
+  #method_other+.layui-table-view td:nth-child(2) {
+    width: 40% !important;
+    /* 第二列宽度 40% */
+  }
+
+  /* 设置 #method_injector 列宽度 */
+  #method_injector+.layui-table-view th:nth-child(1),
+  #method_injector+.layui-table-view td:nth-child(1) {
+    width: 60% !important;
+    /* 第一列宽度 60% */
+  }
+
+  #method_injector+.layui-table-view th:nth-child(2),
+  #method_injector+.layui-table-view td:nth-child(2) {
+    width: 40% !important;
+    /* 第二列宽度 40% */
+  }
+</style>

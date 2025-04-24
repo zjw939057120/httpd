@@ -9,27 +9,29 @@
 #include <string>
 #include "hv/json.hpp"
 
-struct Calibration {
-
+struct Calibration
+{
 };
 
-struct CalibrationTable {
-    int id = 0;
-    std::string calibration_line;
-    int calibration_signalnumber = 0;
-    std::string calibration_queue;
-    int calibration_order = 0;
-    std::string calibration_intercept;
-    float calibration_A = 0;
-    float calibration_B = 0;
-    float calibration_C = 0;
-    float calibration_regression = 0;
-    float calibration_min = 0;
-    float calibration_max = 0;
-    int calibration_calculated = 0;
+struct CalibrationTable
+{
+    int id = 0;                        // 校准表ID
+    std::string calibration_line;      // 校准线名称
+    int calibration_signalnumber = 0;  // 校准信号编号
+    std::string calibration_queue;     // 校准队列名称
+    int calibration_order = 0;         // 校准顺序
+    std::string calibration_intercept; // 校准截距
+    float calibration_A = 0;           // 校准参数A
+    float calibration_B = 0;           // 校准参数B
+    float calibration_C = 0;           // 校准参数C
+    float calibration_regression = 0;  // 校准回归系数
+    float calibration_min = 0;         // 校准最小值
+    float calibration_max = 0;         // 校准最大值
+    int calibration_calculated = 0;    // 校准计算标志 (0: 未计算, 1: 已计算)
 
-// 从 JSON 解析到结构体
-    void from_json(const nlohmann::json &j) {
+    // 从 JSON 解析到结构体
+    void from_json(const nlohmann::json &j)
+    {
         j.at("id").get_to(id);
         j.at("calibration_line").get_to(calibration_line);
         j.at("calibration_signalnumber").get_to(calibration_signalnumber);
@@ -45,8 +47,9 @@ struct CalibrationTable {
         j.at("calibration_calculated").get_to(calibration_calculated);
     }
 
-// 从结构体转换为 JSON
-    void to_json(nlohmann::json &j) {
+    // 从结构体转换为 JSON
+    void to_json(nlohmann::json &j)
+    {
         j["id"] = id;
         j["calibration_line"] = calibration_line;
         j["calibration_signalnumber"] = calibration_signalnumber;
@@ -65,4 +68,4 @@ struct CalibrationTable {
 
 extern Calibration m_calibration;
 
-#endif //HTTPD_CALIBRATION_H
+#endif // HTTPD_CALIBRATION_H

@@ -9,45 +9,47 @@
 #include <string>
 #include "hv/json.hpp"
 
-struct QueueList {
-
+struct QueueList
+{
 };
 
-struct QueueListTable {
-    int id = 0;
-    int queue_number = 0;
-    int queue_signalnumber = 0;
-    std::string queue_name;
-    std::string queue_comment;
-    int queue_element = 0;
-    float queue_blanco = 0;
-    float queue_yield = 0;
-    int queue_calibrationqueue = 0;
-    int queue_calibration_signalnumber = 0;
-    int queue_calibration_order = 0;
-    int queue_intercept = 0;
-    float queue_calibrationa = 0;
-    float queue_calibrationb = 0;
-    float queue_calibrationc = 0;
-    float queue_regression = 0;
-    int queue_calibration_min = 0;
-    int queue_calibration_max = 0;
-    int queue_timewindow = 0;
-    int queue_treshold0 = 0;
-    float queue_treshold1 = 0;
-    float queue_treshold2 = 0;
-    std::string queue_baseline;
-    int queue_posintegration = 0;
-    std::string queue_calculated;
-    float queue_blancocal = 0;
-    int queue_TrashTime1 = 0;
-    int queue_AverageTime1 = 0;
-    int queue_TrashTime2 = 0;
-    int queue_AverageTime2 = 0;
-    std::string queue_calibrationline;
+struct QueueListTable
+{
+    int id = 0;                             // 队列列表ID
+    int queue_number = 0;                   // 队列编号
+    int queue_signalnumber = 0;             // 队列信号编号
+    std::string queue_name;                 // 队列名称
+    std::string queue_comment;              // 队列备注
+    int queue_element = 0;                  // 队列元素数量
+    float queue_blanco = 0;                 // 空白值
+    float queue_yield = 0;                  // 收率
+    int queue_calibrationqueue = 0;         // 校准队列编号
+    int queue_calibration_signalnumber = 0; // 校准信号编号
+    int queue_calibration_order = 0;        // 校准顺序
+    int queue_intercept = 0;                // 截距
+    float queue_calibrationa = 0;           // 校准参数A
+    float queue_calibrationb = 0;           // 校准参数B
+    float queue_calibrationc = 0;           // 校准参数C
+    float queue_regression = 0;             // 回归系数
+    int queue_calibration_min = 0;          // 校准最小值
+    int queue_calibration_max = 0;          // 校准最大值
+    int queue_timewindow = 0;               // 时间窗口
+    int queue_treshold0 = 0;                // 阈值0
+    float queue_treshold1 = 0;              // 阈值1
+    float queue_treshold2 = 0;              // 阈值2
+    std::string queue_baseline;             // 基线
+    int queue_posintegration = 0;           // 积分位置
+    std::string queue_calculated;           // 计算结果
+    float queue_blancocal = 0;              // 空白校准值
+    int queue_TrashTime1 = 0;               // 垃圾时间1
+    int queue_AverageTime1 = 0;             // 平均时间1
+    int queue_TrashTime2 = 0;               // 垃圾时间2
+    int queue_AverageTime2 = 0;             // 平均时间2
+    std::string queue_calibrationline;      // 校准线
 
     // 从 JSON 解析到结构体
-    void from_json(const nlohmann::json &j) {
+    void from_json(const nlohmann::json &j)
+    {
         j.at("id").get_to(id);
         j.at("queue_number").get_to(queue_number);
         j.at("queue_signalnumber").get_to(queue_signalnumber);
@@ -82,7 +84,8 @@ struct QueueListTable {
     }
 
     // 从结构体转换为 JSON
-    void to_json(nlohmann::json &j) const {
+    void to_json(nlohmann::json &j) const
+    {
         j["id"] = id;
         j["queue_number"] = queue_number;
         j["queue_signalnumber"] = queue_signalnumber;
@@ -119,4 +122,4 @@ struct QueueListTable {
 
 extern QueueList m_queueList;
 
-#endif //HTTPD_QUEUELIST_H
+#endif // HTTPD_QUEUELIST_H

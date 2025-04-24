@@ -15,59 +15,59 @@ struct MethodList
 
 struct MethodListTable
 {
-    int id = 0;
-    std::string name;      // 方法名称
-    int type = 0;          // 方法类型[0硫,1氮,2氯,3硫氮,4CELL,5待机,6启动]
-    int injector_type = 0; // 进样器类型[0AJ,1液体,2气体,3固体,4无]
-    int sample_type = 0;   // 样本类型[0液体,1气体,2固体]
-    float method_temp0 = 0;
-    float method_temp1 = 0; // 温度[0炉温(℃),1氮加热(℃),2氮制冷(℃),3催化剂温度(℃),4电解池温度(℃)]
-    float method_temp2 = 0;
-    float method_temp3 = 0;
-    float method_temp4 = 0;
-    float method_temp5 = 0;
-    float method_flow0 = 0;
-    float method_flow1 = 0; // 流量[0载气,1氧气,2臭氧,3裂解氧(%)]
-    float method_flow2 = 0;
-    float method_flow3 = 0;
-    float method_flow4 = 0;
-    float method_flow5 = 0;
-    float method_pass0 = 0;
-    float method_pass1 = 0; // 压力[0系统压力,1氯压力]
-    float method_pass2 = 0;
-    float method_pass3 = 0;
-    float method_pass4 = 0;
-    float method_pass5 = 0;
-    float method_other0 = 0;
-    float method_other1 = 0; // 其他参数[0采样时间,1裂解时间,2氮高压,3硫高压,4氙灯高压]
-    float method_other2 = 0;
-    float method_other3 = 0;
-    float method_other4 = 0;
-    float method_other5 = 0;
-    float method_injector0 = 0;
-    float method_injector1 = 0; // 进样器参数 [0清洗次数1,清洗次数2,置换次数,3提取速度,4排出速度,5进样速度,6注射器容积,7清洗体积,8容差体积,9返回速度,10总行程,11快进速度,12减速位,13燃烧位,14冷却温度,15加热温度,16扎入比例]
-    float method_injector2 = 0;
-    float method_injector3 = 0;
-    float method_injector4 = 0;
-    float method_injector5 = 0;
-    float method_injector6 = 0;
-    float method_injector7 = 0;
-    float method_injector8 = 0;
-    float method_injector9 = 0;
-    float method_injector10 = 0;
-    float method_injector11 = 0;
-    float method_injector12 = 0;
-    float method_injector13 = 0;
-    float method_injector14 = 0;
-    float method_injector15 = 0;
-    float method_injector16 = 0;
+    int id = 0;                  // 方法ID
+    std::string method_name;            // 方法名称
+    int method_type = 0;                // 方法类型 [0: 硫, 1: 氮, 2: 氯, 3: 硫氮, 4: CELL, 5: 待机, 6: 启动]
+    int injector_type = 0;       // 进样器类型 [0: AJ, 1: 液体, 2: 气体, 3: 固体, 4: 无]
+    int sample_type = 0;         // 样本类型 [0: 液体, 1: 气体, 2: 固体]
+    float method_temp0 = 0;      // 温度参数0 [炉温(℃)]
+    float method_temp1 = 0;      // 温度参数1 [氮加热(℃)]
+    float method_temp2 = 0;      // 温度参数2 [氮制冷(℃)]
+    float method_temp3 = 0;      // 温度参数3 [催化剂温度(℃)]
+    float method_temp4 = 0;      // 温度参数4 [电解池温度(℃)]
+    float method_temp5 = 0;      // 温度参数5 [备用]
+    float method_flow0 = 0;      // 流量参数0 [载气]
+    float method_flow1 = 0;      // 流量参数1 [氧气]
+    float method_flow2 = 0;      // 流量参数2 [臭氧]
+    float method_flow3 = 0;      // 流量参数3 [裂解氧(%)]
+    float method_flow4 = 0;      // 流量参数4 [备用]
+    float method_flow5 = 0;      // 流量参数5 [备用]
+    float method_pass0 = 0;      // 压力参数0 [系统压力]
+    float method_pass1 = 0;      // 压力参数1 [氯压力]
+    float method_pass2 = 0;      // 压力参数2 [备用]
+    float method_pass3 = 0;      // 压力参数3 [备用]
+    float method_pass4 = 0;      // 压力参数4 [备用]
+    float method_pass5 = 0;      // 压力参数5 [备用]
+    float method_other0 = 0;     // 其他参数0 [采样时间]
+    float method_other1 = 0;     // 其他参数1 [裂解时间]
+    float method_other2 = 0;     // 其他参数2 [氮高压]
+    float method_other3 = 0;     // 其他参数3 [硫高压]
+    float method_other4 = 0;     // 其他参数4 [氙灯高压]
+    float method_other5 = 0;     // 其他参数5 [备用]
+    float method_injector0 = 0;  // 进样器参数0 [清洗次数1]
+    float method_injector1 = 0;  // 进样器参数1 [清洗次数2]
+    float method_injector2 = 0;  // 进样器参数2 [置换次数]
+    float method_injector3 = 0;  // 进样器参数3 [提取速度]
+    float method_injector4 = 0;  // 进样器参数4 [排出速度]
+    float method_injector5 = 0;  // 进样器参数5 [进样速度]
+    float method_injector6 = 0;  // 进样器参数6 [注射器容积]
+    float method_injector7 = 0;  // 进样器参数7 [清洗体积]
+    float method_injector8 = 0;  // 进样器参数8 [容差体积]
+    float method_injector9 = 0;  // 进样器参数9 [返回速度]
+    float method_injector10 = 0; // 进样器参数10 [总行程]
+    float method_injector11 = 0; // 进样器参数11 [快进速度]
+    float method_injector12 = 0; // 进样器参数12 [减速位]
+    float method_injector13 = 0; // 进样器参数13 [燃烧位]
+    float method_injector14 = 0; // 进样器参数14 [冷却温度]
+    float method_injector15 = 0; // 进样器参数15 [加热温度]
+    float method_injector16 = 0; // 进样器参数16 [扎入比例]
 
     // 从 JSON 解析到结构体
     void from_json(const nlohmann::json &j)
     {
         j.at("id").get_to(id);
-        j.at("name").get_to(name);
-        j.at("type").get_to(type);
+        j.at("method_name").get_to(method_name);
+        j.at("method_type").get_to(method_type);
         j.at("injector_type").get_to(injector_type);
         j.at("sample_type").get_to(sample_type);
         j.at("method_temp0").get_to(method_temp0);
@@ -117,8 +117,8 @@ struct MethodListTable
     void to_json(nlohmann::json &j) const
     {
         j["id"] = id;
-        j["name"] = name;
-        j["type"] = type;
+        j["method_name"] = method_name;
+        j["method_type"] = method_type;
         j["injector_type"] = injector_type;
         j["sample_type"] = sample_type;
         j["method_temp0"] = method_temp0;

@@ -31,7 +31,7 @@ int MethodListHandler::get_all(HttpRequest *req, HttpResponse *resp)
         std::vector<MethodListTable> list;
         size_t size = Model::get_all(list);
 
-        if(size == 0)
+        if (size == 0)
         {
             resp->json["data"] = {};
             return;
@@ -51,9 +51,10 @@ int MethodListHandler::insert(HttpRequest *req, HttpResponse *resp)
 {
     auto func = [req, resp]
     {
+        time_t now = std::time(NULL);
         MethodListTable item;
         item.from_json(req->GetJson());
-        item.name += std::to_string(item.id); // 添加ID到名称后面
+        item.method_name += std::to_string(now); // 添加ID到名称后面
         resp->json["data"] = Model::insert(item);
     };
     Handler::response_json(req, resp, func);
@@ -94,13 +95,13 @@ int MethodListHandler::get(HttpRequest *req, HttpResponse *resp)
     auto func = [req, resp]
     {
         int id = std::stoi(req->GetParam("id"));
-        int type = std::stoi(req->GetParam("type", "-1"));
+        int method_type = std::stoi(req->GetParam("method_type", "-1"));
         int injector_type = std::stoi(req->GetParam("injector_type", "-1"));
         int sample_type = std::stoi(req->GetParam("sample_type", "-1"));
         MethodListTable item;
         Model::get(item, id);
 
-        type = type == -1 ? item.type : type;                                     // type
+        method_type = method_type == -1 ? item.method_type : method_type;                                     // method_type
         injector_type = injector_type == -1 ? item.injector_type : injector_type; // injector_type
         sample_type = sample_type == -1 ? item.sample_type : sample_type;         // sample_type
 
@@ -110,7 +111,7 @@ int MethodListHandler::get(HttpRequest *req, HttpResponse *resp)
         resp->json["data"]["method_other"] = {{}, {}, {}, {}, {}};
         resp->json["data"]["method_injector"] = {{}, {}, {}, {}, {}, {}, {}, {}, {}, {}};
         // 根据类型渲染内容
-        switch (type)
+        switch (method_type)
         {
         case 0: // 硫
             resp->json["data"]["method_temp"][0] = {0, "炉温(℃)", item.method_temp0};
@@ -304,16 +305,17 @@ int MethodListHandler::copy(HttpRequest *req, HttpResponse *resp)
 {
     auto func = [req, resp]
     {
+        time_t now = std::time(NULL);
         int id = std::stoi(req->GetParam("id"));
         MethodListTable item;
-        if (id == 0)
+        if (id == -1)
         {
-            item.name = "新方法"; // 如果没有id，则使用默认名称
+            item.method_name = "未命名" + std::to_string(now); // 如果没有id，则使用默认名称
         }
         else
         {
             Model::get(item, id);
-            item.name += std::to_string(item.id); // 添加ID到名称后面
+            item.method_name += std::to_string(now); // 添加ID到名称后面
         }
         resp->json["data"] = Model::insert(item); // 插入到方法列表中
     };
@@ -326,7 +328,7 @@ int MethodListHandler::config(HttpRequest *req, HttpResponse *resp)
 {
     auto func = [req, resp]
     {
-        resp->json["data"]["type"] = {"单硫", "单氮", "单氯", "硫氮", "CELL", "待机", "启动"};
+        resp->json["data"]["method_type"] = {"单硫", "单氮", "单氯", "硫氮", "CELL", "待机", "启动"};
         resp->json["data"]["injector_type"] = {"AJ", "液体", "气体", "固体", "无"};
         resp->json["data"]["sample_type"] = {"液体", "气体", "固体"};
         resp->json["data"]["method_temp"] = {"炉温(℃)", "氮加热(℃)", "氮制冷(℃)", "催化剂温度(℃)", "电解池温度(℃)"};

@@ -9,23 +9,24 @@
 #include <string>
 #include "hv/json.hpp"
 
-
-struct Configuration {
-
+struct Configuration
+{
 };
 
-struct ConfigurationTable {
-    int id = 0;
-    int config_parameternumber = 0;
-    std::string config_name;
-    std::string config_parametername;
-    float config_floatvalue = 0;
-    int config_integervalue = 0;
-    std::string config_stringvalue;
-    int config_booleanvalue = 0;
+struct ConfigurationTable
+{
+    int id = 0;                       // 配置表ID
+    int config_parameternumber = 0;   // 配置参数编号
+    std::string config_name;          // 配置名称
+    std::string config_parametername; // 配置参数名称
+    float config_floatvalue = 0;      // 配置浮点值
+    int config_integervalue = 0;      // 配置整数值
+    std::string config_stringvalue;   // 配置字符串值
+    int config_booleanvalue = 0;      // 配置布尔值 (0: false, 1: true)
 
     // 从 JSON 解析到结构体
-    void from_json(const nlohmann::json &j) {
+    void from_json(const nlohmann::json &j)
+    {
         j.at("id").get_to(id);
         j.at("config_parameternumber").get_to(config_parameternumber);
         j.at("config_name").get_to(config_name);
@@ -37,7 +38,8 @@ struct ConfigurationTable {
     }
 
     // 从结构体转换为 JSON
-    void to_json(nlohmann::json &j) const {
+    void to_json(nlohmann::json &j) const
+    {
         j["id"] = id;
         j["config_parameternumber"] = config_parameternumber;
         j["config_name"] = config_name;
@@ -51,4 +53,4 @@ struct ConfigurationTable {
 
 extern Configuration m_configuration;
 
-#endif //HTTPD_CONFIGURATION_H
+#endif // HTTPD_CONFIGURATION_H

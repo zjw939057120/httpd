@@ -9,53 +9,55 @@
 #include <string>
 #include "hv/json.hpp"
 
-struct SampleList {
-
+struct SampleList
+{
 };
 
-struct SampleListTable {
-    int id = 0;
-    int queue_number = 0;
-    int sample_number = 0;
-    int sample_signalnumber = 0;
-    std::string sample_name;
-    float sample_area = 0;
-    float sample_amount = 0;
-    std::string sample_amountunit;
-    float sample_startamount = 0;
-    std::string sample_startamount_unit;
-    int sample_place = 0;
-    float sample_dilution = 0;
-    float sample_density = 0;
-    float sample_molweight = 0;
-    float sample_tolerance = 0;
-    std::string sample_type;
-    std::string sample_method;
-    float sample_result = 0;
-    std::string sample_date;
-    std::string sample_comment;
-    std::string sample_log;
-    std::string sample_analyst_name;
-    float sample_totalcomponent = 0;
-    float sample_cal_concentration = 0;
-    float sample_concentration = 0;
-    std::string sample_conc_unit;
-    int sample_beginpeak = 0;
-    float sample_beginpeak_value = 0;
-    int sample_endpeak = 0;
-    float sample_endpeak_value = 0;
-    int sample_id = 0;
-    float sample_mean = 0;
-    float sample_vc = 0;
-    float sample_sd = 0;
-    int sample_flag = 0;
-    std::string sample_temperature;
-    float sample_pressure = 0;
-    std::string sample_calibration_line;
-    int sample_loops = 0;
+struct SampleListTable
+{
+    int id = 0;                          // 样本列表ID
+    int queue_number = 0;                // 队列编号
+    int sample_number = 0;               // 样本编号
+    int sample_signalnumber = 0;         // 样本信号编号
+    std::string sample_name;             // 样本名称
+    float sample_area = 0;               // 样本面积
+    float sample_amount = 0;             // 样本量
+    std::string sample_amountunit;       // 样本量单位
+    float sample_startamount = 0;        // 样本起始量
+    std::string sample_startamount_unit; // 样本起始量单位
+    int sample_place = 0;                // 样本位置
+    float sample_dilution = 0;           // 样本稀释倍数
+    float sample_density = 0;            // 样本密度
+    float sample_molweight = 0;          // 样本分子量
+    float sample_tolerance = 0;          // 样本容差
+    std::string sample_type;             // 样本类型
+    std::string sample_method;           // 样本方法
+    float sample_result = 0;             // 样本结果
+    std::string sample_date;             // 样本日期
+    std::string sample_comment;          // 样本备注
+    std::string sample_log;              // 样本日志
+    std::string sample_analyst_name;     // 样本分析员名称
+    float sample_totalcomponent = 0;     // 样本总成分
+    float sample_cal_concentration = 0;  // 样本校准浓度
+    float sample_concentration = 0;      // 样本浓度
+    std::string sample_conc_unit;        // 样本浓度单位
+    int sample_beginpeak = 0;            // 样本起始峰
+    float sample_beginpeak_value = 0;    // 样本起始峰值
+    int sample_endpeak = 0;              // 样本结束峰
+    float sample_endpeak_value = 0;      // 样本结束峰值
+    int sample_id = 0;                   // 样本ID
+    float sample_mean = 0;               // 样本均值
+    float sample_vc = 0;                 // 样本变异系数
+    float sample_sd = 0;                 // 样本标准差
+    int sample_flag = 0;                 // 样本标志
+    std::string sample_temperature;      // 样本温度
+    float sample_pressure = 0;           // 样本压力
+    std::string sample_calibration_line; // 样本校准线
+    int sample_loops = 0;                // 样本循环次数
 
     // 从 JSON 解析到结构体
-    void from_json(const nlohmann::json &j) {
+    void from_json(const nlohmann::json &j)
+    {
         j.at("id").get_to(id);
         j.at("queue_number").get_to(queue_number);
         j.at("sample_number").get_to(sample_number);
@@ -98,7 +100,8 @@ struct SampleListTable {
     }
 
     // 从结构体转换为 JSON
-    void to_json(nlohmann::json &j) const {
+    void to_json(nlohmann::json &j) const
+    {
         j["id"] = id;
         j["queue_number"] = queue_number;
         j["sample_number"] = sample_number;
@@ -143,4 +146,4 @@ struct SampleListTable {
 
 extern SampleList m_sampleList;
 
-#endif //HTTPD_SAMPLELIST_H
+#endif // HTTPD_SAMPLELIST_H
