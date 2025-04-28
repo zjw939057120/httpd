@@ -391,16 +391,16 @@ int Handler::response_json(HttpRequest *req, HttpResponse *resp, const std::func
         resp->json["data"] = {};
 
         response_status(resp, 1, e.what());
-    } catch (std::exception e) {
+    } catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;
         resp->json["data"] = {};
         
-        response_status(resp, 1, e.what());
+        response_status(resp, 2, e.what());
     } catch (...) {
         std::cerr << "unknown exeption" << std::endl;
         resp->json["data"] = {};
         
-        response_status(resp, 1, "unknown exeption");
+        response_status(resp, 3, "unknown exeption");
     }
 
     return 200;

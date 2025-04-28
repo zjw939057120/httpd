@@ -6,8 +6,8 @@
 
 #include "SampleList.h"
 #include "handler.h"
-#include <thread>   // import std::thread
-#include <chrono>   // import std::chrono
+#include <thread> // import std::thread
+#include <chrono> // import std::chrono
 
 #include "hbase.h"
 #include "htime.h"
@@ -24,27 +24,33 @@
 #include "SampleDataModel.h"
 #include "SampleListModel.h"
 
-int SampleListHandler::get_all(HttpRequest *req, HttpResponse *resp) {
-    auto func = [req, resp] {
+int SampleListHandler::get_all(HttpRequest *req, HttpResponse *resp)
+{
+    auto func = [req, resp]
+    {
         std::vector<SampleListTable> list;
         size_t size = Model::get_all(list);
-        if(size == 0)
+        if (size == 0)
         {
             resp->json["data"] = {};
             return;
         }
         int seq = 0;
-        for (auto &item:list) {
+        for (auto &item : list)
+        {
             item.to_json(resp->json["data"][seq]);
             seq++;
         }
     };
+    
     Handler::response_json(req, resp, func);
     return 200;
 }
 
-int SampleListHandler::insert(HttpRequest *req, HttpResponse *resp) {
-    auto func = [req, resp] {
+int SampleListHandler::insert(HttpRequest *req, HttpResponse *resp)
+{
+    auto func = [req, resp]
+    {
         SampleListTable item;
         item.from_json(req->GetJson());
         resp->json["data"] = Model::insert(item);
@@ -53,8 +59,10 @@ int SampleListHandler::insert(HttpRequest *req, HttpResponse *resp) {
     return 200;
 }
 
-int SampleListHandler::update(HttpRequest *req, HttpResponse *resp) {
-    auto func = [req, resp] {
+int SampleListHandler::update(HttpRequest *req, HttpResponse *resp)
+{
+    auto func = [req, resp]
+    {
         SampleListTable item;
         item.from_json(req->GetJson());
 
@@ -66,8 +74,10 @@ int SampleListHandler::update(HttpRequest *req, HttpResponse *resp) {
     return 200;
 }
 
-int SampleListHandler::remove(HttpRequest *req, HttpResponse *resp) {
-    auto func = [req, resp] {
+int SampleListHandler::remove(HttpRequest *req, HttpResponse *resp)
+{
+    auto func = [req, resp]
+    {
         int id = std::stoi(req->GetParam("id"));
         SampleListTable item;
         Model::remove(item, id);
@@ -78,12 +88,46 @@ int SampleListHandler::remove(HttpRequest *req, HttpResponse *resp) {
     return 200;
 }
 
-int SampleListHandler::get(HttpRequest *req, HttpResponse *resp) {
-    auto func = [req, resp] {
+int SampleListHandler::get(HttpRequest *req, HttpResponse *resp)
+{
+    auto func = [req, resp]
+    {
         int id = std::stoi(req->GetParam("id"));
         SampleListTable item;
         Model::get(item, id);
         item.to_json(resp->json["data"]);
+    };
+
+    Handler::response_json(req, resp, func);
+    return 200;
+}
+
+int SampleListHandler::get_by_queue_id(HttpRequest *req, HttpResponse *resp)
+{
+    auto func = [req, resp]
+    {
+        // 从请求中获取 queue_id 参数
+        int queue_id = std::stoi(req->GetParam("queue_id"));
+
+        // 使用 sqlite_orm 查询符合条件的记录
+        auto storage = Model::get_storage(); // 获取数据库存储对象
+        auto list = storage.get_all<SampleListTable>(
+            sqlite_orm::where(sqlite_orm::c(&SampleListTable::queue_number) == queue_id));
+
+        // 如果没有找到记录，返回空数组
+        if (list.empty())
+        {
+            resp->json["data"] = {};
+            return;
+        }
+
+        // 将查询结果转换为 JSON 格式
+        int seq = 0;
+        for (auto &item : list)
+        {
+            item.to_json(resp->json["data"][seq]);
+            seq++;
+        }
     };
 
     Handler::response_json(req, resp, func);

@@ -7,7 +7,8 @@
 
 #include "HttpService.h"
 
-class MethodListHandler {
+class MethodListHandler
+{
 public:
     static int get_all(HttpRequest *req, HttpResponse *resp);
 
@@ -20,8 +21,8 @@ public:
     static int get(HttpRequest *req, HttpResponse *resp);
 
     static int copy(HttpRequest *req, HttpResponse *resp);
-    
+
     static int config(HttpRequest *req, HttpResponse *resp);
 };
 
-#endif //HTTPD_METHODLISTHANDLER_H
+#endif // HTTPD_METHODLISTHANDLER_H

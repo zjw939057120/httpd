@@ -101,7 +101,7 @@ int MethodListHandler::get(HttpRequest *req, HttpResponse *resp)
         MethodListTable item;
         Model::get(item, id);
 
-        method_type = method_type == -1 ? item.method_type : method_type;                                     // method_type
+        method_type = method_type == -1 ? item.method_type : method_type;         // method_type
         injector_type = injector_type == -1 ? item.injector_type : injector_type; // injector_type
         sample_type = sample_type == -1 ? item.sample_type : sample_type;         // sample_type
 

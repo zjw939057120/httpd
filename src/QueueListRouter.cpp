@@ -14,10 +14,12 @@
 #include "SystemHandler.h"
 #include "System.h"
 
-void QueueListRouter::Register(hv::HttpService &router) {
+void QueueListRouter::Register(hv::HttpService &router)
+{
     router.GET("/api/queue_list/get_all", QueueListHandler::get_all);
     router.POST("/api/queue_list/insert", QueueListHandler::insert);
     router.POST("/api/queue_list/update", QueueListHandler::update);
     router.POST("/api/queue_list/remove/{id}", QueueListHandler::remove);
     router.GET("/api/queue_list/get/{id}", QueueListHandler::get);
+    router.POST("/api/queue_list/copy/{id}", QueueListHandler::copy);
 }

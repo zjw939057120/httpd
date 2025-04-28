@@ -382,6 +382,10 @@ public:
             return false;
         }
     }
+
+    static auto& get_storage(){
+        return storage;
+    }
 };
 
 #endif // HTTPD_MODEL_H

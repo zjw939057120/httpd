@@ -14,7 +14,8 @@
 #include "SystemHandler.h"
 #include "System.h"
 
-void MethodListRouter::Register(hv::HttpService &router) {
+void MethodListRouter::Register(hv::HttpService &router)
+{
     router.GET("/api/method_list/get_all", MethodListHandler::get_all);
     router.POST("/api/method_list/insert", MethodListHandler::insert);
     router.POST("/api/method_list/update", MethodListHandler::update);

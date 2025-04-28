@@ -66,11 +66,11 @@
       , table = layui.table;
 
     var queue_list = {};
-    var current_queue_item = {}; // 当前选中的方法项
+    var current_queue_item = {}; // 当前选中的队列项
 
-    initQueueList(); // 初始化时渲染方法列表
+    initQueueList(); // 初始化时渲染队列列表
     function initQueueList() {
-      // [方法列表]动态填充数据后需要重新渲染 select
+      // [队列列表]动态填充数据后需要重新渲染 select
       $.ajax({
         url: '/api/queue_list/get_all', // 替换为你的 JSON 接口地址
         method: 'GET',
@@ -80,8 +80,8 @@
             layer.msg('没有队列数据', { icon: 5 });
             return;
           }
-          // 假设返回的数据格式为：[{ "id": "1", "name": "方法1" }, { "id": "2", "name": "方法2" }]
-          // 填充方法列表下拉框
+          // 假设返回的数据格式为：[{ "id": "1", "name": "队列1" }, { "id": "2", "name": "队列2" }]
+          // 填充队列列表下拉框
           var queue_list_options = '';
           queue_list.forEach(function (item, index) {
             queue_list_options += '<option value="' + index + '">' + item.queue_name + '</option>';
@@ -91,7 +91,7 @@
           form.render('select'); // 重新渲染表单
 
           var index = $('#queue_list').val();
-          renderQueueItem(index); // 初始化时渲染第一个方法项
+          renderQueueItem(index); // 初始化时渲染第一个队列项
         },
         error: function () {
           console.error('请求失败');
@@ -106,11 +106,29 @@
     });
 
     function renderQueueItem(index) {
-      current_queue_item = queue_list[index]; // 获取当前选中的方法项
-      console.log('当前选中的队列项:', current_queue_item); // 打印当前选中的方法项
-      form.render('select'); // 重新渲染 select
+      current_queue_item = queue_list[index]; // 获取当前选中的队列项
+      console.log('当前选中的队列项:', current_queue_item); // 打印当前选中的队列项
+      renderSampleList(current_queue_item.id);// 渲染样本列表
     }
 
+    function renderSampleList(queue_id) {
+      $.ajax({
+        url: '/api/sample_list/get_by_queue_id/' + queue_id, // 替换为你的 JSON 接口地址
+        method: 'GET',
+        success: function (res) {
+          if (res.code != 0) {
+            layer.msg(res.msg, { icon: 5 });
+            return;
+          }
+          var sample_list = res.data; // 获取样本列表数据
+          console.log('样本列表:', sample_list); // 打印样本列表数据
+        },
+        error: function () {
+          console.error('请求失败');
+        }
+      });
+    }
+    
     form.render(null, 'layadmin-userfront-formlist');
     
     // 监听[删除]按钮点击事件
@@ -128,7 +146,7 @@
             layer.msg(res.msg, { icon: 5 });
             return;
           }
-          initQueueList(); // 重新初始化方法列表
+          initQueueList(); // 重新初始化队列列表
         },
         error: function () {
           console.error('请求失败');
@@ -142,7 +160,7 @@
         layer.msg('没有队列数据', { icon: 5 });
         return;
       }
-      current_queue_item.queue_name = $('#queue_name').val(); // 更新方法名称
+      current_queue_item.queue_name = $('#queue_name').val(); // 更新队列名称
       $.ajax({
         url: '/api/queue_list/insert', // 替换为你的 JSON 接口地址
         method: 'POST',
@@ -153,7 +171,7 @@
             layer.msg(res.msg, { icon: 5 });
             return;
           }
-          initQueueList(); // 重新初始化方法列表
+          initQueueList(); // 重新初始化队列列表
         },
         error: function () {
           console.error('请求失败');
@@ -167,7 +185,7 @@
       if (queue_list == null) {
         queue_id = -1; // 如果没有队列数据，则设置为 0
       }
-      current_queue_item.queue_name = $('#queue_name').val(); // 更新方法名称
+      current_queue_item.queue_name = $('#queue_name').val(); // 更新队列名称
       $.ajax({
         url: '/api/queue_list/copy/' + queue_id, // 替换为你的 JSON 接口地址
         method: 'POST',
@@ -177,7 +195,7 @@
             layer.msg(res.msg, { icon: 5 });
             return;
           }
-          initQueueList(); // 重新初始化方法列表
+          initQueueList(); // 重新初始化队列列表
         },
         error: function () {
           console.error('请求失败');

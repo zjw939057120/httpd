@@ -7,7 +7,8 @@
 
 #include "HttpService.h"
 
-class SampleListHandler {
+class SampleListHandler
+{
 public:
     static int get_all(HttpRequest *req, HttpResponse *resp);
 
@@ -18,7 +19,8 @@ public:
     static int remove(HttpRequest *req, HttpResponse *resp);
 
     static int get(HttpRequest *req, HttpResponse *resp);
+
+    static int get_by_queue_id(HttpRequest *req, HttpResponse *resp);
 };
 
-
-#endif //HTTPD_SAMPLELISTHANDLER_H
+#endif // HTTPD_SAMPLELISTHANDLER_H

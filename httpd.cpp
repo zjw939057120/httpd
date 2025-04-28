@@ -135,7 +135,7 @@ int main(int argc, char **argv) {
         return HTTP_STATUS_NEXT;
     });
 
-    Router::Register(httpService);
+    // Router::Register(httpService);
     CalibrationRouter::Register(httpService);
     MethodListRouter::Register(httpService);
     QueueListRouter::Register(httpService);
