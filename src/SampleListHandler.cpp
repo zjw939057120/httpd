@@ -102,17 +102,17 @@ int SampleListHandler::get(HttpRequest *req, HttpResponse *resp)
     return 200;
 }
 
-int SampleListHandler::get_by_queue_id(HttpRequest *req, HttpResponse *resp)
+int SampleListHandler::get_all_by_queue(HttpRequest *req, HttpResponse *resp)
 {
     auto func = [req, resp]
     {
-        // 从请求中获取 queue_id 参数
-        int queue_id = std::stoi(req->GetParam("queue_id"));
+        // 从请求中获取 queue_number 参数
+        int queue_number = std::stoi(req->GetParam("queue_number"));
 
         // 使用 sqlite_orm 查询符合条件的记录
         auto storage = Model::get_storage(); // 获取数据库存储对象
         auto list = storage.get_all<SampleListTable>(
-            sqlite_orm::where(sqlite_orm::c(&SampleListTable::queue_number) == queue_id));
+            sqlite_orm::where(sqlite_orm::c(&SampleListTable::queue_number) == queue_number));
 
         // 如果没有找到记录，返回空数组
         if (list.empty())

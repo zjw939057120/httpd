@@ -36,17 +36,17 @@
     <div class="layui-col-md12">
       <div class="layui-card">
 
-          <table class="layui-hide" id="test-table-toolbar" lay-filter="test-table-toolbar"></table>
-          
-          <script type="text/html" id="test-table-toolbar-toolbarDemo">
+        <table class="layui-hide" id="test-table-toolbar" lay-filter="test-table-toolbar"></table>
+
+        <script type="text/html" id="test-table-toolbar-toolbarDemo">
             <div class="layui-btn-container">
               <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
               <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>
               <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button>
             </div>
           </script>
-           
-          <script type="text/html" id="test-table-toolbar-barDemo">
+
+        <script type="text/html" id="test-table-toolbar-barDemo">
             <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
             <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
           </script>
@@ -61,6 +61,7 @@
   layui.use(['admin', 'form', 'table'], function () {
     var $ = layui.$
       , admin = layui.admin
+      , view = layui.view
       , element = layui.element
       , form = layui.form
       , table = layui.table;
@@ -113,7 +114,7 @@
 
     function renderSampleList(queue_id) {
       $.ajax({
-        url: '/api/sample_list/get_by_queue_id/' + queue_id, // 替换为你的 JSON 接口地址
+        url: '/api/sample_list/get_all_by_queue/' + queue_id, // 替换为你的 JSON 接口地址
         method: 'GET',
         success: function (res) {
           if (res.code != 0) {
@@ -128,9 +129,9 @@
         }
       });
     }
-    
+
     form.render(null, 'layadmin-userfront-formlist');
-    
+
     // 监听[删除]按钮点击事件
     $('#remove_queue').on('click', function () {
       if (queue_list == null) {
@@ -160,21 +161,40 @@
         layer.msg('没有队列数据', { icon: 5 });
         return;
       }
-      current_queue_item.queue_name = $('#queue_name').val(); // 更新队列名称
-      $.ajax({
-        url: '/api/queue_list/insert', // 替换为你的 JSON 接口地址
-        method: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify(current_queue_item), // 将数据转换为 JSON 字符串
-        success: function (res) {
-          if (res.code != 0) {
-            layer.msg(res.msg, { icon: 5 });
-            return;
-          }
-          initQueueList(); // 重新初始化队列列表
-        },
-        error: function () {
-          console.error('请求失败');
+      admin.popup({
+        title: '添加队列'
+        , area: ['550px', '400px']
+        , id: 'LAY-popup-content-tags'
+        , success: function (layero, index) {
+          view(this.id).render('device/queueform').done(function () {
+            form.render(null, 'layuiadmin-form-tags');
+
+            //监听提交
+            form.on('submit(layuiadmin-app-tags-submit)', function (data) {
+              var field = data.field; //获取提交的字段
+              console.log('提交数据:', field);
+
+              //提交 Ajax 成功后，关闭当前弹层并重载表格
+              $.ajax({
+                url: '/api/queue_list/insert', // 替换为你的 JSON 接口地址
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(field), // 将数据转换为 JSON 字符串
+                success: function (res) {
+                  if (res.code != 0) {
+                    layer.msg(res.msg, { icon: 5 });
+                    return;
+                  }
+                  initQueueList(); // 重新初始化队列列表
+                },
+                error: function () {
+                  console.error('请求失败');
+                }
+              });
+              layui.table.reload('LAY-app-content-tags'); //重载表格
+              layer.close(index); //执行关闭 
+            });
+          });
         }
       });
     });
@@ -205,59 +225,61 @@
 
     table.render({
       elem: '#test-table-toolbar'
-      ,url:'./json/table/demo.js'
-      ,toolbar: '#test-table-toolbar-toolbarDemo'
-      ,title: '用户数据表'
-      ,cols: [[
-        {type: 'checkbox', fixed: 'left'}
-        ,{field:'id', title:'ID', width:80, fixed: 'left', unresize: true, sort: true}
-        ,{field:'username', title:'用户名', width:120, edit: 'text'}
-        ,{field:'email', title:'邮箱', width:150, edit: 'text', templet: function(res){
-          return '<em>'+ res.email +'</em>'
-        }}
-        ,{field:'sex', title:'性别', width:80, edit: 'text', sort: true}
-        ,{field:'city', title:'城市', width:100}
-        ,{field:'sign', title:'签名'}
-        ,{field:'experience', title:'积分', width:80, sort: true}
-        ,{field:'ip', title:'IP', width:120}
-        ,{field:'logins', title:'登入次数', width:100, sort: true}
-        ,{field:'joinTime', title:'加入时间', width:120}
-        ,{fixed: 'right', title:'操作', toolbar: '#test-table-toolbar-barDemo', width:150}
+      , url: './json/table/demo.js'
+      , toolbar: '#test-table-toolbar-toolbarDemo'
+      , title: '用户数据表'
+      , cols: [[
+        { type: 'checkbox', fixed: 'left' }
+        , { field: 'id', title: 'ID', width: 80, fixed: 'left', unresize: true, sort: true }
+        , { field: 'username', title: '用户名', width: 120, edit: 'text' }
+        , {
+          field: 'email', title: '邮箱', width: 150, edit: 'text', templet: function (res) {
+            return '<em>' + res.email + '</em>'
+          }
+        }
+        , { field: 'sex', title: '性别', width: 80, edit: 'text', sort: true }
+        , { field: 'city', title: '城市', width: 100 }
+        , { field: 'sign', title: '签名' }
+        , { field: 'experience', title: '积分', width: 80, sort: true }
+        , { field: 'ip', title: 'IP', width: 120 }
+        , { field: 'logins', title: '登入次数', width: 100, sort: true }
+        , { field: 'joinTime', title: '加入时间', width: 120 }
+        , { fixed: 'right', title: '操作', toolbar: '#test-table-toolbar-barDemo', width: 150 }
       ]]
-      ,page: true
+      , page: true
     });
-    
+
     //头工具栏事件
-    table.on('toolbar(test-table-toolbar)', function(obj){
+    table.on('toolbar(test-table-toolbar)', function (obj) {
       var checkStatus = table.checkStatus(obj.config.id);
-      switch(obj.event){
+      switch (obj.event) {
         case 'getCheckData':
           var data = checkStatus.data;
           layer.alert(JSON.stringify(data));
-        break;
+          break;
         case 'getCheckLength':
           var data = checkStatus.data;
-          layer.msg('选中了：'+ data.length + ' 个');
-        break;
+          layer.msg('选中了：' + data.length + ' 个');
+          break;
         case 'isAll':
-          layer.msg(checkStatus.isAll ? '全选': '未全选');
-        break;
+          layer.msg(checkStatus.isAll ? '全选' : '未全选');
+          break;
       };
     });
-    
+
     //监听行工具事件
-    table.on('tool(test-table-toolbar)', function(obj){
+    table.on('tool(test-table-toolbar)', function (obj) {
       var data = obj.data;
-      if(obj.event === 'del'){
-        layer.confirm('真的删除行么', function(index){
+      if (obj.event === 'del') {
+        layer.confirm('真的删除行么', function (index) {
           obj.del();
           layer.close(index);
         });
-      } else if(obj.event === 'edit'){
+      } else if (obj.event === 'edit') {
         layer.prompt({
           formType: 2
-          ,value: data.email
-        }, function(value, index){
+          , value: data.email
+        }, function (value, index) {
           obj.update({
             email: value
           });
@@ -265,6 +287,6 @@
         });
       }
     });
-  
+
   });
 </script>

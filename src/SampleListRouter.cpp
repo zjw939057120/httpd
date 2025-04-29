@@ -21,5 +21,5 @@ void SampleListRouter::Register(hv::HttpService &router)
     router.POST("/api/sample_list/update", SampleListHandler::update);
     router.POST("/api/sample_list/remove/{id}", SampleListHandler::remove);
     router.GET("/api/sample_list/get/{id}", SampleListHandler::get);
-    router.GET("/api/sample_list/get_by_queue_id/{queue_id}", SampleListHandler::get_by_queue_id);
+    router.GET("/api/sample_list/get_all_by_queue/{queue_number}", SampleListHandler::get_all_by_queue);
 }

@@ -20,7 +20,7 @@ public:
 
     static int get(HttpRequest *req, HttpResponse *resp);
 
-    static int get_by_queue_id(HttpRequest *req, HttpResponse *resp);
+    static int get_all_by_queue(HttpRequest *req, HttpResponse *resp);
 };
 
 #endif // HTTPD_SAMPLELISTHANDLER_H

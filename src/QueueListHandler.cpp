@@ -51,7 +51,9 @@ int QueueListHandler::insert(HttpRequest *req, HttpResponse *resp)
     auto func = [req, resp]
     {
         QueueListTable item;
-        item.from_json(req->GetJson());
+        hv::Json json = req->GetJson(); 
+        item.queue_name = json["queue_name"].get<std::string>();//队列名称
+        item.queue_comment = json["queue_comment"].get<std::string>(); //队列备注
         resp->json["data"] = Model::insert(item);
     };
     Handler::response_json(req, resp, func);
