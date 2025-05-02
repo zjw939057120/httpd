@@ -51,9 +51,9 @@ int QueueListHandler::insert(HttpRequest *req, HttpResponse *resp)
     auto func = [req, resp]
     {
         QueueListTable item;
-        hv::Json json = req->GetJson(); 
-        item.queue_name = json["queue_name"].get<std::string>();//队列名称
-        item.queue_comment = json["queue_comment"].get<std::string>(); //队列备注
+        hv::Json json = req->GetJson();
+        item.queue_name = json["queue_name"].get<std::string>();       // 队列名称
+        item.queue_comment = json["queue_comment"].get<std::string>(); // 队列备注
         resp->json["data"] = Model::insert(item);
     };
     Handler::response_json(req, resp, func);
@@ -67,6 +67,23 @@ int QueueListHandler::update(HttpRequest *req, HttpResponse *resp)
         QueueListTable item;
         item.from_json(req->GetJson());
 
+        Model::update(item);
+        resp->json["data"] = item.id;
+    };
+
+    Handler::response_json(req, resp, func);
+    return 200;
+}
+
+int QueueListHandler::edit(HttpRequest *req, HttpResponse *resp)
+{
+    auto func = [req, resp]
+    {
+        hv::Json json = req->GetJson();
+        QueueListTable item;
+        item.id = std::stoi(json["id"].get<std::string>());            // 队列ID
+        item.queue_name = json["queue_name"].get<std::string>();       // 队列名称
+        item.queue_comment = json["queue_comment"].get<std::string>(); // 队列备注
         Model::update(item);
         resp->json["data"] = item.id;
     };

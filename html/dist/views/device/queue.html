@@ -24,6 +24,7 @@
 
         <div class="layui-inline">
           <div class="layui-input-block" style="margin-left:30px;">
+            <button class="layui-btn layui-btn-warm" id="edit_queue">编辑</button>
             <button class="layui-btn layui-btn-danger" id="remove_queue">刪除</button>
             <button class="layui-btn layui-btn-normal" id="insert_queue">新增</button>
             <button class="layui-btn layui-btn-primary" id="copy_queue">复制</button>
@@ -112,21 +113,74 @@
       renderSampleList(current_queue_item.id);// 渲染样本列表
     }
 
+    // 渲染样本列表
+    // 这里的 queue_id 是从队列列表中获取的
     function renderSampleList(queue_id) {
-      $.ajax({
-        url: '/api/sample_list/get_all_by_queue/' + queue_id, // 替换为你的 JSON 接口地址
-        method: 'GET',
-        success: function (res) {
-          if (res.code != 0) {
-            layer.msg(res.msg, { icon: 5 });
-            return;
+      table.render({
+        elem: '#test-table-toolbar'
+        , url: '/api/sample_list/get_all_by_queue/' + queue_id // 数据接口
+        , toolbar: '#test-table-toolbar-toolbarDemo'
+        , title: '样本数据表'
+        , cols: [[
+          { type: 'checkbox', fixed: 'left' }
+          , { field: 'sample_number', title: '编号', width: 60 }
+          , { field: 'sample_place', title: '位置', width: 60 }
+          , { field: 'sample_signalnumber', title: '信号', width: 60 }
+          , { field: 'sample_name', title: '名称', width: 120, sort: true }
+          , { field: 'sample_type', title: '类型', width: 120, sort: true }
+          , {
+            field: 'sample_cal_concentration', title: '校准浓度', width: 100, templet: function (res) {
+              return res.sample_cal_concentration.toFixed(3);
+            }
           }
-          var sample_list = res.data; // 获取样本列表数据
-          console.log('样本列表:', sample_list); // 打印样本列表数据
-        },
-        error: function () {
-          console.error('请求失败');
-        }
+          , {
+            field: 'sample_area', title: '面积', width: 100, sort: true, templet: function (res) {
+              return res.sample_area.toFixed(3);
+            }
+          }
+          , {
+            field: 'sample_concentration', title: '浓度', width: 100, sort: true, templet: function (res) {
+              return res.sample_concentration.toFixed(3);
+            }
+          }
+          , { field: 'sample_conc_unit', title: '浓度单位', width: 100 }
+          , {
+            field: 'sample_mean', title: '均值', width: 100, sort: true, templet: function (res) {
+              return res.sample_mean.toFixed(3);
+            }
+          }
+          , { field: 'sample_method', title: '方法', width: 160, sort: true }
+          , {
+            field: 'sample_sd', title: 'SD', width: 100, sort: true, templet: function (res) {
+              return res.sample_sd.toFixed(3);
+            }
+          }
+          , {
+            field: 'sample_vc', title: 'RSD(%)', width: 100, sort: true, templet: function (res) {
+              return res.sample_vc.toFixed(3);
+            }
+          }
+          , { field: 'sample_amount', title: '样本量', width: 100, sort: true }
+          , { field: 'sample_amountunit', title: '单位', width: 100 }
+          , { field: 'sample_date', title: '日期', width: 160, sort: true }
+          , { field: 'sample_comment', title: '备注', width: 100 }
+          , { field: 'sample_analyst_name', title: '分析员', width: 100 }
+          , {
+            field: 'sample_dilution', title: '稀释倍数', width: 100, templet: function (res) {
+              return res.sample_dilution.toFixed(3);
+            }
+          }
+          , {
+            field: 'sample_density', title: '密度', width: 100, templet: function (res) {
+              return res.sample_density.toFixed(3);
+            }
+          }
+          , { field: 'sample_loops', title: '循环', width: 60 }
+          , { fixed: 'right', title: '操作', toolbar: '#test-table-toolbar-barDemo', width: 120 }
+        ]]
+        , page: true
+        , limit: 30
+        , limits: [10, 20, 30, 40, 50, 100, 200, 500, 1000]
       });
     }
 
@@ -138,20 +192,24 @@
         layer.msg('没有队列数据', { icon: 5 });
         return;
       }
-      $.ajax({
-        url: '/api/queue_list/remove/' + current_queue_item.id, // 替换为你的 JSON 接口地址
-        method: 'POST',
-        contentType: 'application/json',
-        success: function (res) {
-          if (res.code != 0) {
-            layer.msg(res.msg, { icon: 5 });
-            return;
+      layer.confirm('真的删除么', function (index) {
+        $.ajax({
+          url: '/api/queue_list/remove/' + current_queue_item.id, // 替换为你的 JSON 接口地址
+          method: 'POST',
+          contentType: 'application/json',
+          success: function (res) {
+            if (res.code != 0) {
+              layer.msg(res.msg, { icon: 5 });
+              return;
+            }
+            layer.msg('删除成功', { icon: 1 });
+            initQueueList(); // 重新初始化队列列表
+          },
+          error: function () {
+            console.error('请求失败');
           }
-          initQueueList(); // 重新初始化队列列表
-        },
-        error: function () {
-          console.error('请求失败');
-        }
+        });
+        layer.close(index); // 关闭确认框
       });
     });
 
@@ -163,7 +221,7 @@
       }
       admin.popup({
         title: '添加队列'
-        , area: ['550px', '400px']
+        , area: ['600px', '400px']
         , id: 'LAY-popup-content-tags'
         , success: function (layero, index) {
           view(this.id).render('device/queueform').done(function () {
@@ -172,7 +230,6 @@
             //监听提交
             form.on('submit(layuiadmin-app-tags-submit)', function (data) {
               var field = data.field; //获取提交的字段
-              console.log('提交数据:', field);
 
               //提交 Ajax 成功后，关闭当前弹层并重载表格
               $.ajax({
@@ -185,13 +242,56 @@
                     layer.msg(res.msg, { icon: 5 });
                     return;
                   }
+                  layer.msg('新增成功', { icon: 1 });
                   initQueueList(); // 重新初始化队列列表
                 },
                 error: function () {
                   console.error('请求失败');
                 }
               });
-              layui.table.reload('LAY-app-content-tags'); //重载表格
+              layer.close(index); //执行关闭 
+            });
+          });
+        }
+      });
+    });
+
+    // 监听[编辑]按钮点击事件
+    $('#edit_queue').on('click', function () {
+      if (queue_list == null) {
+        layer.msg('没有队列数据', { icon: 5 });
+        return;
+      }
+      admin.popup({
+        title: '编辑队列'
+        , area: ['600px', '400px']
+        , id: 'LAY-popup-content-tags'
+        , success: function (layero, index) {
+          view(this.id).render('device/queueform', current_queue_item).done(function () {
+            form.render(null, 'layuiadmin-form-tags');
+
+            //监听提交
+            form.on('submit(layuiadmin-app-tags-submit)', function (data) {
+              var field = data.field; //获取提交的字段
+
+              //提交 Ajax 成功后，关闭当前弹层并重载表格
+              $.ajax({
+                url: '/api/queue_list/edit', // 替换为你的 JSON 接口地址
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(field), // 将数据转换为 JSON 字符串
+                success: function (res) {
+                  if (res.code != 0) {
+                    layer.msg(res.msg, { icon: 5 });
+                    return;
+                  }
+                  layer.msg('编辑成功', { icon: 1 });
+                  initQueueList(); // 重新初始化队列列表
+                },
+                error: function () {
+                  console.error('请求失败');
+                }
+              });
               layer.close(index); //执行关闭 
             });
           });
@@ -215,6 +315,7 @@
             layer.msg(res.msg, { icon: 5 });
             return;
           }
+          layer.msg('复制成功', { icon: 1 });
           initQueueList(); // 重新初始化队列列表
         },
         error: function () {
@@ -223,31 +324,6 @@
       });
     });
 
-    table.render({
-      elem: '#test-table-toolbar'
-      , url: './json/table/demo.js'
-      , toolbar: '#test-table-toolbar-toolbarDemo'
-      , title: '用户数据表'
-      , cols: [[
-        { type: 'checkbox', fixed: 'left' }
-        , { field: 'id', title: 'ID', width: 80, fixed: 'left', unresize: true, sort: true }
-        , { field: 'username', title: '用户名', width: 120, edit: 'text' }
-        , {
-          field: 'email', title: '邮箱', width: 150, edit: 'text', templet: function (res) {
-            return '<em>' + res.email + '</em>'
-          }
-        }
-        , { field: 'sex', title: '性别', width: 80, edit: 'text', sort: true }
-        , { field: 'city', title: '城市', width: 100 }
-        , { field: 'sign', title: '签名' }
-        , { field: 'experience', title: '积分', width: 80, sort: true }
-        , { field: 'ip', title: 'IP', width: 120 }
-        , { field: 'logins', title: '登入次数', width: 100, sort: true }
-        , { field: 'joinTime', title: '加入时间', width: 120 }
-        , { fixed: 'right', title: '操作', toolbar: '#test-table-toolbar-barDemo', width: 150 }
-      ]]
-      , page: true
-    });
 
     //头工具栏事件
     table.on('toolbar(test-table-toolbar)', function (obj) {
@@ -269,24 +345,72 @@
 
     //监听行工具事件
     table.on('tool(test-table-toolbar)', function (obj) {
-      var data = obj.data;
+      var data = obj.data; // 获取当前行数据
       if (obj.event === 'del') {
-        layer.confirm('真的删除行么', function (index) {
-          obj.del();
+        layer.confirm('真的删除么', function (index) {
+          $.ajax({
+            url: '/api/sample_list/remove/' + data.id, // 替换为你的 JSON 接口地址
+            method: 'POST',
+            contentType: 'application/json',
+            success: function (res) {
+              if (res.code != 0) {
+                layer.msg(res.msg, { icon: 5 });
+                return;
+              }
+              obj.del(); // 删除当前行
+              layer.msg('删除成功', { icon: 1 });
+            },
+            error: function () {
+              console.error('请求失败');
+            }
+          });
           layer.close(index);
         });
       } else if (obj.event === 'edit') {
-        layer.prompt({
-          formType: 2
-          , value: data.email
-        }, function (value, index) {
-          obj.update({
-            email: value
-          });
-          layer.close(index);
+        admin.popup({
+          title: '编辑样本'
+          , area: ['800px', '600px']
+          , id: 'LAY-popup-content-tags'
+          , success: function (layero, index) {
+            view(this.id).render('device/sampleform', data).done(function () {
+              form.render(null, 'layuiadmin-form-tags');
+
+              //监听提交
+              form.on('submit(layuiadmin-app-tags-submit)', function (data) {
+                var field = data.field; //获取提交的字段
+
+                //提交 Ajax 成功后，关闭当前弹层并重载表格
+                $.ajax({
+                  url: '/api/sample_list/insert', // 替换为你的 JSON 接口地址
+                  method: 'POST',
+                  contentType: 'application/json',
+                  data: JSON.stringify(field), // 将数据转换为 JSON 字符串
+                  success: function (res) {
+                    if (res.code != 0) {
+                      layer.msg(res.msg, { icon: 5 });
+                      return;
+                    }
+                    initQueueList(); // 重新初始化队列列表
+                  },
+                  error: function () {
+                    console.error('请求失败');
+                  }
+                });
+                layer.close(index); //执行关闭 
+              });
+            });
+          }
         });
       }
     });
 
   });
 </script>
+
+<style>
+  .layui-layer-admin .layui-layer-title {
+    background-color: #f2f2f2; /* 设置背景颜色为灰色 */
+    color: #333; /* 设置文字颜色为深灰色 */
+    font-weight: bold; /* 设置文字加粗 */
+  }
+</style>

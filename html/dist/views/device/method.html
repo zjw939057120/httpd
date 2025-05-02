@@ -51,8 +51,8 @@
         <div class="layui-inline">
           <label class="layui-form-label">方法名称</label>
           <div class="layui-input-block">
-            <input type="text" name="method_name" id="method_name" placeholder="请输入" autocomplete="off" class="layui-input"
-              style="padding-right: 30px;">
+            <input type="text" name="method_name" id="method_name" placeholder="请输入" autocomplete="off"
+              class="layui-input" style="padding-right: 30px;">
           </div>
         </div>
 
@@ -513,6 +513,7 @@
             layer.msg(res.msg, { icon: 5 });
             return;
           }
+          layer.msg('修改成功', { icon: 1 });
           initMethodList(); // 重新初始化方法列表
         },
         error: function () {
@@ -527,21 +528,26 @@
         layer.msg('没有方法列表数据', { icon: 5 });
         return;
       }
-      $.ajax({
-        url: '/api/method_list/remove/' + current_method_item.id, // 替换为你的 JSON 接口地址
-        method: 'POST',
-        contentType: 'application/json',
-        success: function (res) {
-          if (res.code != 0) {
-            layer.msg(res.msg, { icon: 5 });
-            return;
+      layer.confirm('真的删除么', function (index) {
+        $.ajax({
+          url: '/api/method_list/remove/' + current_method_item.id, // 替换为你的 JSON 接口地址
+          method: 'POST',
+          contentType: 'application/json',
+          success: function (res) {
+            if (res.code != 0) {
+              layer.msg(res.msg, { icon: 5 });
+              return;
+            }
+            layer.msg('删除成功', { icon: 1 });
+            initMethodList(); // 重新初始化方法列表
+          },
+          error: function () {
+            console.error('请求失败');
           }
-          initMethodList(); // 重新初始化方法列表
-        },
-        error: function () {
-          console.error('请求失败');
-        }
+        });
+        layer.close(index);
       });
+
     });
 
     // 监听[新增]按钮点击事件
@@ -561,6 +567,7 @@
             layer.msg(res.msg, { icon: 5 });
             return;
           }
+          layer.msg('新增成功', { icon: 1 });
           initMethodList(); // 重新初始化方法列表
         },
         error: function () {
@@ -585,6 +592,7 @@
             layer.msg(res.msg, { icon: 5 });
             return;
           }
+          layer.msg('复制成功', { icon: 1 });
           initMethodList(); // 重新初始化方法列表
         },
         error: function () {

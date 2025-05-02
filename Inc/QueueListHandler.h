@@ -16,6 +16,8 @@ public:
 
     static int update(HttpRequest *req, HttpResponse *resp);
 
+    static int edit(HttpRequest *req, HttpResponse *resp);
+
     static int remove(HttpRequest *req, HttpResponse *resp);
 
     static int get(HttpRequest *req, HttpResponse *resp);
