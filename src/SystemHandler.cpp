@@ -52,13 +52,18 @@ int SystemHandler::menu(HttpRequest *req, HttpResponse *resp)
 
         resp->json["data"][i]["name"] = "status";
         resp->json["data"][i]["title"] = "系统状态";
-        resp->json["data"][i]["icon"] = "layui-icon-component";
+        resp->json["data"][i]["icon"] = "layui-icon-home";
         resp->json["data"][i]["jump"] = "/device/status";
         i++;
         resp->json["data"][i]["name"] = "method";
         resp->json["data"][i]["title"] = "方法管理";
-        resp->json["data"][i]["icon"] = "layui-icon-template";
+        resp->json["data"][i]["icon"] = "layui-icon-component";
         resp->json["data"][i]["jump"] = "/device/method";
+        // i++;
+        // resp->json["data"][i]["name"] = "calibration";
+        // resp->json["data"][i]["title"] = "标定管理";
+        // resp->json["data"][i]["icon"] = "layui-icon-template";
+        // resp->json["data"][i]["jump"] = "/device/calibration";
         i++;
         resp->json["data"][i]["name"] = "queue";
         resp->json["data"][i]["title"] = "队列管理";

@@ -129,7 +129,7 @@
           , { field: 'sample_name', title: '名称', width: 120, sort: true }
           , { field: 'sample_type', title: '类型', width: 120, sort: true }
           , {
-            field: 'sample_cal_concentration', title: '校准浓度', width: 100, templet: function (res) {
+            field: 'sample_cal_concentration', title: '标定浓度', width: 100, templet: function (res) {
               return res.sample_cal_concentration.toFixed(3);
             }
           }

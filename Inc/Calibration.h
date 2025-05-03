@@ -15,19 +15,19 @@ struct Calibration
 
 struct CalibrationTable
 {
-    int id = 0;                        // 校准表ID
-    std::string calibration_line;      // 校准线名称
-    int calibration_signalnumber = 0;  // 校准信号编号
-    std::string calibration_queue;     // 校准队列名称
-    int calibration_order = 0;         // 校准顺序
-    std::string calibration_intercept; // 校准截距
-    float calibration_A = 0;           // 校准参数A
-    float calibration_B = 0;           // 校准参数B
-    float calibration_C = 0;           // 校准参数C
-    float calibration_regression = 0;  // 校准回归系数
-    float calibration_min = 0;         // 校准最小值
-    float calibration_max = 0;         // 校准最大值
-    int calibration_calculated = 0;    // 校准计算标志 (0: 未计算, 1: 已计算)
+    int id = 0;                        // 标定表ID
+    std::string calibration_line;      // 标定线名称
+    int calibration_signalnumber = 0;  // 标定信号编号
+    std::string calibration_queue;     // 标定队列名称
+    int calibration_order = 0;         // 标定顺序
+    std::string calibration_intercept; // 标定截距
+    float calibration_A = 0;           // 标定参数A
+    float calibration_B = 0;           // 标定参数B
+    float calibration_C = 0;           // 标定参数C
+    float calibration_regression = 0;  // 标定回归系数
+    float calibration_min = 0;         // 标定最小值
+    float calibration_max = 0;         // 标定最大值
+    int calibration_calculated = 0;    // 标定计算标志 (0: 未计算, 1: 已计算)
 
     // 从 JSON 解析到结构体
     void from_json(const nlohmann::json &j)

@@ -38,7 +38,7 @@ struct SampleListTable
     std::string sample_log;              // 样本日志
     std::string sample_analyst_name;     // 样本分析员名称
     float sample_totalcomponent = 0;     // 样本总成分
-    float sample_cal_concentration = 0;  // 样本校准浓度
+    float sample_cal_concentration = 0;  // 样本标定浓度
     float sample_concentration = 0;      // 样本浓度
     std::string sample_conc_unit;        // 样本浓度单位
     int sample_beginpeak = 0;            // 样本起始峰
@@ -52,7 +52,7 @@ struct SampleListTable
     int sample_flag = 0;                 // 样本标志
     std::string sample_temperature;      // 样本温度
     float sample_pressure = 0;           // 样本压力
-    std::string sample_calibration_line; // 样本校准线
+    std::string sample_calibration_line; // 样本标定线
     int sample_loops = 0;                // 样本循环次数
 
     // 从 JSON 解析到结构体

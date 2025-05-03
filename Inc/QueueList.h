@@ -23,16 +23,16 @@ struct QueueListTable
     int queue_element = 0;                  // 队列元素数量
     float queue_blanco = 0;                 // 空白值
     float queue_yield = 0;                  // 收率
-    int queue_calibrationqueue = 0;         // 校准队列编号
-    int queue_calibration_signalnumber = 0; // 校准信号编号
-    int queue_calibration_order = 0;        // 校准顺序
+    int queue_calibrationqueue = 0;         // 标定队列编号
+    int queue_calibration_signalnumber = 0; // 标定信号编号
+    int queue_calibration_order = 0;        // 标定顺序
     int queue_intercept = 0;                // 截距
-    float queue_calibrationa = 0;           // 校准参数A
-    float queue_calibrationb = 0;           // 校准参数B
-    float queue_calibrationc = 0;           // 校准参数C
+    float queue_calibrationa = 0;           // 标定参数A
+    float queue_calibrationb = 0;           // 标定参数B
+    float queue_calibrationc = 0;           // 标定参数C
     float queue_regression = 0;             // 回归系数
-    int queue_calibration_min = 0;          // 校准最小值
-    int queue_calibration_max = 0;          // 校准最大值
+    int queue_calibration_min = 0;          // 标定最小值
+    int queue_calibration_max = 0;          // 标定最大值
     int queue_timewindow = 0;               // 时间窗口
     int queue_treshold0 = 0;                // 阈值0
     float queue_treshold1 = 0;              // 阈值1
@@ -40,12 +40,12 @@ struct QueueListTable
     std::string queue_baseline;             // 基线
     int queue_posintegration = 0;           // 积分位置
     std::string queue_calculated;           // 计算结果
-    float queue_blancocal = 0;              // 空白校准值
+    float queue_blancocal = 0;              // 空白标定值
     int queue_TrashTime1 = 0;               // 垃圾时间1
     int queue_AverageTime1 = 0;             // 平均时间1
     int queue_TrashTime2 = 0;               // 垃圾时间2
     int queue_AverageTime2 = 0;             // 平均时间2
-    std::string queue_calibrationline;      // 校准线
+    std::string queue_calibrationline;      // 标定线
 
     // 从 JSON 解析到结构体
     void from_json(const nlohmann::json &j)
