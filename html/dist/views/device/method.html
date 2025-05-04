@@ -138,8 +138,8 @@
       success: function (res) {
         method_config = res.data; // 将数据存储到全局变量中
       },
-      error: function () {
-        console.error('请求失败');
+      error: function (xhr, status, error) {
+        layer.msg('请求失败', { icon: 5 });
       }
     });
 
@@ -189,8 +189,8 @@
           var index = $('#method_list').val();
           renderMethodItem(index); // 初始化时渲染第一个方法项
         },
-        error: function () {
-          console.error('请求失败');
+        error: function (xhr, status, error) {
+          layer.msg('请求失败', { icon: 5 });
         }
       });
     };
@@ -516,8 +516,8 @@
           layer.msg('修改成功', { icon: 1 });
           initMethodList(); // 重新初始化方法列表
         },
-        error: function () {
-          console.error('请求失败');
+        error: function (xhr, status, error) {
+          layer.msg('请求失败', { icon: 5 });
         }
       });
     });
@@ -541,8 +541,8 @@
             layer.msg('删除成功', { icon: 1 });
             initMethodList(); // 重新初始化方法列表
           },
-          error: function () {
-            console.error('请求失败');
+          error: function (xhr, status, error) {
+            layer.msg('请求失败', { icon: 5 });
           }
         });
         layer.close(index);
@@ -570,8 +570,8 @@
           layer.msg('新增成功', { icon: 1 });
           initMethodList(); // 重新初始化方法列表
         },
-        error: function () {
-          console.error('请求失败');
+        error: function (xhr, status, error) {
+          layer.msg('请求失败', { icon: 5 });
         }
       });
     });
@@ -595,8 +595,8 @@
           layer.msg('复制成功', { icon: 1 });
           initMethodList(); // 重新初始化方法列表
         },
-        error: function () {
-          console.error('请求失败');
+        error: function (xhr, status, error) {
+          layer.msg('请求失败', { icon: 5 });
         }
       });
     });

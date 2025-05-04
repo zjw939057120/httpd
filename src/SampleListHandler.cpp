@@ -42,7 +42,7 @@ int SampleListHandler::get_all(HttpRequest *req, HttpResponse *resp)
             seq++;
         }
     };
-    
+
     Handler::response_json(req, resp, func);
     return 200;
 }
@@ -128,6 +128,62 @@ int SampleListHandler::get_all_by_queue(HttpRequest *req, HttpResponse *resp)
             item.to_json(resp->json["data"][seq]);
             seq++;
         }
+    };
+
+    Handler::response_json(req, resp, func);
+    return 200;
+}
+
+int SampleListHandler::batchDelete(HttpRequest *req, HttpResponse *resp)
+{
+    auto func = [req, resp]
+    {
+        hv::Json json = req->GetJson();
+        std::vector<int> ids = json["ids"].get<std::vector<int>>();
+
+        for (auto id : ids)
+        {
+            SampleListTable item;
+            Model::remove(item, id);
+        }
+        resp->json["data"] = ids;
+    };
+
+    Handler::response_json(req, resp, func);
+    return 200;
+}
+
+int SampleListHandler::batchAnalyse(HttpRequest *req, HttpResponse *resp)
+{
+    auto func = [req, resp]
+    {
+        hv::Json json = req->GetJson();
+        std::vector<int> ids = json["ids"].get<std::vector<int>>();
+
+        resp->json["data"] = ids;
+    };
+
+    Handler::response_json(req, resp, func);
+    return 200;
+}
+
+int SampleListHandler::analyseQueue(HttpRequest *req, HttpResponse *resp)
+{
+    auto func = [req, resp]
+    {
+        // 从请求中获取 queue_number 参数
+        int queue_number = std::stoi(req->GetParam("queue_number"));
+        resp->json["data"] = queue_number;
+    };
+
+    Handler::response_json(req, resp, func);
+    return 200;
+}
+
+int SampleListHandler::analyseStop(HttpRequest *req, HttpResponse *resp)
+{
+    auto func = [req, resp] {
+
     };
 
     Handler::response_json(req, resp, func);

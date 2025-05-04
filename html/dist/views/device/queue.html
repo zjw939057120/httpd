@@ -34,16 +34,18 @@
       </div>
     </div>
 
-    <div class="layui-col-md12">
+    <div class="layui-col-xs12">
       <div class="layui-card">
 
         <table class="layui-hide" id="test-table-toolbar" lay-filter="test-table-toolbar"></table>
 
         <script type="text/html" id="test-table-toolbar-toolbarDemo">
             <div class="layui-btn-container">
-              <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
-              <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>
-              <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button>
+              <button class="layui-btn layui-btn-sm" lay-event="insert">新增</button>
+              <button class="layui-btn layui-btn-sm" lay-event="delete">删除</button>
+              <button class="layui-btn layui-btn-sm" lay-event="analyse">分析</button>
+              <button class="layui-btn layui-btn-sm" lay-event="analyseQueue">分析队列</button>
+              <button class="layui-btn layui-btn-sm" lay-event="stop">停止</button>
             </div>
           </script>
 
@@ -95,8 +97,8 @@
           var index = $('#queue_list').val();
           renderQueueItem(index); // 初始化时渲染第一个队列项
         },
-        error: function () {
-          console.error('请求失败');
+        error: function (xhr, status, error) {
+          layer.msg('请求失败', { icon: 5 });
         }
       });
     };
@@ -123,13 +125,13 @@
         , title: '样本数据表'
         , cols: [[
           { type: 'checkbox', fixed: 'left' }
-          , { field: 'sample_number', title: '编号', width: 60 }
-          , { field: 'sample_place', title: '位置', width: 60 }
-          , { field: 'sample_signalnumber', title: '信号', width: 60 }
+          , { field: 'sample_number', title: '编号', width: 80 }
+          , { field: 'sample_place', title: '位置', width: 80, sort: true }
+          , { field: 'sample_signalnumber', title: '信号', width: 80, sort: true }
           , { field: 'sample_name', title: '名称', width: 120, sort: true }
           , { field: 'sample_type', title: '类型', width: 120, sort: true }
           , {
-            field: 'sample_cal_concentration', title: '标定浓度', width: 100, templet: function (res) {
+            field: 'sample_cal_concentration', title: '标定浓度', width: 100, sort: true, templet: function (res) {
               return res.sample_cal_concentration.toFixed(3);
             }
           }
@@ -166,7 +168,7 @@
           , { field: 'sample_comment', title: '备注', width: 100 }
           , { field: 'sample_analyst_name', title: '分析员', width: 100 }
           , {
-            field: 'sample_dilution', title: '稀释倍数', width: 100, templet: function (res) {
+            field: 'sample_dilution', title: '稀释倍数', width: 120, sort: true, templet: function (res) {
               return res.sample_dilution.toFixed(3);
             }
           }
@@ -205,8 +207,8 @@
             layer.msg('删除成功', { icon: 1 });
             initQueueList(); // 重新初始化队列列表
           },
-          error: function () {
-            console.error('请求失败');
+          error: function (xhr, status, error) {
+            layer.msg('请求失败', { icon: 5 });
           }
         });
         layer.close(index); // 关闭确认框
@@ -245,8 +247,8 @@
                   layer.msg('新增成功', { icon: 1 });
                   initQueueList(); // 重新初始化队列列表
                 },
-                error: function () {
-                  console.error('请求失败');
+                error: function (xhr, status, error) {
+                  layer.msg('请求失败', { icon: 5 });
                 }
               });
               layer.close(index); //执行关闭 
@@ -288,8 +290,8 @@
                   layer.msg('编辑成功', { icon: 1 });
                   initQueueList(); // 重新初始化队列列表
                 },
-                error: function () {
-                  console.error('请求失败');
+                error: function (xhr, status, error) {
+                  layer.msg('请求失败', { icon: 5 });
                 }
               });
               layer.close(index); //执行关闭 
@@ -318,8 +320,8 @@
           layer.msg('复制成功', { icon: 1 });
           initQueueList(); // 重新初始化队列列表
         },
-        error: function () {
-          console.error('请求失败');
+        error: function (xhr, status, error) {
+          layer.msg('请求失败', { icon: 5 });
         }
       });
     });
@@ -329,16 +331,137 @@
     table.on('toolbar(test-table-toolbar)', function (obj) {
       var checkStatus = table.checkStatus(obj.config.id);
       switch (obj.event) {
-        case 'getCheckData':
-          var data = checkStatus.data;
-          layer.alert(JSON.stringify(data));
+        case 'insert':
+          admin.popup({
+            title: '新增样本'
+            , area: ['800px', '600px']
+            , id: 'LAY-popup-content-tags'
+            , success: function (layero, index) {
+              view(this.id).render('device/sampleform', data).done(function () {
+                form.render(null, 'layuiadmin-form-tags');
+
+                //监听提交
+                form.on('submit(layuiadmin-app-tags-submit)', function (data) {
+                  var field = data.field; //获取提交的字段
+
+                  //提交 Ajax 成功后，关闭当前弹层并重载表格
+                  $.ajax({
+                    url: '/api/sample_list/insert', // 替换为你的 JSON 接口地址
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(field), // 将数据转换为 JSON 字符串
+                    success: function (res) {
+                      if (res.code != 0) {
+                        layer.msg(res.msg, { icon: 5 });
+                        return;
+                      }
+                      layer.msg('新增成功', { icon: 1 });
+                      initQueueList(); // 重新初始化队列列表
+                    },
+                    error: function (xhr, status, error) {
+                      layer.msg('请求失败', { icon: 5 });
+                    }
+                  });
+                  layer.close(index); //执行关闭 
+                });
+              });
+            }
+          });
           break;
-        case 'getCheckLength':
+        case 'delete'://删除
           var data = checkStatus.data;
-          layer.msg('选中了：' + data.length + ' 个');
+          if (data.length == 0) {
+            layer.msg('请选择样本', { icon: 5 });
+            return;
+          }
+          layer.confirm('真的删除么', function (index) {
+            const ids = data.map(item => item.id);//获取选中行的id
+            const payload = { ids: ids };
+            $.ajax({
+              url: '/api/sample_list/delete', // 替换为你的 JSON 接口地址
+              method: 'POST',
+              contentType: 'application/json',
+              data: JSON.stringify(payload), // 将数据转换为 JSON 字符串
+              success: function (res) {
+                if (res.code != 0) {
+                  layer.msg(res.msg, { icon: 5 });
+                }
+                layer.msg('删除成功', { icon: 1 });
+                initQueueList(); // 重新初始化队列列表
+              },
+              error: function (xhr, status, error) {
+                layer.msg('请求失败', { icon: 5 });
+              }
+            });
+            layer.close(index);
+          });
           break;
-        case 'isAll':
-          layer.msg(checkStatus.isAll ? '全选' : '未全选');
+        case 'analyse'://分析
+          var data = checkStatus.data;
+          if (data.length == 0) {
+            layer.msg('请选择样本', { icon: 5 });
+            return;
+          }
+          layer.confirm('开始分析么', function (index) {
+            const ids = data.map(item => item.id);//获取选中行的id
+            const payload = { ids: ids };
+            $.ajax({
+              url: '/api/sample_list/analyse', // 替换为你的 JSON 接口地址
+              method: 'POST',
+              contentType: 'application/json',
+              data: JSON.stringify(payload), // 将数据转换为 JSON 字符串
+              success: function (res) {
+                if (res.code != 0) {
+                  layer.msg(res.msg, { icon: 5 });
+                }
+                layer.msg('分析完成', { icon: 1 });
+              },
+              error: function (xhr, status, error) {
+                layer.msg('请求失败', { icon: 5 });
+              }
+            });
+            layer.close(index);
+          });
+          break;
+        case 'analyseQueue'://分析队列
+          layer.confirm('开始分析队列么', function (index) {
+            $.ajax({
+              url: '/api/sample_list/analyse_queue/' + current_queue_item.id, // 替换为你的 JSON 接口地址
+              method: 'POST',
+              contentType: 'application/json',
+              success: function (res) {
+                if (res.code != 0) {
+                  layer.msg(res.msg, { icon: 5 });
+                  return;
+                }
+                layer.msg('分析完成', { icon: 1 });
+              },
+              error: function (xhr, status, error) {
+                layer.msg('请求失败', { icon: 5 });
+              }
+            });
+            layer.close(index);
+          });
+          break;
+        case 'stop'://停止
+          layer.confirm('停止分析么', function (index) {
+            $.ajax({
+              url: '/api/sample_list/analyse_stop', // 替换为你的 JSON 接口地址
+              method: 'POST',
+              contentType: 'application/json',
+              success: function (res) {
+                if (res.code != 0) {
+                  layer.msg(res.msg, { icon: 5 });
+                  return;
+                }
+                layer.msg('分析停止', { icon: 1 });
+              },
+              error: function (xhr, status, error) {
+                layer.msg('请求失败', { icon: 5 });
+              }
+            });
+            layer.close(index);
+          });
           break;
       };
     });
@@ -360,8 +483,8 @@
               obj.del(); // 删除当前行
               layer.msg('删除成功', { icon: 1 });
             },
-            error: function () {
-              console.error('请求失败');
+            error: function (xhr, status, error) {
+              layer.msg('请求失败', { icon: 5 });
             }
           });
           layer.close(index);
@@ -390,10 +513,11 @@
                       layer.msg(res.msg, { icon: 5 });
                       return;
                     }
+                    layer.msg('编辑成功', { icon: 1 });
                     initQueueList(); // 重新初始化队列列表
                   },
-                  error: function () {
-                    console.error('请求失败');
+                  error: function (xhr, status, error) {
+                    layer.msg('请求失败', { icon: 5 });
                   }
                 });
                 layer.close(index); //执行关闭 
@@ -406,11 +530,3 @@
 
   });
 </script>
-
-<style>
-  .layui-layer-admin .layui-layer-title {
-    background-color: #f2f2f2; /* 设置背景颜色为灰色 */
-    color: #333; /* 设置文字颜色为深灰色 */
-    font-weight: bold; /* 设置文字加粗 */
-  }
-</style>

@@ -17,3 +17,13 @@ std::string Utils::preprocessToJson(const std::string &input) {
 
     return result;
 }
+
+void Utils::print(const char *input)
+{
+    printf("%s\n", input);
+}
+
+void Utils::print(const std::string &input)
+{
+    print(input.c_str());
+}
