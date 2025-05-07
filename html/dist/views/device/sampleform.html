@@ -1,19 +1,228 @@
-
-
 <div class="layui-form" lay-filter="layuiadmin-form-tags" id="layuiadmin-app-form-tags">
+
+  <div class="layui-card">
+    <div class="layui-card-body">
+      <table cellspacing="0" cellpadding="0" border="0" class="layui-table layui-table-signal">
+        <thead>
+          <tr>
+
+            <th width=10%>信号</th>
+            <th width=15%>类型</th>
+            <th width=35%>标定曲线</th>
+            <th width=20%>标定浓度</th>
+            <th width=20%>容差</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>硫
+            </td>
+            <td>
+              <script type="text/html" template>
+              <select name="S_type">
+                <option value="0" {{ d.params.S_type == 0 ? 'selected' : '' }}>采样</option>
+                <option value="1" {{ d.params.S_type == 1 ? 'selected' : '' }}>标定</option>
+                <option value="4" {{ d.params.S_type == 4 ? 'selected' : '' }}>空</option>
+              </select>
+            </script>
+            </td>
+            <td>
+              <script type="text/html" template>
+              <select name="S_calibration_line">
+                <option value="测试1" {{ d.params.S_calibration_line === '测试1' ? 'selected' : '' }}>测试1</option>
+                <option value="新闻" {{ d.params.S_calibration_line === '新闻' ? 'selected' : '' }}>新闻</option>
+                <option value="八卦" {{ d.params.S_calibration_line === '八卦' ? 'selected' : '' }}>八卦</option>
+                <option value="体育" {{ d.params.S_calibration_line === '体育' ? 'selected' : '' }}>体育</option>
+                <option value="音乐" {{ d.params.S_calibration_line === '音乐' ? 'selected' : '' }}>音乐</option>
+                <option value="0">无</option>
+                <option value="-1">新建</option>
+              </select>
+            </script>
+            </td>
+            <td>
+              <script type="text/html" template>
+                <input type="text" name="S_cal_concentration" value="{{ d.params.S_cal_concentration || '' }}" placeholder="请输入" autocomplete="off" class="layui-input">
+              </script>
+            </td>
+            <td>
+              <script type="text/html" template>
+              <input type="text" name="S_tolerance" value="{{ d.params.S_tolerance || '' }}" placeholder="请输入" autocomplete="off" class="layui-input">
+            </script>
+            </td>
+          </tr>
+
+          <tr>
+            <td>氮
+            </td>
+            <td>
+              <script type="text/html" template>
+              <select name="S_type">
+                <option value="0" {{ d.params.S_type == 0 ? 'selected' : '' }}>采样</option>
+                <option value="1" {{ d.params.S_type == 1 ? 'selected' : '' }}>标定</option>
+                <option value="4" {{ d.params.S_type == 4 ? 'selected' : '' }}>空</option>
+              </select>
+            </script>
+            </td>
+            <td>
+              <script type="text/html" template>
+              <select name="S_calibration_line">
+                <option value="测试1" {{ d.params.S_calibration_line === '测试1' ? 'selected' : '' }}>测试1</option>
+                <option value="新闻" {{ d.params.S_calibration_line === '新闻' ? 'selected' : '' }}>新闻</option>
+                <option value="八卦" {{ d.params.S_calibration_line === '八卦' ? 'selected' : '' }}>八卦</option>
+                <option value="体育" {{ d.params.S_calibration_line === '体育' ? 'selected' : '' }}>体育</option>
+                <option value="音乐" {{ d.params.S_calibration_line === '音乐' ? 'selected' : '' }}>音乐</option>
+                <option value="0">无</option>
+                <option value="-1">新建</option>
+              </select>
+            </script>
+            </td>
+            <td>
+              <script type="text/html" template>
+                <input type="text" name="S_cal_concentration" value="{{ d.params.S_cal_concentration || '' }}" placeholder="请输入" autocomplete="off" class="layui-input">
+              </script>
+            </td>
+            <td>
+              <script type="text/html" template>
+              <input type="text" name="S_tolerance" value="{{ d.params.S_tolerance || '' }}" placeholder="请输入" autocomplete="off" class="layui-input">
+            </script>
+            </td>
+          </tr>
+
+          <tr>
+            <td>氯
+            </td>
+            <td>
+              <script type="text/html" template>
+              <select name="S_type">
+                <option value="0" {{ d.params.S_type == 0 ? 'selected' : '' }}>采样</option>
+                <option value="1" {{ d.params.S_type == 1 ? 'selected' : '' }}>标定</option>
+                <option value="4" {{ d.params.S_type == 4 ? 'selected' : '' }}>空</option>
+              </select>
+            </script>
+            </td>
+            <td>
+              <script type="text/html" template>
+              <select name="S_calibration_line">
+                <option value="测试1" {{ d.params.S_calibration_line === '测试1' ? 'selected' : '' }}>测试1</option>
+                <option value="新闻" {{ d.params.S_calibration_line === '新闻' ? 'selected' : '' }}>新闻</option>
+                <option value="八卦" {{ d.params.S_calibration_line === '八卦' ? 'selected' : '' }}>八卦</option>
+                <option value="体育" {{ d.params.S_calibration_line === '体育' ? 'selected' : '' }}>体育</option>
+                <option value="音乐" {{ d.params.S_calibration_line === '音乐' ? 'selected' : '' }}>音乐</option>
+                <option value="0">无</option>
+                <option value="-1">新建</option>
+              </select>
+            </script>
+            </td>
+            <td>
+              <script type="text/html" template>
+                <input type="text" name="S_cal_concentration" value="{{ d.params.S_cal_concentration || '' }}" placeholder="请输入" autocomplete="off" class="layui-input">
+              </script>
+            </td>
+            <td>
+              <script type="text/html" template>
+              <input type="text" name="S_tolerance" value="{{ d.params.S_tolerance || '' }}" placeholder="请输入" autocomplete="off" class="layui-input">
+            </script>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
   <div class="layui-form-item">
-    <label class="layui-form-label">名称</label>
+    <label class="layui-form-label">样本名称</label>
     <div class="layui-input-inline">
       <script type="text/html" template>
-        <input type="text" name="queue_name" value="{{ d.params.queue_name || '' }}" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+        <input type="text" name="sample_name" value="{{ d.params.sample_name || '' }}" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
       </script>
     </div>
   </div>
+
+  <div class="layui-form-item">
+    <label class="layui-form-label">样本量</label>
+    <div class="layui-input-inline">
+      <script type="text/html" template>
+        <input type="text" name="sample_amount" value="{{ d.params.sample_amount || '' }}" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+      </script>
+    </div>
+    <div class="layui-input-inline">
+      <script type="text/html" template>
+        <select name="sample_amountunit">
+          <option value="" >未选择</option>
+          <option value="g" {{ d.params.sample_amountunit === 'g' ? 'selected' : '' }}>g</option>
+          <option value="mg" {{ d.params.sample_amountunit === 'mg' ? 'selected' : '' }}>mg</option>
+          <option value="ug" {{ d.params.sample_amountunit === 'ug' ? 'selected' : '' }}>ug</option>
+          <option value="ng" {{ d.params.sample_amountunit === 'ng' ? 'selected' : '' }}>ng</option>
+          <option value="L" {{ d.params.sample_amountunit === 'L' ? 'selected' : '' }}>L</option>
+          <option value="mL" {{ d.params.sample_amountunit === 'mL' ? 'selected' : '' }}>mL</option>
+          <option value="uL" {{ d.params.sample_amountunit === 'uL' ? 'selected' : '' }}>uL</option>
+          <option value="nL" {{ d.params.sample_amountunit === 'nL' ? 'selected' : '' }}>nL</option>
+        </select>
+      </script>
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <label class="layui-form-label">浓度单位</label>
+    <div class="layui-input-inline">
+      <script type="text/html" template>
+          <select name="sample_conc_unit">
+            <option value="g/L" {{ d.params.sample_conc_unit === 'g/L' ? 'selected' : '' }}>g/L</option>
+            <option value="mg/L" {{ d.params.sample_conc_unit === 'mg/L' ? 'selected' : '' }}>mg/L</option>
+            <option value="ug" {{ d.params.sample_conc_unit === 'ug' ? 'selected' : '' }}>ug</option>
+            <option value="ng" {{ d.params.sample_conc_unit === 'ng' ? 'selected' : '' }}>ng</option>
+            <option value="L" {{ d.params.sample_conc_unit === 'L' ? 'selected' : '' }}>L</option>
+            <option value="mL" {{ d.params.sample_conc_unit === 'mL' ? 'selected' : '' }}>mL</option>
+            <option value="uL" {{ d.params.sample_conc_unit === 'uL' ? 'selected' : '' }}>uL</option>
+            <option value="nL" {{ d.params.sample_conc_unit === 'nL' ? 'selected' : '' }}>nL</option>
+          </select>
+        </script>
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <label class="layui-form-label">稀释倍数</label>
+    <div class="layui-input-inline">
+      <script type="text/html" template>
+            <input type="text" name="sample_dilution" value="{{ d.params.sample_dilution || '' }}" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+          </script>
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <label class="layui-form-label">密度</label>
+    <div class="layui-input-inline">
+      <script type="text/html" template>
+            <input type="text" name="sample_density" value="{{ d.params.sample_density || '' }}" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+          </script>
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <label class="layui-form-label">方法</label>
+    <div class="layui-input-inline">
+      <script type="text/html" template>
+            <select name="sample_method">
+              <option value="" {{ d.params.sample_method === '' ? 'selected' : '' }}>未选择</option>
+            </select>
+          </script>
+    </div>
+  </div>
+
+  <div class="layui-form-item">
+    <label class="layui-form-label">分析员</label>
+    <div class="layui-input-inline">
+      <script type="text/html" template>
+            <input type="text" name="sample_analyst_name" value="{{ d.params.sample_analyst_name || '' }}" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+          </script>
+    </div>
+  </div>
+
   <div class="layui-form-item">
     <label class="layui-form-label">备注</label>
     <div class="layui-input-inline">
       <script type="text/html" template>
-        <textarea name="queue_comment" lay-verify="required" style="width: 400px; height: 150px;" autocomplete="off" class="layui-textarea">{{ d.params.queue_comment || '' }}</textarea>
+        <textarea name="queue_comment" lay-verify="required" style="width: 400px; height: 100px;" autocomplete="off" class="layui-textarea">{{ d.params.queue_comment || '' }}</textarea>
       </script>
     </div>
   </div>
@@ -27,3 +236,16 @@
     </div>
   </div>
 </div>
+
+<style>
+  .layui-card-body .layui-table-signal td {
+    border-width: 0;
+  }
+
+  .layui-form-select dl {
+    top: auto !important;
+    /* 禁止自动调整位置 */
+    bottom: auto !important;
+    /* 禁止向上展开 */
+  }
+</style>
